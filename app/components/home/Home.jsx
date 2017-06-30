@@ -5,19 +5,14 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Butter from '../../api/Butter';
 import Header from '../header/Header.jsx';
 import CardList from '../card/CardList.jsx';
+import type { contentType } from '../../api/metadata/MetadataProviderInterface';
 
 export type activeModeOptionsType = {
+  searchQuery?: string,
   [option: string]: number | boolean | string
 };
 
-export type itemType = {
-  title: string,
-  id: string,
-  year: number,
-  type: string,
-  rating: number | 'n/a',
-  genres: Array<string>
-};
+export type itemType = contentType;
 
 type Props = {
   actions: {

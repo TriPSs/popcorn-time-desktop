@@ -11,8 +11,8 @@ type Props = {
   title?: string,
   limit?: number,
   items: Array<contentType>,
-  isLoading: boolean,
-  isFinished: boolean
+  isLoading?: boolean,
+  isFinished?: boolean
 };
 
 export default function CardList(props: Props) {
