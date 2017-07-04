@@ -37,7 +37,7 @@ import type { deviceType } from '../../api/torrents/TorrentProviderInterface';
 
 const SUMMARY_CHAR_LIMIT = 300;
 
-type playerType = 'default' | 'plyr' | 'vlc' | 'chromecast';
+type playerType = 'default' | 'plyr' | 'chromecast' | 'youtube';
 
 type torrentSelectionType = {
   default: torrentType,
@@ -175,7 +175,14 @@ export default class Item extends Component {
    * Check which players are available on the system
    */
   setPlayer(player: playerType) {
-    this.setState({ currentPlayer: player });
+    switch (player) {
+      case 'youtube':
+        this.player.initYouTube(this.state.item.title, this.state.item.trailer);
+        this.toggleActive();
+        break;
+      default:
+        this.setState({ currentPlayer: player });
+    }
   }
 
   toggle() {
@@ -191,6 +198,8 @@ export default class Item extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
+
     this.getAllData(this.props.itemId);
     this.initCastingDevices();
     this.stopPlayback();
@@ -209,6 +218,8 @@ export default class Item extends Component {
   }
 
   componentWillReceiveProps(nextProps: Props) {
+    window.scrollTo(0, 0);
+
     this.stopPlayback();
 
     this.setState({
@@ -397,6 +408,8 @@ export default class Item extends Component {
         }
       })();
 
+      console.log(torrent, idealTorrent);
+
       if (idealTorrent.quality === 'poor') {
         notie.alert(2, 'Slow torrent, low seeder count', 1);
       }
@@ -522,6 +535,16 @@ export default class Item extends Component {
     );
 
     return mergedResults;
+  }
+
+  closeVideo() {
+    if (this.player.player.isFullscreen()) {
+      this.player.player.toggleFullscreen();
+    } else {
+      this.player.player.pause();
+      // this.player.pause();
+      this.toggleActive();
+    }
   }
 
   toggleActive() {
@@ -678,6 +701,7 @@ export default class Item extends Component {
         </Link>
         <div className="row">
           <div className="plyr col-sm-12">
+            <a id="close-button" onClick={() => this.closeVideo()}>Close</a>
             <video controls poster={item.images.fanart.full} />
           </div>
 
@@ -724,15 +748,15 @@ export default class Item extends Component {
                   : ''}
               </h6>
               <div className="row row-margin row-center Item--details">
-                <div className="col-sm-4">
-                  {item.rating && typeof item.rating === 'number'
-                    ? <Rating
+                {item.rating && typeof item.rating === 'number'
+                  ? <div className="col-sm-4">
+                      <Rating
                         emptyStarColor={'rgba(255, 255, 255, 0.2)'}
                         starColor={'white'}
                         rating={item.rating}
                       />
-                    : null}
-                </div>
+                    </div>
+                  : null}
                 <div className="col-sm-2">
                   <a>
                     {item.year}
@@ -747,10 +771,19 @@ export default class Item extends Component {
                     </div>
                   : null}
 
-                <div className="col-sm-3 row-center">
+                <div className="col-sm-2 row-center">
                   <i className="ion-magnet" />
                   <div className="Movie--status" style={statusColorStyle} />
                 </div>
+
+                {item.trailer && item.trailer !== 'n/a'
+                  ? <div className="col-sm-3 row-center">
+                      <i
+                        className="ion-videocamera"
+                        onClick={() => this.setPlayer('youtube')}
+                      />
+                    </div>
+                  : null}
               </div>
             </div>
 
@@ -825,8 +858,75 @@ export default class Item extends Component {
             {fetchingTorrents ? 'Fetching torrents...' : null}
           </h3>
           <div className="row">
-            <div className="col-sm-12">
-              <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
+            <div className="col-sm-6">
+              {/* Torrent Selection */}
+              <span>
+                <button
+                  onClick={() =>
+                    this.startPlayback(
+                      idealTorrent.magnet,
+                      idealTorrent.method
+                    )}
+                  disabled={!idealTorrent.magnet}
+                >
+                  Start Ideal Torrent
+                </button>
+              </span>
+              {(() => {
+                if (process.env.FLAG_MANUAL_TORRENT_SELECTION === 'true') {
+                  return (
+                    <span>
+                      <button
+                        onClick={() =>
+                          this.startPlayback(
+                            torrent['1080p'].magnet,
+                            torrent['1080p'].method
+                          )}
+                        disabled={!torrent['1080p'].quality}
+                      >
+                        Start 1080p -- {torrent['1080p'].seeders} seeders
+                      </button>
+                      <button
+                        onClick={() =>
+                          this.startPlayback(
+                            torrent['720p'].magnet,
+                            torrent['720p'].method
+                          )}
+                        disabled={!torrent['720p'].quality}
+                      >
+                        Start 720p -- {torrent['720p'].seeders} seeders
+                      </button>
+                      {(() => {
+                        if (activeMode === 'shows') {
+                          return (
+                            <button
+                              onClick={() =>
+                                this.startPlayback(
+                                  torrent['480p'].magnet,
+                                  torrent['480p'].method
+                                )}
+                              disabled={!torrent['480p'].quality}
+                            >
+                              Start 480p -- {torrent['480p'].seeders} seeders
+                            </button>
+                          );
+                        }
+
+                        return null;
+                      })()}
+                    </span>
+                  );
+                }
+
+                return null;
+              })()}
+            </div>
+            <div className="col-sm-6">
+              <Dropdown
+                style={{ float: 'right' }}
+                isOpen={dropdownOpen}
+                toggle={() => this.toggle()}
+              >
                 <DropdownToggle caret>
                   {currentPlayer || 'default'}
                 </DropdownToggle>
@@ -853,10 +953,15 @@ export default class Item extends Component {
                 </DropdownMenu>
               </Dropdown>
             </div>
+            <div className="col-sm-12">
+              <h3 style={torrentLoadingStatusStyle}>
+                {!servingUrl && torrentInProgress ? 'Loading torrent...' : null}
+              </h3>
+              <h3 style={torrentLoadingStatusStyle}>
+                {fetchingTorrents ? 'Fetching torrents...' : null}
+              </h3>
+            </div>
           </div>
-          <button className="btn btn-info" onClick={() => this.toggleActive()}>
-            Toggle Hover Playback Active
-          </button>
 
           {activeMode === 'shows'
             ? <Show

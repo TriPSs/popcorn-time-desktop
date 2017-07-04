@@ -4,7 +4,7 @@ import axios from 'axios';
 import { parseRuntimeMinutesToObject } from './MetadataAdapter';
 import type { MetadataProviderInterface } from './MetadataProviderInterface';
 
-export default class TheMovieDBMetadataProvider
+export default class TheMovieDbMetadataProvider
   implements MetadataProviderInterface {
   apiKey = '809858c82322872e2be9b2c127ccdcf7';
 
@@ -53,7 +53,7 @@ export default class TheMovieDBMetadataProvider
       baseURL: this.apiUri,
       params: {
         api_key: this.apiKey,
-        append_to_response: 'external_ids'
+        append_to_response: 'external_ids,videos'
       }
     });
   }
@@ -163,55 +163,72 @@ function formatImage(
   return `${imageUri}${size}/${path}`;
 }
 
-function formatMetadata(movie, type: string, imageUri: string, genres) {
+function formatMetadata(item, type: string, imageUri: string, genres) {
   return {
     // 'title' property is on movies only. 'name' property is on
     // shows only
-    title: movie.name || movie.title,
-    year: new Date(movie.release_date).getFullYear(),
+    title: item.name || item.title,
+    year: new Date(item.release_date).getFullYear(),
     // @DEPRECATE
-    id: String(movie.id),
+    id: String(item.id),
     ids: {
-      tmdbId: movie.id,
+      tmdbId: String(item.id),
       imdbId:
-        movie.imdb_id ||
-          (movie.external_ids && movie.external_ids.imdb_id
-            ? movie.external_ids.imdb_id
+        item.imdb_id ||
+          (item.external_ids && item.external_ids.imdb_id
+            ? item.external_ids.imdb_id
             : '')
     },
     type,
     certification: 'n/a',
-    summary: movie.overview,
-    genres: movie.genres
-      ? movie.genres.map(genre => genre.name)
-      : movie.genre_ids
-        ? movie.genre_ids.map(genre => genres[String(genre)])
+    summary: item.overview,
+    genres: item.genres
+      ? item.genres.map(genre => genre.name)
+      : item.genre_ids
+        ? item.genre_ids.map(genre => genres[String(genre)])
         : [],
-    rating: movie.vote_average,
-    runtime: movie.runtime ? parseRuntimeMinutesToObject(movie.runtime) : 'n/a',
-    trailer: 'n/a',
+    rating: item.vote_average,
+    runtime: item.runtime ||
+      (item.episode_run_time && item.episode_run_time.length > 0)
+      ? parseRuntimeMinutesToObject(
+          type === 'movies' ? item.runtime : item.episode_run_time[0]
+        )
+      : {
+          full: 'n/a',
+          hours: 'n/a',
+          minutes: 'n/a'
+        },
+    trailer: item.videos &&
+      item.videos.results &&
+      item.videos.results.length > 0
+      ? `http://youtube.com/watch?v=${item.videos.results[0].key}`
+      : 'n/a',
     images: {
       fanart: {
-        full: formatImage(imageUri, movie.backdrop_path, 'original'),
-        medium: formatImage(imageUri, movie.backdrop_path, 'w780'),
-        thumb: formatImage(imageUri, movie.backdrop_path, 'w342')
+        full: formatImage(imageUri, item.backdrop_path, 'original'),
+        medium: formatImage(imageUri, item.backdrop_path, 'w780'),
+        thumb: formatImage(imageUri, item.backdrop_path, 'w342')
       },
       poster: {
-        full: formatImage(imageUri, movie.poster_path, 'original'),
-        medium: formatImage(imageUri, movie.poster_path, 'w780'),
-        thumb: formatImage(imageUri, movie.poster_path, 'w342')
+        full: formatImage(imageUri, item.poster_path, 'original'),
+        medium: formatImage(imageUri, item.poster_path, 'w780'),
+        thumb: formatImage(imageUri, item.poster_path, 'w342')
       }
     }
   };
 }
 
 function formatSeasons(show) {
+  const firstSeasonIsZero = show.seasons.length > 0
+    ? show.seasons[0].season_number === 0
+    : false;
+
   return show.seasons.map(season => ({
-    season: season.season_number + 1,
+    season: firstSeasonIsZero ? season.season_number + 1 : season.season_number,
     overview: show.overview,
-    id: season.id,
+    id: String(season.id),
     ids: {
-      tmdbId: season.id
+      tmdbId: String(season.id)
     },
     images: {
       full: season.poster_path,
@@ -223,9 +240,9 @@ function formatSeasons(show) {
 
 function formatSeason(season) {
   return season.episodes.map(episode => ({
-    id: episode.id,
+    id: String(episode.id),
     ids: {
-      tmdbId: episode.id
+      tmdbId: String(episode.id)
     },
     title: episode.name,
     season: episode.season_number,
@@ -243,9 +260,9 @@ function formatSeason(season) {
 
 function formatEpisode(episode) {
   return {
-    id: episode.id,
+    id: String(episode.id),
     ids: {
-      tmdbId: episode.id
+      tmdbId: String(episode.id)
     },
     title: episode.name,
     season: episode.season_number,

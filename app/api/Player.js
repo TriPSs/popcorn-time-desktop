@@ -62,6 +62,34 @@ export default class Player {
     );
   }
 
+  initYouTube(itemTitle: string, source: string) {
+    console.info('Initializing plyr...');
+    this.currentPlayer = 'plyr';
+
+    this.player =
+      this.player ||
+      plyr.setup({
+        volume: 10,
+        autoplay: true,
+        showPosterOnEnd: true
+      })[0];
+
+    const player = this.player;
+
+    player.source({
+      title: `${itemTitle} Trailer`,
+      type: 'video',
+      sources: [
+        {
+          src: source,
+          type: 'youtube'
+        }
+      ]
+    });
+
+    return player;
+  }
+
   async initCast(
     provider: ChromecastPlayerProvider,
     // selectedDeviceId: string,
@@ -86,11 +114,13 @@ export default class Player {
     this.currentPlayer = 'plyr';
     this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension');
 
-    this.player = plyr.setup({
-      volume: 10,
-      autoplay: true,
-      showPosterOnEnd: true
-    })[0];
+    this.player =
+      this.player ||
+      plyr.setup({
+        volume: 10,
+        autoplay: true,
+        showPosterOnEnd: true
+      })[0];
 
     const player = this.player;
 
