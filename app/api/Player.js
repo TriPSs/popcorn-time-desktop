@@ -2,12 +2,14 @@
 import { remote } from 'electron';
 import plyr from 'plyr';
 import childProcess from 'child_process';
+import network from 'network-address'
 import vlcCommand from 'vlc-command';
+import ChromecastPlayerProvider from './players/ChromecastPlayerProvider';
 
 const { powerSaveBlocker } = remote;
 
 type metadataType = {
-  poster: string
+  poster?: string
 };
 
 export default class Player {
@@ -88,6 +90,25 @@ export default class Player {
     return player;
   }
 
+  async initCast(
+    provider: ChromecastPlayerProvider,
+    // selectedDeviceId: string,
+    streamingUrl: string,
+    metadata: metadataType = {}
+  ) {
+    // await provider.selectDevice(selectedDeviceId);
+    const addr = streamingUrl.replace('localhost', network());
+
+    console.log(addr, network());
+
+    return provider.play(addr, {
+      title: 'Big Buck Bunny',
+      image: {
+        poster: metadata.poster || ''
+      }
+    });
+  }
+
   initPlyr(streamingUrl: string, metadata: metadataType = {}): plyr {
     console.info('Initializing plyr...');
     this.currentPlayer = 'plyr';
@@ -114,8 +135,9 @@ export default class Player {
       ...metadata
     });
 
-    player.poster(metadata.poster);
-    player.toggleFullscreen();
+    if (metadata.poster) {
+      player.poster(metadata.poster);
+    }
 
     return player;
   }

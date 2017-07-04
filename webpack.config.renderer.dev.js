@@ -182,7 +182,7 @@ export default merge.smart(baseConfig, {
     watchOptions: {
       aggregateTimeout: 300,
       poll: 100,
-      ignored: /node_modules/
+      ignored: 'app/dist,app/main.js,dll,flow-typed,node_modules,app/node_modules,release',
     },
     historyApiFallback: {
       verbose: true,

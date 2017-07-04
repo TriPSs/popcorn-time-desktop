@@ -261,9 +261,5 @@
   "devEngines": {
     "node": ">=8.x",
     "npm": ">=5.x"
-  },
-  "optionalDependencies": {
-    "castv2-webpack": "0.1.10",
-    "chromecast-player": "0.2.3"
   }
 }

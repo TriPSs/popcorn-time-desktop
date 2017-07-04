@@ -11,6 +11,13 @@ import {
   merge
 } from './BaseTorrentProvider';
 
+type extendedDetailsType =
+  | {}
+  | {
+      season: number,
+      episode: number
+    };
+
 /**
  * @TODO: Use ES6 dynamic imports here
  */
@@ -25,7 +32,7 @@ const providers = [
 export default async function TorrentAdapter(
   _itemId: string,
   type: string,
-  extendedDetails,
+  extendedDetails: extendedDetailsType = {},
   returnAll: boolean = false,
   method: string = 'all',
   cache: boolean = true
@@ -48,7 +55,6 @@ export default async function TorrentAdapter(
   switch (method) {
     case 'all': {
       const providerResults = await Promise.all(torrentPromises);
-      const { season, episode } = extendedDetails;
 
       switch (type) {
         case 'movies':
@@ -62,10 +68,22 @@ export default async function TorrentAdapter(
             args
           );
         case 'shows':
+          if (
+            !('season' in extendedDetails) ||
+            !('episode' in extendedDetails)
+          ) {
+            throw new Error('asfd');
+          }
           return selectTorrents(
             appendAttributes(providerResults)
               .filter(show => !!show.metadata)
-              .filter(show => filterShows(show, season, episode))
+              .filter(show =>
+                filterShows(
+                  show,
+                  extendedDetails.season,
+                  extendedDetails.episode
+                )
+              )
               .map(result => ({
                 ...result,
                 method: 'shows'
@@ -78,7 +96,7 @@ export default async function TorrentAdapter(
           return selectTorrents(
             appendAttributes(providerResults)
               .filter(show => !!show.metadata)
-              .filter(show => filterShowsComplete(show, season))
+              .filter(show => filterShowsComplete(show, extendedDetails.season))
               .map(result => ({
                 ...result,
                 method: 'season_complete'
