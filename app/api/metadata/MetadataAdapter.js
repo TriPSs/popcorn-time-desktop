@@ -4,7 +4,7 @@
  */
 import OpenSubtitles from 'opensubtitles-api';
 import { merge, resolveCache, setCache } from '../torrents/BaseTorrentProvider';
-import TheMovieDbMetadataProvider from './TheMovieDbMetadataProvider';
+import TheMovieDbMetadataProvider from './TheMovieDBMetadataProvider';
 // import TraktMetadataProvider from './TraktMetadataProvider';
 import type { runtimeType } from './MetadataProviderInterface';
 

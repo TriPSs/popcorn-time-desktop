@@ -4,9 +4,11 @@
  */
 import os from 'os';
 import WebTorrent from 'webtorrent';
+import debug from 'debug'
 import { isExactEpisode } from './torrents/BaseTorrentProvider';
 
-const port = 9090;
+const log  = debug('app:torrent')
+const port = 9091;
 
 type metadataType = {
   season: number,
@@ -19,46 +21,52 @@ export default class Torrent {
 
   finished: boolean = false;
 
+  callbackCalled: boolean = false;
+
   checkDownloadInterval: number;
 
   engine: WebTorrent;
 
   magnetURI: string;
 
-  server:
-    | {}
+  server: | {}
     | {
-        close: () => void,
-        listen: (port: number) => void
-      };
+    close: () => void,
+    listen: (port: number) => void
+  };
 
-  start(
-    magnetURI: string,
-    metadata: metadataType,
-    supportedFormats: Array<string>,
-    cb
-  ) {
+  start(magnetURI: string, metadata: metadataType, supportedFormats: Array<string>, cb) {
     if (this.inProgress) {
       throw new Error('Torrent already in progress');
     }
 
-    const { season, episode, activeMode } = metadata;
-    const maxConns = process.env.CONFIG_MAX_CONNECTIONS
-      ? parseInt(process.env.CONFIG_MAX_CONNECTIONS, 10)
-      : 20;
+    log('Start', magnetURI)
 
-    this.engine = new WebTorrent({ maxConns });
+    const { season, episode, activeMode } = metadata;
+
+    if (!this.engine) {
+      const maxConns = process.env.CONFIG_MAX_CONNECTIONS
+        ? parseInt(process.env.CONFIG_MAX_CONNECTIONS, 10)
+        : 20;
+
+      this.engine = new WebTorrent({ maxConns });
+    }
+
     this.inProgress = true;
-    this.magnetURI = magnetURI;
+    this.magnetURI  = magnetURI;
 
     const cacheLocation = process.env.CONFIG_PERSIST_DOWNLOADS === 'true'
       ? process.env.CONFIG_DOWNLOAD_LOCATION || '/tmp/popcorn-time-desktop'
       : os.tmpdir();
 
+    log('Using', cacheLocation, 'to save the file!')
+
     this.engine.add(magnetURI, { path: cacheLocation }, torrent => {
-      const server = torrent.createServer();
-      server.listen(port);
-      this.server = server;
+      if (!this.server) {
+        const server = torrent.createServer();
+        server.listen(port);
+        this.server = server;
+      }
 
       const { file, torrentIndex } = torrent.files.reduce(
         (previous, current, index) => {
@@ -69,13 +77,10 @@ export default class Torrent {
           switch (activeMode) {
             // Check if the current file is the exact episode we're looking for
             case 'season_complete':
-              if (
-                formatIsSupported &&
-                isExactEpisode(current.name, season, episode)
-              ) {
+              if (formatIsSupported && isExactEpisode(current.name, season, episode)) {
                 previous.file.deselect();
                 return {
-                  file: current,
+                  file        : current,
                   torrentIndex: index
                 };
               }
@@ -87,7 +92,7 @@ export default class Torrent {
               if (formatIsSupported && current.length > previous.file.length) {
                 previous.file.deselect();
                 return {
-                  file: current,
+                  file        : current,
                   torrentIndex: index
                 };
               }
@@ -100,24 +105,21 @@ export default class Torrent {
 
       if (typeof torrentIndex !== 'number') {
         console.warn('File List', torrent.files.map(_file => _file.name));
-        throw new Error(
-          `No torrent could be selected. Torrent Index: ${torrentIndex}`
-        );
+        throw new Error(`No torrent could be selected. Torrent Index: ${torrentIndex}`);
       }
 
       const buffer = 1 * 1024 * 1024; // 1MB
-      const files = torrent.files;
+      const files  = torrent.files;
 
       file.select();
 
       torrent.on('done', () => {
+        log('Loaded')
         this.inProgress = false;
         this.clearIntervals();
-      });
 
-      this.checkDownloadInterval = setInterval(() => {
-        if (torrent.downloaded > buffer) {
-          console.log('Ready...');
+        if (!this.callbackCalled) {
+          this.callbackCalled = true
 
           cb(
             `http://localhost:${port}/${torrentIndex}`,
@@ -126,6 +128,25 @@ export default class Torrent {
             torrent,
             selectSubtitleFile(files, activeMode, metadata)
           );
+        }
+      });
+
+      this.checkDownloadInterval = setInterval(() => {
+        log('Buffering:', torrent.downloaded, buffer)
+
+        if (torrent.downloaded > buffer) {
+
+          if (!this.callbackCalled) {
+            this.callbackCalled = true
+
+            cb(
+              `http://localhost:${port}/${torrentIndex}`,
+              file,
+              files,
+              torrent,
+              selectSubtitleFile(files, activeMode, metadata)
+            );
+          }
 
           this.clearIntervals();
         }
@@ -164,21 +185,19 @@ type torrentSpeedsType = {
   ratio: number
 };
 
-export function formatSpeeds(
-  torrentSpeeds: torrentSpeedsType
-): torrentSpeedsType {
+export function formatSpeeds(torrentSpeeds: torrentSpeedsType): torrentSpeedsType {
   const {
-    downloadSpeed,
-    uploadSpeed,
-    progress,
-    numPeers,
-    ratio
-  } = torrentSpeeds;
+          downloadSpeed,
+          uploadSpeed,
+          progress,
+          numPeers,
+          ratio
+        } = torrentSpeeds;
 
   return {
     downloadSpeed: downloadSpeed / 1000000,
-    uploadSpeed: uploadSpeed / 1000000,
-    progress: Math.round(progress * 100) / 100,
+    uploadSpeed  : uploadSpeed / 1000000,
+    progress     : Math.round(progress * 100) / 100,
     numPeers,
     ratio
   };
@@ -187,11 +206,9 @@ export function formatSpeeds(
 /**
  * Get the subtitle file buffer given an array of files
  */
-export function selectSubtitleFile(
-  files: Array<{ name: string }> = [],
-  activeMode: string,
-  metadata: { season: number, episode: number }
-): { name: string } | boolean {
+export function selectSubtitleFile(files: Array<{ name: string }> = [],
+                                   activeMode: string,
+                                   metadata: { season: number, episode: number }): { name: string } | boolean {
   return (
     files.find(file => {
       const formatIsSupported = file.name.includes('.srt');

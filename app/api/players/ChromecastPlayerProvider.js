@@ -1,11 +1,15 @@
 // @flow
 import { Client, DefaultMediaReceiver } from 'castv2-client';
 import mdns from 'mdns';
+import debug from 'debug'
 import type {
   PlayerProviderInterface,
   deviceType,
   metadataType
 } from './PlayerProviderInterface';
+
+
+const log = debug('app:player:chromecast')
 
 type castv2DeviceType = {
   fullname: string,
@@ -43,10 +47,10 @@ class ChromecastPlayerProvider implements PlayerProviderInterface {
 
       this.browser.on('serviceUp', service => {
         devices.push({
-          name: service.txtRecord.fn,
-          id: service.fullname,
+          name   : service.txtRecord.fn,
+          id     : service.fullname,
           address: service.addresses[0],
-          port: service.port
+          port   : service.port
         });
       });
 
@@ -69,7 +73,7 @@ class ChromecastPlayerProvider implements PlayerProviderInterface {
     return selectedDevice;
   }
 
-  play(contentUrl: string, metadata: metadataType) {
+  play(contentUrl: string, item) {
     const client = new Client();
 
     if (!this.selectDevice) {
@@ -77,36 +81,55 @@ class ChromecastPlayerProvider implements PlayerProviderInterface {
     }
 
     return new Promise((resolve, reject) => {
-      client.connect(this.selectedDevice.address, () => {
-        client.launch(DefaultMediaReceiver, (err, player) => {
-          if (err) reject(err);
+      log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
 
-          console.log(contentUrl);
+      client.connect(this.selectedDevice.address, () => {
+        log(`Connected to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
+
+        client.launch(DefaultMediaReceiver, (error, player) => {
+          if (error) {
+            reject(error);
+          }
+
+          player.on('status', (status) => {
+            log('Status broadcast playerState=%s', status.playerState);
+          })
+
 
           const media = {
             // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
-            contentId: contentUrl,
-            // contentType: 'video/mp4',
-            streamType: 'BUFFERED', // or LIVE
+            contentId  : contentUrl,
+            contentType: 'video/mp4',
+            streamType : 'BUFFERED', // or LIVE
 
             // Title and cover displayed while buffering
             metadata: {
-              type: 0,
+              type        : 0,
               metadataType: 0,
-              title: metadata.title,
-              images: [
+              title       : item.title,
+              images      : [
                 {
-                  url: metadata.image.poster
+                  url: item.images.poster.full || item.images.fanart.full
                 }
               ]
             }
           };
 
-          player.load(media, { autoplay: true }, _err => {
-            if (_err) reject(_err);
+          player.load(media, { autoplay: true }, (error) => {
+            if (error) {
+              reject(error)
+            }
             resolve();
           });
         });
+      });
+
+      client.on('error', (error) => {
+        console.log('Error: %s', error.message);
+
+        client.close();
+
+        reject(error); //Error
       });
     });
   }

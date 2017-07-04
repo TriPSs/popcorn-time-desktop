@@ -53,10 +53,8 @@ export default class Player {
     this.player.restart();
   }
 
-  static isFormatSupported(
-    filename: string,
-    mimeTypes: Array<string>
-  ): boolean {
+  static isFormatSupported(filename: string,
+                           mimeTypes: Array<string>): boolean {
     return !!mimeTypes.find(mimeType =>
       filename.toLowerCase().includes(mimeType)
     );
@@ -69,19 +67,19 @@ export default class Player {
     this.player =
       this.player ||
       plyr.setup({
-        volume: 10,
-        autoplay: true,
+        volume         : 10,
+        autoplay       : true,
         showPosterOnEnd: true
       })[0];
 
     const player = this.player;
 
     player.source({
-      title: `${itemTitle} Trailer`,
-      type: 'video',
+      title  : `${itemTitle} Trailer`,
+      type   : 'video',
       sources: [
         {
-          src: source,
+          src : source,
           type: 'youtube'
         }
       ]
@@ -90,45 +88,32 @@ export default class Player {
     return player;
   }
 
-  async initCast(
-    provider: ChromecastPlayerProvider,
-    // selectedDeviceId: string,
-    streamingUrl: string,
-    metadata: metadataType = {}
-  ) {
-    // await provider.selectDevice(selectedDeviceId);
+  async initCast(provider: ChromecastPlayerProvider, streamingUrl: string, item) {
     const addr = streamingUrl.replace('localhost', network());
 
-    console.log(addr, network());
-
-    return provider.play(addr, {
-      title: 'Big Buck Bunny',
-      image: {
-        poster: metadata.poster || ''
-      }
-    });
+    return provider.play(addr, item);
   }
 
   initPlyr(streamingUrl: string, metadata: metadataType = {}): plyr {
     console.info('Initializing plyr...');
-    this.currentPlayer = 'plyr';
+    this.currentPlayer      = 'plyr';
     this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension');
 
     this.player =
       this.player ||
       plyr.setup({
-        volume: 10,
-        autoplay: true,
+        volume         : 10,
+        autoplay       : true,
         showPosterOnEnd: true
       })[0];
 
     const player = this.player;
 
     player.source({
-      type: 'video',
+      type   : 'video',
       sources: [
         {
-          src: streamingUrl,
+          src : streamingUrl,
           type: 'video/mp4'
         }
       ],

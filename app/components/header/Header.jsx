@@ -7,16 +7,12 @@ import { history as browserHistory } from '../../store/configureStore';
 import Butter from '../../api/Butter';
 
 type Props = {
-  setActiveMode: (mode: string, options?: { searchQuery: string }) => void,
+  setActiveMode: (mode: string, options: ? { searchQuery: string }) => void,
   activeMode: string
 };
 
 export default class Header extends Component {
   props: Props;
-
-  state: {
-    searchQuery: string
-  };
 
   butter: Butter;
 
@@ -24,25 +20,25 @@ export default class Header extends Component {
     super(props);
 
     this.butter = new Butter();
-    this.state = {
+    this.state  = {
       searchQuery: ''
-    };
+    }
   }
 
   /**
    * Set the mode of the movies to be 'search'
    */
-  setSearchState(searchQuery: string) {
+  setSearchState = (searchQuery: string) => {
     this.props.setActiveMode('search', { searchQuery });
   }
 
-  handleSearchChange(event: SyntheticEvent) {
+  handleSearchChange = (event: SyntheticEvent) => {
     this.setState({
       searchQuery: event.target.value
     });
   }
 
-  handleKeyPress(event: SyntheticEvent) {
+  handleKeyPress = (event: SyntheticEvent) => {
     if (event.key === 'Enter') {
       browserHistory.replace('/item/search');
       this.props.setActiveMode('search', {
@@ -53,7 +49,7 @@ export default class Header extends Component {
 
   render() {
     const { activeMode, setActiveMode } = this.props;
-    const { searchQuery } = this.state;
+    const { searchQuery }               = this.state;
 
     return (
       <div className="col-sm-12">

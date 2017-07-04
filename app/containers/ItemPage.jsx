@@ -1,6 +1,6 @@
 // @flow
-import React from 'react';
-import Item from '../components/item/Item.jsx';
+import React from 'react'
+import Item from '../components/item/Item.jsx'
 
 type Props = {
   match: {
@@ -9,15 +9,13 @@ type Props = {
       activeMode: string
     }
   }
-};
-
-export default function ItemPage(props: Props) {
-  return (
-    <div>
-      <Item
-        itemId={props.match.params.itemId}
-        activeMode={props.match.params.activeMode}
-      />
-    </div>
-  );
 }
+
+export default (props: Props) => (
+  <div>
+    <Item
+      itemId={props.match.params.itemId}
+      activeMode={props.match.params.activeMode}
+    />
+  </div>
+)

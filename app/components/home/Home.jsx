@@ -5,48 +5,7 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Butter from '../../api/Butter';
 import Header from '../header/Header.jsx';
 import CardList from '../card/CardList.jsx';
-import type { contentType } from '../../api/metadata/MetadataProviderInterface';
-
-export type activeModeOptionsType = {
-  searchQuery?: string,
-  [option: string]: number | boolean | string
-};
-
-export type itemType = contentType;
-
-type Props = {
-  actions: {
-    setActiveMode: (
-      mode: string,
-      activeModeOptions?: activeModeOptionsType
-    ) => void,
-    paginate: (
-      activeMode: string,
-      activeModeOptions?: activeModeOptionsType
-    ) => void,
-    clearAllItems: () => void,
-    setLoading: (isLoading: boolean) => void
-  },
-  activeMode: string,
-  activeModeOptions: activeModeOptionsType,
-  modes: {
-    movies: {
-      page: number,
-      limit: number,
-      items: {
-        title: string,
-        id: string,
-        year: number,
-        type: string,
-        rating: number | 'n/a',
-        genres: Array<string>
-      }
-    }
-  },
-  items: Array<itemType>,
-  isLoading: boolean,
-  infinitePagination: boolean
-};
+import type { Props }from './HomeConstants'
 
 export default class Home extends Component {
   props: Props;
@@ -55,26 +14,25 @@ export default class Home extends Component {
 
   didMount: boolean;
 
-  onChange: () => void;
-
   constructor(props: Props) {
     super(props);
     this.butter = new Butter();
-    this.onChange = this.onChange.bind(this);
 
     // Temporary hack to preserve scroll position
     if (!global.pct) {
       global.pct = {
         moviesScrollTop: 0,
-        showsScrollTop: 0,
+        showsScrollTop : 0,
         searchScrollTop: 0
       };
     }
   }
 
-  async onChange(isVisible: boolean) {
-    if (isVisible && !this.props.isLoading) {
-      await this.paginate(this.props.activeMode, this.props.activeModeOptions);
+  onChange = async (isVisible: boolean) => {
+    const { isLoading, activeMode, activeModeOptions } = this.props
+
+    if (isVisible && !isLoading) {
+      await this.paginate(activeMode, activeModeOptions);
     }
   }
 
@@ -85,12 +43,10 @@ export default class Home extends Component {
    *
    * @param {string} queryType   | 'search', 'movies', 'shows', etc
    * @param {object} queryParams | { searchQuery: 'game of thrones' }
+   * @param {activeModeOptionsType} activeModeOptions
    */
-  async paginate(
-    queryType: string,
-    activeModeOptions: activeModeOptionsType = {}
-  ) {
-    this.props.actions.setLoading(true);
+  paginate = async (queryType: string, activeModeOptions: activeModeOptionsType = {}) => {
+    this.props.setLoading(true);
 
     // HACK: This is a temporary solution.
     // Waiting on: https://github.com/yannickcr/eslint-plugin-react/issues/818
@@ -111,8 +67,8 @@ export default class Home extends Component {
       }
     })();
 
-    this.props.actions.paginate(items);
-    this.props.actions.setLoading(false);
+    this.props.paginate(items);
+    this.props.setLoading(false);
 
     return items;
   }
@@ -120,11 +76,11 @@ export default class Home extends Component {
   /**
    * If bottom of component is 2000px from viewport, query
    */
-  initInfinitePagination() {
+  initInfinitePagination = () => {
     if (this.props.infinitePagination) {
-      const scrollDimentions = document
-        .querySelector('body')
-        .getBoundingClientRect();
+      const scrollDimentions = document.querySelector('body')
+                                       .getBoundingClientRect();
+
       if (scrollDimentions.bottom < 2000 && !this.props.isLoading) {
         this.paginate(this.props.activeMode, this.props.activeModeOptions);
       }
@@ -133,19 +89,16 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.didMount = true;
-    document.addEventListener('scroll', this.initInfinitePagination.bind(this));
+    document.addEventListener('scroll', this.initInfinitePagination);
     window.scrollTo(0, global.pct[`${this.props.activeMode}ScrollTop`]);
   }
 
   componentWillReceiveProps(nextProps: Props) {
     global.pct[`${this.props.activeMode}ScrollTop`] = document.body.scrollTop;
 
-    if (
-      JSON.stringify(nextProps.activeModeOptions) !==
-      JSON.stringify(this.props.activeModeOptions)
-    ) {
+    if (JSON.stringify(nextProps.activeModeOptions) !== JSON.stringify(this.props.activeModeOptions)) {
       if (nextProps.activeMode === 'search') {
-        this.props.actions.clearAllItems();
+        this.props.clearAllItems();
       }
 
       this.paginate(nextProps.activeMode, nextProps.activeModeOptions);
@@ -160,9 +113,7 @@ export default class Home extends Component {
 
   componentWillUnmount() {
     if (!document.body) {
-      throw new Error(
-        '"document" not defined. You are probably not running in the renderer process'
-      );
+      throw new Error('"document" not defined. You are probably not running in the renderer process');
     }
 
     global.pct[`${this.props.activeMode}ScrollTop`] = document.body.scrollTop;
@@ -170,15 +121,16 @@ export default class Home extends Component {
     this.didMount = false;
     document.removeEventListener(
       'scroll',
-      this.initInfinitePagination.bind(this)
+      this.initInfinitePagination
     );
   }
 
   render() {
-    const { activeMode, actions, items, isLoading } = this.props;
+    const { activeMode, setActiveMode, items, isLoading } = this.props;
+
     return (
       <div className="row">
-        <Header activeMode={activeMode} setActiveMode={actions.setActiveMode} />
+        <Header activeMode={activeMode} setActiveMode={setActiveMode} />
         <div className="col-sm-12">
           <CardList items={items} isLoading={isLoading} />
           <VisibilitySensor onChange={this.onChange} />

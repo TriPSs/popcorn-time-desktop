@@ -1,30 +1,11 @@
 // @flow
-import React from 'react';
-import classNames from 'classnames';
+import React from 'react'
+import classNames from 'classnames'
 
-type Props = {
-  selectShow: (type: string, season: number, episode?: number) => void,
-  selectedSeason: number,
-  selectedEpisode: number,
-  seasons: Array<{
-    season: number,
-    overview: string
-  }>,
-  episodes: Array<{
-    episode: number,
-    overview: string,
-    title: string
-  }>
-};
+import type { Props } from './ShowConstants'
 
 export default function Show(props: Props) {
-  const {
-    seasons,
-    selectShow,
-    selectedSeason,
-    episodes,
-    selectedEpisode
-  } = props;
+  const { seasons, selectShow, selectedSeason, episodes, selectedEpisode } = props;
 
   return (
     <div className="row">
@@ -88,11 +69,11 @@ export default function Show(props: Props) {
         </li>
       </ul>
     </div>
-  );
+  )
 }
 
 Show.defaultProps = {
-  seasons: [],
+  seasons : [],
   episodes: [],
-  episode: {}
+  episode : {}
 };
