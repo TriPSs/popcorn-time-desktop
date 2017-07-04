@@ -4,8 +4,7 @@ import axios from 'axios';
 import { parseRuntimeMinutesToObject } from './MetadataAdapter';
 import type { MetadataProviderInterface } from './MetadataProviderInterface';
 
-export default class TheMovieDbMetadataProvider
-  implements MetadataProviderInterface {
+export default class TheMovieDbMetadataProvider implements MetadataProviderInterface {
   apiKey = '809858c82322872e2be9b2c127ccdcf7';
 
   imageUri = 'https://image.tmdb.org/t/p/';

@@ -23,14 +23,14 @@ if (process.env.NODE_ENV === 'production') {
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
   const path = require('path');
-  const p = path.join(__dirname, '..', 'app', 'node_modules');
+  const p    = path.join(__dirname, '..', 'app', 'node_modules');
   require('module').globalPaths.push(p);
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
+  const installer     = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = [
+  const extensions    = [
     'REACT_DEVELOPER_TOOLS',
     'REDUX_DEVTOOLS'
   ];
@@ -60,14 +60,16 @@ app.on('ready', async () => {
   }
 
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 1224,
-    height: 728,
+    show           : false,
+    minWidth       : 1224,
+    width          : 1224,
+    minHeight      : 728,
+    height         : 728,
     backgroundColor: '#252525',
-    webPreferences: {
-      darkTheme: true,
-      'web-preferences': { 'web-security': false },
-      scrollBounce: true,
+    webPreferences : {
+      darkTheme             : true,
+      'web-preferences'     : { 'web-security': false },
+      scrollBounce          : true,
       overlayFullscreenVideo: false
     }
   });

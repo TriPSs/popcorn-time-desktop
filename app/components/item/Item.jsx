@@ -456,9 +456,7 @@ export default class Item extends Component {
     }
   }
 
-  selectShow = (type: string,
-                selectedSeason: number,
-                selectedEpisode: number = 1) => {
+  selectShow = (type: string, selectedSeason: number, selectedEpisode: number = 1) => {
     switch (type) {
       case 'episodes':
         this.setState({ selectedSeason });

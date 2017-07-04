@@ -99,9 +99,7 @@ export default class Player {
     this.currentPlayer      = 'plyr';
     this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension');
 
-    this.player =
-      this.player ||
-      plyr.setup({
+    this.player = this.player || plyr.setup({
         volume         : 10,
         autoplay       : true,
         showPosterOnEnd: true

@@ -129,9 +129,10 @@ export default class Home extends Component {
     const { activeMode, setActiveMode, items, isLoading } = this.props;
 
     return (
-      <div className="row">
+      <div style={{marginRight: -8}}>
         <Header activeMode={activeMode} setActiveMode={setActiveMode} />
-        <div className="col-sm-12">
+
+        <div style={{ padding: 25 }}>
           <CardList items={items} isLoading={isLoading} />
           <VisibilitySensor onChange={this.onChange} />
         </div>

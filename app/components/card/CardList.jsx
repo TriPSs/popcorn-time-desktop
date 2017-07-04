@@ -21,13 +21,15 @@ export default function CardList(props: Props) {
   return (
     <div className="row">
       <div className="col-sm-12">
-        <h4 className="CardList--header">
-          {title}
-        </h4>
+        {title && (
+          <h4 className="CardList--header">
+            {title}
+          </h4>
+        )}
         <div className="CardList">
           {(limit ? items.filter((e, i) => i < limit) : items).map(item =>
             <Card
-              image={item.images.fanart.thumb}
+              image={item.images.poster.thumb}
               title={item.title}
               id={item.id}
               key={item.id}

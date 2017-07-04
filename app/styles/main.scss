@@ -19,13 +19,18 @@
 // Components
 //
 
-@import './components/Movie.scss';
-@import './components/CardList.scss';
-@import './components/Loader.scss';
-@import './components/Item.scss';
+@import './components/Movie';
+@import './components/CardList';
+@import './components/Loader';
+@import './components/Item';
 
 //
 // Utilities
 //
 
 @import './utilities/container';
+
+
+html {
+  overflow-x: hidden;
+}
