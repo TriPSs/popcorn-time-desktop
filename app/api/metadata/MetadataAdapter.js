@@ -16,14 +16,13 @@ type subtitlesType = {
   default: boolean
 };
 
-const subtitlesEndpoint =
-  'https://popcorn-time-api-server.herokuapp.com/subtitles';
+const subtitlesEndpoint = 'https://popcorn-time-api-server.herokuapp.com/subtitles';
 
 const openSubtitles = new OpenSubtitles({
   useragent: 'OSTestUserAgent',
-  username: '',
-  password: '',
-  ssl: true
+  username : '',
+  password : '',
+  ssl      : true
 });
 
 function MetadataAdapter() {
@@ -156,24 +155,22 @@ function getShows(...args: Array<string>) {
  * @param {string} filename
  * @param {object} metadata
  */
-async function getSubtitles(
-  imdbId: string,
-  filename: string,
-  length: number,
-  metadata: { season?: number, episode?: number, activeMode?: string } = {}
-): Promise<Array<subtitlesType>> {
+async function getSubtitles(imdbId: string,
+                            filename: string,
+                            length: number,
+                            metadata: { season?: number, episode?: number, activeMode?: string } = {}): Promise<Array<subtitlesType>> {
   const { activeMode } = metadata;
 
   const defaultOptions = {
     sublanguageid: 'eng',
     // sublanguageid: 'all', // @TODO
     // hash: '8e245d9679d31e12', // @TODO
-    filesize: length || undefined,
-    filename: filename || undefined,
-    season: metadata.season || undefined,
-    episode: metadata.episode || undefined,
-    extensions: ['srt', 'vtt'],
-    imdbid: imdbId
+    filesize     : length || undefined,
+    filename     : filename || undefined,
+    season       : metadata.season || undefined,
+    episode      : metadata.episode || undefined,
+    extensions   : ['srt', 'vtt'],
+    imdbid       : imdbId
   };
 
   const subtitles = (() => {
@@ -234,17 +231,15 @@ function recentlyWatched(...args) {
  * @param  {number} runtimeInMinutes
  * @return {object}
  */
-export function parseRuntimeMinutesToObject(
-  runtimeInMinutes: number
-): runtimeType {
-  const hours = runtimeInMinutes >= 60 ? Math.round(runtimeInMinutes / 60) : 0;
+export function parseRuntimeMinutesToObject(runtimeInMinutes: number): runtimeType {
+  const hours   = runtimeInMinutes >= 60 ? Math.round(runtimeInMinutes / 60) : 0;
   const minutes = runtimeInMinutes % 60;
 
   return {
     full: hours > 0
       ? `${hours} ${hours > 1 ? 'hours' : 'hour'}${minutes > 0
-          ? ` ${minutes} minutes`
-          : ''}`
+        ? ` ${minutes} minutes`
+        : ''}`
       : `${minutes} minutes`,
     hours,
     minutes
@@ -253,10 +248,10 @@ export function parseRuntimeMinutesToObject(
 
 function formatSubtitle(subtitle) {
   return {
-    kind: 'captions',
-    label: subtitle.langName,
+    kind   : 'captions',
+    label  : subtitle.langName,
     srclang: subtitle.lang,
-    src: `${subtitlesEndpoint}/${encodeURIComponent(subtitle.url)}`,
+    src    : `${subtitlesEndpoint}/${encodeURIComponent(subtitle.url)}`,
     default: subtitle.lang === 'en'
   };
 }

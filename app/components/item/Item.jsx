@@ -248,14 +248,12 @@ export default class Item extends Component {
       this.getItem(itemId).then((item: contentType) =>
         this.getTorrent(item.ids.imdbId, item.title, 1, 1)
       ),
+
       this.getSimilar(itemId)
     ]);
   }
 
-  async getShowData(type: string,
-                    imdbId: string,
-                    season?: number,
-                    episode?: number) {
+  async getShowData(type: string, imdbId: string, season?: number, episode?: number) {
     switch (type) {
       case 'seasons':
         this.setState({ seasons: [], episodes: [], episode: {} });

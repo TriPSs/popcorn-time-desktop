@@ -1,10 +1,10 @@
 // @flow
-import fetch from 'isomorphic-fetch';
 import axios from 'axios';
 import { parseRuntimeMinutesToObject } from './MetadataAdapter';
 import type { MetadataProviderInterface } from './MetadataProviderInterface';
 
 export default class TheMovieDbMetadataProvider implements MetadataProviderInterface {
+
   apiKey = '809858c82322872e2be9b2c127ccdcf7';
 
   imageUri = 'https://image.tmdb.org/t/p/';
@@ -154,11 +154,7 @@ export default class TheMovieDbMetadataProvider implements MetadataProviderInter
   provide() {}
 }
 
-function formatImage(
-  imageUri,
-  path: string,
-  size: string = 'original'
-): string {
+function formatImage(imageUri, path: string, size: string = 'original'): string {
   return `${imageUri}${size}/${path}`;
 }
 
@@ -172,9 +168,7 @@ function formatMetadata(item, type: string, imageUri: string, genres) {
     id: String(item.id),
     ids: {
       tmdbId: String(item.id),
-      imdbId:
-        item.imdb_id ||
-          (item.external_ids && item.external_ids.imdb_id
+      imdbId: item.imdb_id || (item.external_ids && item.external_ids.imdb_id
             ? item.external_ids.imdb_id
             : '')
     },
@@ -197,8 +191,7 @@ function formatMetadata(item, type: string, imageUri: string, genres) {
           hours: 'n/a',
           minutes: 'n/a'
         },
-    trailer: item.videos &&
-      item.videos.results &&
+    trailer: item.videos && item.videos.results &&
       item.videos.results.length > 0
       ? `http://youtube.com/watch?v=${item.videos.results[0].key}`
       : 'n/a',

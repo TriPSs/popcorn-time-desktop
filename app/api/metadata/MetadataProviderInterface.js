@@ -73,30 +73,31 @@ type optionsType = {
 };
 
 export interface MetadataProviderInterface {
-  getMovies: (
-    page: number,
-    limit: number,
-    options: optionsType
-  ) => Promise<contentType>,
+  getMovies: (page: number, limit: number, options: optionsType) => Promise<contentType>,
+
   getMovie: (itemId: string) => contentType,
+
   getShows: (page: number, limit: number) => Promise<contentType>,
+
   getShow: (itemId: string) => contentType,
-  getSimilar: (
-    type: string,
-    itemId: string,
-    limit: number
-  ) => Promise<Array<contentType>>,
+
+  getSimilar: (type: string, itemId: string, limit: number) => Promise<Array<contentType>>,
 
   supportedIdTypes: Array<'tmdb' | 'imdb'>,
 
   getSeasons: (itemId: string) => Promise<Array<seasonType>>,
+
   getSeason: (itemId: string, season: number) => Promise<episodeType>,
+
   getEpisode: (itemId: string, season: number, episode: number) => episodeType,
 
   search: (query: string, page: number) => Promise<Array<contentType>>,
 
   updateConfig: (type: string, method: string, metadata: contentType) => void,
+
   favorites: () => void,
+
   recentlyWatched: () => void,
+
   watchList: () => void
 }

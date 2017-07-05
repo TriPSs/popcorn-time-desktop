@@ -9,10 +9,10 @@ export type fetchType = {
 };
 
 export type torrentType = {
-  ...fetchType,
   health: healthType,
   quality: qualityType,
-  method: torrentQueryType
+  method: torrentQueryType,
+  ...fetchType,
 };
 
 export type healthType = 'poor' | 'decent' | 'healthy';
@@ -25,10 +25,10 @@ export type torrentQueryType = 'movies' | 'show' | 'season_complete';
 
 export interface TorrentProviderInterface {
   supportedIdTypes: Array<'tmdb' | 'imdb'>,
+
   static getStatus: () => Promise<boolean>,
+
   static fetch: (itemId: string) => Promise<Array<fetchType>>,
-  static provide: (
-    itemId: string,
-    type: torrentType
-  ) => Promise<Array<torrentType>>
+
+  static provide: (itemId: string, type: torrentType) => Promise<Array<torrentType>>
 }
