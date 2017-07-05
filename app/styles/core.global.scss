@@ -2,13 +2,8 @@
 // Modules
 //
 
-@import 'variables';
-
-//
-// Bootstrap
-// Core variables and mixins
-// @TODO: Import only boootstrap that are used
-//
+@import 'base/fonts';
+@import 'base/variables';
 
 @import '~bootstrap/scss/bootstrap.scss';
 @import '~ionicons-temp/scss/ionicons.scss';
@@ -30,7 +25,6 @@
 
 @import './utilities/container';
 
-
-html {
-  overflow-x: hidden;
+a {
+  text-decoration: none;
 }

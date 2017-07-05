@@ -11,6 +11,7 @@ const data   = fs.readFileSync('.env.example', { encoding: 'utf8' })
 const buffer = new Buffer(data)
 const flags  = Object.keys(dotenv.parse(buffer))
 
+
 export default {
   externals: Object.keys(externals || {}),
 

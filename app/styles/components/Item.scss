@@ -18,9 +18,9 @@
 	left: 0;
 	right: 0;
 	z-index: -100;
-	min-height: 500px;
+	min-height: 600px;
 	opacity: 1;
-	height: 500px;
+	height: 600px;
 	overflow: hidden;
   }
 
@@ -63,7 +63,7 @@
 
   // Some hacky plyr style overrides
   .plyr {
-	height: 500px;
+	height: 600px;
   }
 
   .plyr.col-sm-12 {
@@ -71,7 +71,8 @@
   }
 
   .plyr__video-wrapper.plyr__video-embed.plyr--setup {
-	padding: 250px 0;
+	padding: 0;
+	height: 100%;
   }
 
   .plyr--fullscreen-active.plyr {

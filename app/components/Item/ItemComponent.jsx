@@ -25,6 +25,7 @@ import type { torrentType, qualityType } from '../../api/torrents/TorrentProvide
 import ChromecastPlayerProvider from '../../api/players/ChromecastPlayerProvider'
 import type { deviceType } from '../../api/torrents/TorrentProviderInterface'
 import debug from 'debug'
+import classes from './Item.scss'
 
 const log = debug('app:item')
 
@@ -118,7 +119,9 @@ export default class Item extends Component {
 
     switch (player) {
       case 'youtube':
-        this.player.initYouTube(this.state.item.title, this.state.item.trailer)
+        const { item } = this.props
+
+        this.player.initYouTube(title, item.trailer)
         this.toggleActive()
         break
 
@@ -572,7 +575,7 @@ export default class Item extends Component {
 
   render() {
     const {
-            idealTorrent, servingUrl, torrentInProgress, fetchingTorrents,
+            servingUrl, torrentInProgress, fetchingTorrents,
             dropdownOpen, currentPlayer, seasons, selectedSeason, episodes, selectedEpisode,
             similarItems,
             similarLoading,
@@ -590,6 +593,8 @@ export default class Item extends Component {
 
     const torrent                   = item.torrents
     const torrentLoadingStatusStyle = { color: 'maroon' }
+
+    let idealTorrent = torrent['1080p']
 
     const statusColorStyle = {
       backgroundColor: (() => {
@@ -677,7 +682,7 @@ export default class Item extends Component {
                  </div>
                   : null}
                 <div className="col-sm-2">
-                  <a>
+                  <a className={classes['item-year']}>
                     {item.year}
                   </a>
                 </div>

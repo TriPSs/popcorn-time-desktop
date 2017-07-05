@@ -12,18 +12,18 @@ $enable-rounded: false;
 $enable-hover-media-query: true;
 
 $grid-breakpoints: (
-  xs: 0,
-  sm: 544px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px
+		xs: 0,
+		sm: 544px,
+		md: 768px,
+		lg: 992px,
+		xl: 1200px
 );
 
 $container-max-widths: (
-  sm: 576px,
-  md: 720px,
-  lg: 940px,
-  xl: 1200px
+		sm: 576px,
+		md: 720px,
+		lg: 940px,
+		xl: 1200px
 );
 
 // Input
@@ -35,16 +35,17 @@ $input-color: white;
 // Components
 $component-active-bg: gray;
 $container-max-widths: (
-  sm: 576px,
-  md: 720px,
-  lg: 1440px,
-  xl: 1540px
+		sm: 576px,
+		md: 720px,
+		lg: 1440px,
+		xl: 1540px
 ) !default;
 $headings-color: white;
 $navbar-dark-color: #848484;
 
 // Fonts
-$font-family-base: "Avenir Next", Avenir, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, sans-serif;
+$font-family-base: 'Roboto Condensed', sans-serif;
+$font-family-second: 'Roboto', sans-serif;
 $headings-font-weight: 400;
 
 .row-margin {

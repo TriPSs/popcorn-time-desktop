@@ -9,7 +9,7 @@ import type {
 } from './PlayerProviderInterface';
 
 
-const log = debug('app:player:chromecast')
+const log = debug('api:players:chromecast')
 
 type castv2DeviceType = {
   fullname: string,

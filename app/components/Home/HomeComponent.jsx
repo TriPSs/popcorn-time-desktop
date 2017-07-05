@@ -1,11 +1,13 @@
 // @flow
 /* eslint react/no-unused-prop-types: 0 */
 import React, { Component } from 'react'
+import classNames from 'classnames'
 import VisibilitySensor from 'react-visibility-sensor'
 
 import Butter from '../../api/Butter'
 import Header from '../header/Header'
 import CardList from '../CardList'
+import classes from './Home.scss'
 
 import type { Props } from './HomeTypes'
 
@@ -13,13 +15,10 @@ export default class Home extends Component {
 
   props: Props
 
-  butter: Butter
-
   didMount: boolean
 
   constructor(props: Props) {
     super(props)
-    this.butter = new Butter()
 
     // Temporary hack to preserve scroll position
     if (!global.pct) {
@@ -59,13 +58,13 @@ export default class Home extends Component {
     const items = await (async () => {
       switch (queryType) {
         case 'search':
-          return this.butter.search(activeModeOptions.searchQuery, page)
+          return Butter.search(activeModeOptions.searchQuery, page)
 
         case 'shows':
-          return this.butter.getShows(page, limit)
+          return Butter.getShows(page, limit)
 
         default:
-          return this.butter.getMovies(page, limit)
+          return Butter.getMovies(page, limit)
       }
     })()
 
@@ -123,7 +122,7 @@ export default class Home extends Component {
     this.didMount = false
     document.removeEventListener(
       'scroll',
-      this.initInfinitePagination
+      this.initInfinitePagination,
     )
   }
 
@@ -131,15 +130,13 @@ export default class Home extends Component {
     const { activeMode, setActiveMode, items, isLoading } = this.props
 
     return (
-      <div style={{ marginRight: -8 }}>
+      <div className={'container-fluid'}>
+
         <Header activeMode={activeMode} setActiveMode={setActiveMode} />
 
-        <div style={{ padding: 25 }}>
+        <CardList items={items} isLoading={isLoading} />
+        <VisibilitySensor onChange={this.onChange} />
 
-          <CardList items={items} isLoading={isLoading} />
-          <VisibilitySensor onChange={this.onChange} />
-
-        </div>
       </div>
     )
   }

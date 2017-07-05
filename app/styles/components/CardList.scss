@@ -13,14 +13,13 @@
   align-content: space-between;
   flex-flow: row wrap;
   text-align: left;
-  padding: 30px 0;
 
   .Card {
     border: 2px solid transparent;
-    max-width: 220px;
-    min-width: 200px;
+    max-width: 150px;
+    min-width: 140px;
     width: 100%;
-    margin: 10px 0;
+    margin: 10px;
     overflow: hidden;
     position: relative;
 
@@ -29,7 +28,7 @@
     }
 
     .Card--descrption {
-      padding: 10px;
+      padding: 10px 0;
 
       .Card--title {
         color: $card-list-color;
@@ -60,7 +59,7 @@
 
     .Card--overlay-container {
       width: 100%;
-      height: 300px;
+      height: 220px;
       position: relative;
       background-color: #373737;
       background-repeat: no-repeat;

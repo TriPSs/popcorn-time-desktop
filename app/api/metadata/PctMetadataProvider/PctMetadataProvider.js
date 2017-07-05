@@ -33,11 +33,13 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
   )
 
   getShows = (page: number = 1, limit: number = 50) => (
-    this.popcornAPI.get(`shows/${page}`, { params: { page, limit } }).then(this.formatShows)
+    this.popcornAPI.get(`shows/${page}`, { params: { page, limit } })
+        .then(response => this.formatShows(response.data))
   )
 
   getShow = (itemId: string) => (
-    this.popcornAPI.get(`show/${itemId}`).then(this.formatShows)
+    this.popcornAPI.get(`show/${itemId}`)
+        .then(response => this.formatShow(response.data))
   )
 
   formatMovies = (movies: Array<movieType>) => (movies.map((movie: movieType) => this.formatMovie(movie)))

@@ -1,12 +1,14 @@
 // @flow
-import { remote } from 'electron';
-import plyr from 'plyr';
-import childProcess from 'child_process';
+import { remote } from 'electron'
+import plyr from 'plyr'
+import childProcess from 'child_process'
 import network from 'network-address'
-import vlcCommand from 'vlc-command';
-import ChromecastPlayerProvider from './players/ChromecastPlayerProvider';
+import vlcCommand from 'vlc-command'
+import ChromecastPlayerProvider from './players/ChromecastPlayerProvider'
+import debug from 'debug'
 
-const { powerSaveBlocker } = remote;
+const log                  = debug('api:player')
+const { powerSaveBlocker } = remote
 
 type metadataType = {
   poster?: string
@@ -14,14 +16,14 @@ type metadataType = {
 
 export default class Player {
 
-  currentPlayer = 'plyr';
+  currentPlayer = 'plyr'
 
-  powerSaveBlockerId: number;
+  powerSaveBlockerId: number
 
   /**
    * @private
    */
-  player: plyr;
+  player: plyr
 
   static nativePlaybackFormats = [
     'mp4',
@@ -31,19 +33,20 @@ export default class Player {
     'mkv',
     'wmv',
     'avi'
-  ];
+  ]
 
-  static experimentalPlaybackFormats = [];
+  static experimentalPlaybackFormats = []
 
   /**
    * Cleanup all traces of the player UI
    */
   destroy() {
     if (this.powerSaveBlockerId) {
-      powerSaveBlocker.stop(this.powerSaveBlockerId);
+      powerSaveBlocker.stop(this.powerSaveBlockerId)
     }
+
     if (this.player) {
-      this.player.destroy();
+      this.player.destroy()
     }
   }
 
@@ -51,29 +54,26 @@ export default class Player {
    * restart they player's state
    */
   restart() {
-    this.player.restart();
+    this.player.restart()
   }
 
-  static isFormatSupported(filename: string,
-                           mimeTypes: Array<string>): boolean {
+  static isFormatSupported(filename: string, mimeTypes: Array<string>): boolean {
     return !!mimeTypes.find(mimeType =>
-      filename.toLowerCase().includes(mimeType)
-    );
+      filename.toLowerCase().includes(mimeType),
+    )
   }
 
   initYouTube(itemTitle: string, source: string) {
-    console.info('Initializing plyr...');
-    this.currentPlayer = 'plyr';
+    log('Initializing plyr...')
+    this.currentPlayer = 'plyr'
 
-    this.player =
-      this.player ||
-      plyr.setup({
+    this.player = this.player || plyr.setup({
         volume         : 10,
         autoplay       : true,
-        showPosterOnEnd: true
-      })[0];
+        showPosterOnEnd: true,
+      })[0]
 
-    const player = this.player;
+    const player = this.player
 
     player.source({
       title  : `${itemTitle} Trailer`,
@@ -81,32 +81,32 @@ export default class Player {
       sources: [
         {
           src : source,
-          type: 'youtube'
-        }
-      ]
-    });
+          type: 'youtube',
+        },
+      ],
+    })
 
-    return player;
+    return player
   }
 
   async initCast(provider: ChromecastPlayerProvider, streamingUrl: string, item) {
-    const addr = streamingUrl.replace('localhost', network());
+    const addr = streamingUrl.replace('localhost', network())
 
-    return provider.play(addr, item);
+    return provider.play(addr, item)
   }
 
   initPlyr(streamingUrl: string, metadata: metadataType = {}): plyr {
-    console.info('Initializing plyr...');
-    this.currentPlayer      = 'plyr';
-    this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension');
+    console.info('Initializing plyr...')
+    this.currentPlayer      = 'plyr'
+    this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension')
 
     this.player = this.player || plyr.setup({
         volume         : 10,
         autoplay       : true,
         showPosterOnEnd: true
-      })[0];
+      })[0]
 
-    const player = this.player;
+    const player = this.player
 
     player.source({
       type   : 'video',
@@ -117,36 +117,36 @@ export default class Player {
         }
       ],
       ...metadata
-    });
+    })
 
     if (metadata.poster) {
-      player.poster(metadata.poster);
+      player.poster(metadata.poster)
     }
 
-    return player;
+    return player
   }
 
   initVLC(servingUrl: string) {
     vlcCommand((error, cmd: string) => {
-      if (error) return console.error('Could not find vlc command path');
+      if (error) return console.error('Could not find vlc command path')
 
       if (process.platform === 'win32') {
         childProcess.execFile(cmd, [servingUrl], (_error, stdout) => {
-          if (_error) return console.error(_error);
-          return console.log(stdout);
-        });
+          if (_error) return console.error(_error)
+          return console.log(stdout)
+        })
       } else {
         childProcess.exec(`${cmd} ${servingUrl}`, (_error, stdout) => {
-          if (_error) return console.error(_error);
-          return console.log(stdout);
-        });
+          if (_error) return console.error(_error)
+          return console.log(stdout)
+        })
       }
 
       this.powerSaveBlockerId = powerSaveBlocker.start(
         'prevent-app-suspension'
-      );
+      )
 
-      return true;
-    });
+      return true
+    })
   }
 }

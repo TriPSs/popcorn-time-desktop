@@ -7,7 +7,7 @@ import WebTorrent from 'webtorrent';
 import debug from 'debug'
 import { isExactEpisode } from './torrents/BaseTorrentProvider';
 
-const log  = debug('app:torrent')
+const log  = debug('api:torrent')
 const port = 9091;
 
 type metadataType = {

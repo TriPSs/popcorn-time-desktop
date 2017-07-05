@@ -227,7 +227,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
-    "bootstrap": "4.0.0-alpha.2",
+    "bootstrap": "4.0.0-alpha.4",
     "debug": "^2.6.8",
     "isomorphic-fetch": "2.2.1",
     "network-address": "1.1.2",

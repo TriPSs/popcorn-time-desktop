@@ -3,6 +3,9 @@
  * @flow
  */
 import React from 'react'
+
+import classes from './CardList.scss'
+
 import Card from './Card'
 import Loader from '../loader/Loader'
 import type { contentType } from '../../api/metadata/MetadataProviderInterface'
@@ -20,7 +23,7 @@ export default function CardList(props: Props) {
 
   return (
     <div className="row">
-      <div className="col-sm-12">
+      <div className="col-12">
         {title && (
           <h4 className="CardList--header">
             {title}
@@ -29,7 +32,7 @@ export default function CardList(props: Props) {
 
         <div className="CardList">
           {(limit ? items.filter((e, i) => i < limit) : items).map(item =>
-            <Card image={item.images.poster}
+            <Card image={item.images.poster.thumb}
                   title={item.title}
                   id={item.id}
                   key={item.id}
@@ -41,7 +44,7 @@ export default function CardList(props: Props) {
         </div>
       </div>
 
-      <div className="col-sm-12">
+      <div className="col-12">
         <Loader {...{ isLoading, isFinished }} />
       </div>
     </div>
