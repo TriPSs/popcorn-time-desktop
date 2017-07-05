@@ -155,9 +155,7 @@ function getShows(...args: Array<string>) {
  * @param {string} filename
  * @param {object} metadata
  */
-async function getSubtitles(imdbId: string,
-                            filename: string,
-                            length: number,
+async function getSubtitles(imdbId: string, filename: string, length: number,
                             metadata: { season?: number, episode?: number, activeMode?: string } = {}): Promise<Array<subtitlesType>> {
   const { activeMode } = metadata;
 
@@ -241,8 +239,13 @@ export function parseRuntimeMinutesToObject(runtimeInMinutes: number): runtimeTy
         ? ` ${minutes} minutes`
         : ''}`
       : `${minutes} minutes`,
+    short: hours > 0
+      ? `${hours} ${hours > 1 ? 'hrs' : 'hr'}${minutes > 0
+        ? ` ${minutes} min`
+        : ''}`
+      : `${minutes} min`,
     hours,
-    minutes
+    minutes,
   };
 }
 

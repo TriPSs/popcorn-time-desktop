@@ -6,24 +6,24 @@ export type fetchType = {
   leechers: number,
   metadata: string,
   _provider: string
-};
+}
 
-export type torrentType = {
+export type torrentType = fetchType & {
   health: healthType,
   quality: qualityType,
   method: torrentQueryType,
-  ...fetchType,
-};
+}
 
-export type healthType = 'poor' | 'decent' | 'healthy';
+export type healthType = 'poor' | 'decent' | 'healthy'
 
-export type torrentMethodType = 'all' | 'race';
+export type torrentMethodType = 'all' | 'race'
 
-export type qualityType = '1080p' | '720p' | '480p' | 'default';
+export type qualityType = '1080p' | '720p' | '480p' | 'default'
 
-export type torrentQueryType = 'movies' | 'show' | 'season_complete';
+export type torrentQueryType = 'movies' | 'show' | 'season_complete'
 
 export interface TorrentProviderInterface {
+
   supportedIdTypes: Array<'tmdb' | 'imdb'>,
 
   static getStatus: () => Promise<boolean>,
@@ -31,4 +31,5 @@ export interface TorrentProviderInterface {
   static fetch: (itemId: string) => Promise<Array<fetchType>>,
 
   static provide: (itemId: string, type: torrentType) => Promise<Array<torrentType>>
+
 }

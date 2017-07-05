@@ -2,9 +2,9 @@
  * Card in the CardList component
  * @flow
  */
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Rating from './Rating.jsx';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import Rating from './Rating'
 
 type Props = {
   title: string,
@@ -16,15 +16,15 @@ type Props = {
 };
 
 export default function Card(props: Props) {
-  const { type, image, id, rating, title, starColor } = props;
+  const { type, image, id, rating, title, starColor } = props
 
   const placeholder = process.env.NODE_ENV === 'production'
     ? './images/posterholder.png'
-    : './app/images/posterholder.png';
+    : './app/images/posterholder.png'
 
   const backgroundImageStyle = {
     backgroundImage: `url(${image !== 'n/a' ? image : placeholder})`
-  };
+  }
 
   return (
     <div className="Card">
@@ -44,14 +44,14 @@ export default function Card(props: Props) {
         </div>
         {type === 'search'
           ? <div>
-              Kind: {type}
-            </div>
+           Kind: {type}
+         </div>
           : null}
       </div>
     </div>
-  );
+  )
 }
 
 Card.defaultProps = {
   starColor: '#848484'
-};
+}

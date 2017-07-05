@@ -9,4 +9,6 @@ API 2 ( For TV ?)
 
 
 ### TODO::
-Get collections from the API above then for the detail page use  
+Get collections from the API above then for the detail page use TheMovieDBMetadata
+
+Merge TheMovieDBMetadata and above API and when the episode does not have a magnet search for one

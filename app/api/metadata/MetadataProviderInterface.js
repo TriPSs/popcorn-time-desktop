@@ -30,20 +30,16 @@ export type runtimeType = {
 export type certificationType = 'G' | 'PG' | 'PG-13' | 'R' | 'n/a';
 
 export type imagesType = {
-  fanart:
-    | {}
-    | {
-        full: string,
-        medium: string,
-        thumb: string
-      },
-  poster:
-    | {}
-    | {
-        full: string,
-        medium: string,
-        thumb: string
-      }
+  fanart: ?{
+    full: string,
+    medium: string,
+    thumb: string
+  },
+  poster: ?{
+    full: string,
+    medium: string,
+    thumb: string
+  }
 };
 
 export type contentType = {
@@ -73,6 +69,7 @@ type optionsType = {
 };
 
 export interface MetadataProviderInterface {
+
   getMovies: (page: number, limit: number, options: optionsType) => Promise<contentType>,
 
   getMovie: (itemId: string) => contentType,
@@ -81,23 +78,28 @@ export interface MetadataProviderInterface {
 
   getShow: (itemId: string) => contentType,
 
-  getSimilar: (type: string, itemId: string, limit: number) => Promise<Array<contentType>>,
+  provide: (itemId: string, type: string) => Promise<Array<torrentType>>,
 
-  supportedIdTypes: Array<'tmdb' | 'imdb'>,
+  getStatus: () => Promise<boolean>,
 
-  getSeasons: (itemId: string) => Promise<Array<seasonType>>,
+  // getSimilar: (type: string, itemId: string, limit: number) => Promise<Array<contentType>>,
 
-  getSeason: (itemId: string, season: number) => Promise<episodeType>,
+  // supportedIdTypes: Array<'tmdb' | 'imdb'>,
 
-  getEpisode: (itemId: string, season: number, episode: number) => episodeType,
+  // getSeasons: (itemId: string) => Promise<Array<seasonType>>,
 
-  search: (query: string, page: number) => Promise<Array<contentType>>,
+  // getSeason: (itemId: string, season: number) => Promise<episodeType>,
 
-  updateConfig: (type: string, method: string, metadata: contentType) => void,
+  // getEpisode: (itemId: string, season: number, episode: number) => episodeType,
 
-  favorites: () => void,
+  // search: (query: string, page: number) => Promise<Array<contentType>>,
 
-  recentlyWatched: () => void,
+  // updateConfig: (type: string, method: string, metadata: contentType) => void,
 
-  watchList: () => void
+  // favorites: () => void,
+
+  // recentlyWatched: () => void,
+
+  // watchList: () => void
+
 }

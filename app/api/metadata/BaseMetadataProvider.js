@@ -3,6 +3,7 @@ import { set, get } from '../../utils/Config';
 import type { contentType } from './MetadataProviderInterface';
 
 export default class BaseMetadataProvider {
+
   /**
    * Temporarily store the 'favorites', 'recentlyWatched', 'watchList' items
    * in config file. The cache can't be used because this data needs to be
@@ -39,4 +40,5 @@ export default class BaseMetadataProvider {
   watchList(...args) {
     return this.updateConfig('watchList', ...args);
   }
+
 }

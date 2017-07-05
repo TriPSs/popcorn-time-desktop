@@ -51,10 +51,10 @@ export interface PlayerProviderInterface {
   /**
    * Handle any logic to remove the traces of the player from memory
    */
-  destroy: () => Promise<void>,
+    destroy: () => Promise<void>,
 
   /**
    * Check if the plugin is supported on the machine
    */
-  isSupported: () => Promise<boolean>
+    isSupported: () => Promise<boolean>
 }

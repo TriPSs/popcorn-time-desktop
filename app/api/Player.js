@@ -13,6 +13,7 @@ type metadataType = {
 };
 
 export default class Player {
+
   currentPlayer = 'plyr';
 
   powerSaveBlockerId: number;

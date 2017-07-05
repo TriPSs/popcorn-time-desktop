@@ -9,6 +9,7 @@ import type {
 } from './PlayerProviderInterface';
 
 export default class PlayerAdapter {
+
   providers: Array<PlayerProviderInterface> = [new ChromecastPlayerProvider()];
 
   devices: Array<deviceType>;

@@ -1,6 +1,6 @@
 // @flow
 
-import type { contentType } from '../../api/metadata/MetadataProviderInterface';
+import type { contentType } from '../../api/metadata/MetadataProviderInterface'
 
 export type activeModeOptionsType = {
   searchQuery: ? string,
@@ -10,12 +10,12 @@ export type activeModeOptionsType = {
 export type itemType = contentType;
 
 export type Props = {
-  actions: {
-    setActiveMode: (mode: string, activeModeOptions: ?activeModeOptionsType) => void,
-    paginate: (activeMode: string, activeModeOptions: ?activeModeOptionsType) => void,
-    clearAllItems: () => void,
-    setLoading: (isLoading: boolean) => void
-  },
+
+  setActiveMode: (mode: string, activeModeOptions: ?activeModeOptionsType) => void,
+  paginate: (activeMode: string, activeModeOptions: ?activeModeOptionsType) => void,
+  clearAllItems: () => void,
+  setLoading: (isLoading: boolean) => void,
+
   activeMode: string,
   activeModeOptions: activeModeOptionsType,
   modes: {
@@ -32,6 +32,7 @@ export type Props = {
       }
     }
   },
+
   items: Array<itemType>,
   isLoading: boolean,
   infinitePagination: boolean

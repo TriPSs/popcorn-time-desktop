@@ -1,28 +1,26 @@
-// @flow
-import React from 'react';
-import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import Root from './containers/Root.jsx';
-import { configureStore, history } from './store/configureStore';
-import './styles/main.scss';
+import React from 'react'
+import { render as renderDOM } from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
 
-const store = configureStore();
+import Root from './containers/Root'
+import { configureStore, history } from './store/configureStore'
+import './styles/main.scss'
 
-render(
-  <AppContainer>
+const store = configureStore()
+
+const render = (Container = AppContainer) => renderDOM(
+  <Container>
     <Root store={store} history={history} />
-  </AppContainer>,
-  document.getElementById('root')
-);
+  </Container>,
+  document.getElementById('root'),
+)
 
 if (module.hot) {
-  module.hot.accept('./containers/Root.jsx', () => {
-    const NextRoot = require('./containers/Root.jsx'); // eslint-disable-line global-require
-    render(
-      <AppContainer>
-        <NextRoot store={store} history={history} />
-      </AppContainer>,
-      document.getElementById('root')
-    );
-  });
+  module.hot.accept('./containers/Root', () => {
+    const NextRoot = require('./containers/Root') // eslint-disable-line global-require
+
+    render(NextRoot)
+  })
 }
+
+render()

@@ -17,6 +17,7 @@ type metadataType = {
 };
 
 export default class Torrent {
+
   inProgress: boolean = false;
 
   finished: boolean = false;
@@ -186,13 +187,7 @@ type torrentSpeedsType = {
 };
 
 export function formatSpeeds(torrentSpeeds: torrentSpeedsType): torrentSpeedsType {
-  const {
-          downloadSpeed,
-          uploadSpeed,
-          progress,
-          numPeers,
-          ratio
-        } = torrentSpeeds;
+  const { downloadSpeed, uploadSpeed, progress, numPeers, ratio } = torrentSpeeds;
 
   return {
     downloadSpeed: downloadSpeed / 1000000,

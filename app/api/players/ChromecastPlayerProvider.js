@@ -21,6 +21,7 @@ type castv2DeviceType = {
 };
 
 class ChromecastPlayerProvider implements PlayerProviderInterface {
+
   provider = 'Chromecast';
 
   providerId = 'chromecast';
@@ -91,10 +92,11 @@ class ChromecastPlayerProvider implements PlayerProviderInterface {
             reject(error);
           }
 
+          // on close
+
           player.on('status', (status) => {
             log('Status broadcast playerState=%s', status.playerState);
           })
-
 
           const media = {
             // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.

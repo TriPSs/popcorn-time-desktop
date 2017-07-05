@@ -74,9 +74,11 @@ export function determineQuality(magnet: string, metadata: string = ''): string 
 export async function convertTmdbToImdb(tmdbId: string): Promise<string> {
   const theMovieDbProvider = new TheMovieDbMetadataProvider();
   const movie              = await theMovieDbProvider.getMovie(tmdbId);
+
   if (!movie.ids.imdbId) {
     throw new Error('Cannot convert tmdbId to imdbId');
   }
+
   return movie.ids.imdbId;
 }
 
