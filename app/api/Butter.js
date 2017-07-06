@@ -11,20 +11,20 @@ export class Butter {
 
   metadata: MetadataAdapter
 
-  pctAdater: PctMetadataProvider
+  pctAdapter: PctMetadataProvider
 
   constructor() {
-    this.metadata  = MetadataAdapter
-    this.pctAdater = new PctMetadataProvider()
+    this.metadata   = MetadataAdapter
+    this.pctAdapter = new PctMetadataProvider()
   }
 
-  getMovies = (page: number = 1, limit: number = 50) => this.pctAdater.getMovies(page, limit)
+  getMovies = (page: number = 1, limit: number = 50) => this.pctAdapter.getMovies(page, limit)
 
-  getMovie = (itemId: string) => this.pctAdater.getMovie(itemId)
+  getMovie = (itemId: string) => this.pctAdapter.getMovie(itemId)
 
-  getShows = (page: number = 1, limit: number = 50) => this.pctAdater.getShows(page, limit)
+  getShows = (page: number = 1, limit: number = 50) => this.pctAdapter.getShows(page, limit)
 
-  getShow = (itemId: string) => this.pctAdater.getShow(itemId)
+  getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
 
   searchTorrent = (itemId: string, type: string) => {
     return TorrentAdapter(itemId, type, {}, false)

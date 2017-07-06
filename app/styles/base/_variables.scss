@@ -75,6 +75,14 @@ $headings-font-weight: 400;
 // Card list
 $card-list-color: #848484;
 
+// Card
+$card-max-with: 295px;
+$card-min-with: 275px;
+$card-max-height: 190px;
+$card-min-height: 170px;
+$card-title-color: $card-list-color;
+$card-title-color-hover: darken($card-list-color, 20%);
+
 // Notie
 $notie-font-size-big: 18px;
 $notie-font-size-small: 18px;

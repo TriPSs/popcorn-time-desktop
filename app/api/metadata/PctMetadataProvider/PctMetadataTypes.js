@@ -1,11 +1,11 @@
 // @flow
-export type imageType = {
+export type ImageType = {
   poster: string,
   fanart: string,
   banner: string,
 }
 
-export type ratingType = {
+export type RatingType = {
   percentage: number,
   watching: number,
   votes: number,
@@ -13,7 +13,7 @@ export type ratingType = {
   hated: number,
 }
 
-export type movieType = {
+export type MovieType = {
   _id: string,
   imdb_id: string,
   title: string,
@@ -25,16 +25,16 @@ export type movieType = {
   certification: string,
   torrents: {
     en: {
-      '1080p': torrentType,
-      '720p': torrentType,
+      '1080p': TorrentType,
+      '720p': TorrentType,
     }
   },
   genres: Array<string>
-  images: imageType,
-  rating: ratingType
+  images: ImageType,
+  rating: RatingType
 }
 
-export type showType = {
+export type ShowType = {
   _id: string,
   imdb_id: string,
   tvdb_id: string,
@@ -42,11 +42,11 @@ export type showType = {
   year: string,
   slug: string,
   num_seasons: number,
-  images: imageType,
-  rating: ratingType
+  images: ImageType,
+  rating: RatingType
 }
 
-export type showDetailType = showType & {
+export type ShowDetailType = ShowType & {
   synopsis: string,
   runtime: string,
   country: string,
@@ -60,7 +60,7 @@ export type showDetailType = showType & {
   genres: Array<string>
 }
 
-export type torrentType = {
+export type TorrentType = {
   url: string,
   seed: number,
   peer: number,

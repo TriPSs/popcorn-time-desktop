@@ -15,6 +15,17 @@
     "browser": true,
     "node": true
   },
+  "globals" : {
+    "__DEV__"      : false,
+    "__PROD__"     : false,
+    "__DEBUG__"    : false,
+    "__COVERAGE__" : false,
+    "__BASENAME__" : false,
+    "__IMG__"      : false,
+    "__API__"      : false,
+    "NODE_ENV"     : false,
+    "DEBUG_PROD"   : false
+  },
   "rules": {
     // ESLint Rules
     "no-console": 2,
@@ -125,7 +136,6 @@
     "jsx-a11y/no-access-key": [2],
 
     "class-methods-use-this": "off",
-    "flowtype/boolean-style": ["error", "boolean"],
     "fp/no-arguments": "off",
     "fp/no-class": "off",
     "fp/no-delete": "off",

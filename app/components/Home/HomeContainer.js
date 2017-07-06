@@ -8,12 +8,11 @@ import * as Selectors from './HomeSelectors'
 import Home from './HomeComponent'
 
 export const mapStateToProps = state => ({
-  activeMode        : Selectors.getActiveMode(state),
-  activeModeOptions : Selectors.getActiveModeOptions(state),
-  modes             : Selectors.getModes(state),
-  items             : Selectors.getItems(state),
-  isLoading         : Selectors.getIsLoading(state),
-  infinitePagination: false,
+  activeMode       : Selectors.getActiveMode(state),
+  activeModeOptions: Selectors.getActiveModeOptions(state),
+  modes            : Selectors.getModes(state),
+  items            : Selectors.getItems(state),
+  isLoading        : Selectors.getIsLoading(state),
 })
 
 export default connect(mapStateToProps, { ...Actions })(Home)

@@ -22,10 +22,8 @@ export function getItem(itemId, activeMode) {
 
     switch (activeMode) {
       case 'movie':
-        getMovie(itemId).then(movie => {
-          dispatch(fetchedItem(movie))
-        })
-        break;
+        getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
+        break
 
       case 'show':
         return dispatch(fetchedItem(getShow(itemId)))
@@ -34,6 +32,7 @@ export function getItem(itemId, activeMode) {
         return null
     }
 
+    return null
   }
 }
 

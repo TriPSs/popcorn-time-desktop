@@ -6,6 +6,7 @@
 @import 'base/variables';
 
 @import '~bootstrap/scss/bootstrap.scss';
+@import '~animate.css';
 @import '~ionicons-temp/scss/ionicons.scss';
 @import '~plyr/src/scss/plyr.scss';
 @import '~notie/src/notie.scss';
@@ -14,9 +15,9 @@
 // Components
 //
 
+@import './components/stars';
+
 @import './components/Movie';
-@import './components/CardList';
-@import './components/Loader';
 @import './components/Item';
 
 //

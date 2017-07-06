@@ -1,0 +1,45 @@
+@import 'base/variables';
+
+.card {
+  border: 2px solid transparent;
+  max-width: $card-max-with;
+  min-width: $card-min-with;
+  width: 100%;
+  max-height: $card-max-height;
+  min-height: $card-min-height;
+  height: 100%;
+  margin: 10px;
+  overflow: hidden;
+  position: relative;
+
+  &__description {
+	height: 25px;
+	line-height: 25px;
+	display: flex;
+
+	:global {
+	  .dv-star-rating {
+		width: 150px;
+	  }
+	}
+  }
+
+  &__title {
+	color: $card-title-color;
+	white-space: nowrap;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	&:hover {
+	  color: $card-title-color-hover;
+	  text-decoration: none;
+	}
+  }
+
+  img {
+	width: 100%;
+	height: 100%;
+	border-radius: 10px;
+  }
+}

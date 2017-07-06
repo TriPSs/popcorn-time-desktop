@@ -2,11 +2,11 @@
  * Resolve requests from cache
  * @flow
  */
-import OpenSubtitles from 'opensubtitles-api';
-import { merge, resolveCache, setCache } from '../torrents/BaseTorrentProvider';
-import TheMovieDbMetadataProvider from './TheMovieDBMetadataProvider';
+import OpenSubtitles from 'opensubtitles-api'
+import { merge, resolveCache, setCache } from '../torrents/BaseTorrentProvider'
+import TheMovieDbMetadataProvider from './TheMovieDBMetadataProvider'
 // import TraktMetadataProvider from './TraktMetadataProvider';
-import type { runtimeType } from './MetadataProviderInterface';
+import type { runtimeType } from './MetadataProviderInterface'
 
 type subtitlesType = {
   kind: 'captions',
@@ -16,37 +16,37 @@ type subtitlesType = {
   default: boolean
 };
 
-const subtitlesEndpoint = 'https://popcorn-time-api-server.herokuapp.com/subtitles';
+const subtitlesEndpoint = 'https://popcorn-time-api-server.herokuapp.com/subtitles'
 
 const openSubtitles = new OpenSubtitles({
   useragent: 'OSTestUserAgent',
   username : '',
   password : '',
   ssl      : true
-});
+})
 
 function MetadataAdapter() {
   return [
     // new TraktMetadataProvider(),
     new TheMovieDbMetadataProvider()
-  ];
+  ]
 }
 
 async function interceptAndHandleRequest(method: string, args: Array<string>) {
-  const key = JSON.stringify(method) + JSON.stringify(args);
+  const key = JSON.stringify(method) + JSON.stringify(args)
 
   if (resolveCache(key)) {
-    return Promise.resolve(resolveCache(key));
+    return Promise.resolve(resolveCache(key))
   }
 
   const results = await Promise.all(
     MetadataAdapter().map(provider => provider[method].apply(provider, args)) // eslint-disable-line
-  );
+  )
 
-  const mergedResults = merge(results);
-  setCache(key, mergedResults);
+  const mergedResults = merge(results)
+  setCache(key, mergedResults)
 
-  return mergedResults;
+  return mergedResults
 }
 
 /**
@@ -58,7 +58,7 @@ async function interceptAndHandleRequest(method: string, args: Array<string>) {
  * @param {string} sortBy
  */
 function search(...args: Array<string>) {
-  return interceptAndHandleRequest('search', args);
+  return interceptAndHandleRequest('search', args)
 }
 
 /**
@@ -67,7 +67,7 @@ function search(...args: Array<string>) {
  * @param {string} itemId
  */
 function getMovie(...args: Array<string>) {
-  return interceptAndHandleRequest('getMovie', args);
+  return interceptAndHandleRequest('getMovie', args)
 }
 
 /**
@@ -79,7 +79,7 @@ function getMovie(...args: Array<string>) {
  * @param {string} sortBy
  */
 function getMovies(...args: Array<string>) {
-  return interceptAndHandleRequest('getMovies', args);
+  return interceptAndHandleRequest('getMovies', args)
 }
 
 /**
@@ -90,7 +90,7 @@ function getMovies(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getSimilar(...args: Array<string>) {
-  return interceptAndHandleRequest('getSimilar', args);
+  return interceptAndHandleRequest('getSimilar', args)
 }
 
 /**
@@ -101,7 +101,7 @@ function getSimilar(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getSeason(...args: Array<string>) {
-  return interceptAndHandleRequest('getSeason', args);
+  return interceptAndHandleRequest('getSeason', args)
 }
 
 /**
@@ -112,7 +112,7 @@ function getSeason(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getSeasons(...args: Array<string>) {
-  return interceptAndHandleRequest('getSeasons', args);
+  return interceptAndHandleRequest('getSeasons', args)
 }
 
 /**
@@ -123,7 +123,7 @@ function getSeasons(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getEpisode(...args: Array<string>) {
-  return interceptAndHandleRequest('getEpisode', args);
+  return interceptAndHandleRequest('getEpisode', args)
 }
 
 /**
@@ -134,7 +134,7 @@ function getEpisode(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getShow(...args: Array<string>) {
-  return interceptAndHandleRequest('getShow', args);
+  return interceptAndHandleRequest('getShow', args)
 }
 
 /**
@@ -145,7 +145,7 @@ function getShow(...args: Array<string>) {
  * @param {number} limit  | movie or show
  */
 function getShows(...args: Array<string>) {
-  return interceptAndHandleRequest('getShows', args);
+  return interceptAndHandleRequest('getShows', args)
 }
 
 /**
@@ -157,7 +157,7 @@ function getShows(...args: Array<string>) {
  */
 async function getSubtitles(imdbId: string, filename: string, length: number,
                             metadata: { season?: number, episode?: number, activeMode?: string } = {}): Promise<Array<subtitlesType>> {
-  const { activeMode } = metadata;
+  const { activeMode } = metadata
 
   const defaultOptions = {
     sublanguageid: 'eng',
@@ -169,25 +169,25 @@ async function getSubtitles(imdbId: string, filename: string, length: number,
     episode      : metadata.episode || undefined,
     extensions   : ['srt', 'vtt'],
     imdbid       : imdbId
-  };
+  }
 
   const subtitles = (() => {
     switch (activeMode) {
       case 'shows': {
-        const { season, episode } = metadata;
+        const { season, episode } = metadata
         return openSubtitles.search({
           ...defaultOptions,
           ...{ season, episode }
-        });
+        })
       }
       default:
-        return openSubtitles.search(defaultOptions);
+        return openSubtitles.search(defaultOptions)
     }
-  })();
+  })()
 
   return subtitles.then(res =>
     Object.values(res).map(subtitle => formatSubtitle(subtitle))
-  );
+  )
 }
 
 /**
@@ -198,7 +198,7 @@ async function getSubtitles(imdbId: string, filename: string, length: number,
  * @param {object} metadata | 'id', Required only remove
  */
 function favorites(...args: Array<string>) {
-  return interceptAndHandleRequest('favorites', args);
+  return interceptAndHandleRequest('favorites', args)
 }
 
 /**
@@ -209,7 +209,7 @@ function favorites(...args: Array<string>) {
  * @param {object} metadata | 'id', Required only remove
  */
 function watchList(...args: Array<string>) {
-  return interceptAndHandleRequest('watchList', args);
+  return interceptAndHandleRequest('watchList', args)
 }
 
 /**
@@ -220,7 +220,7 @@ function watchList(...args: Array<string>) {
  * @param {object} metadata | 'id', Required only remove
  */
 function recentlyWatched(...args) {
-  return interceptAndHandleRequest('recentlyWatched', args);
+  return interceptAndHandleRequest('recentlyWatched', args)
 }
 
 /**
@@ -230,11 +230,11 @@ function recentlyWatched(...args) {
  * @return {object}
  */
 export function parseRuntimeMinutesToObject(runtimeInMinutes: number): runtimeType {
-  const hours   = runtimeInMinutes >= 60 ? Math.round(runtimeInMinutes / 60) : 0;
-  const minutes = runtimeInMinutes % 60;
+  const hours   = runtimeInMinutes >= 60 ? Math.round(runtimeInMinutes / 60) : 0
+  const minutes = runtimeInMinutes % 60
 
   return {
-    full: hours > 0
+    full : hours > 0
       ? `${hours} ${hours > 1 ? 'hours' : 'hour'}${minutes > 0
         ? ` ${minutes} minutes`
         : ''}`
@@ -246,7 +246,7 @@ export function parseRuntimeMinutesToObject(runtimeInMinutes: number): runtimeTy
       : `${minutes} min`,
     hours,
     minutes,
-  };
+  }
 }
 
 function formatSubtitle(subtitle) {
@@ -256,7 +256,7 @@ function formatSubtitle(subtitle) {
     srclang: subtitle.lang,
     src    : `${subtitlesEndpoint}/${encodeURIComponent(subtitle.url)}`,
     default: subtitle.lang === 'en'
-  };
+  }
 }
 
 export default {
@@ -272,5 +272,5 @@ export default {
   getSubtitles,
   favorites,
   watchList,
-  recentlyWatched
-};
+  recentlyWatched,
+}

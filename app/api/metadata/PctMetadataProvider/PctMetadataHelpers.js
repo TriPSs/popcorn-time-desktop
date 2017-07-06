@@ -1,6 +1,6 @@
-import type { imageType, torrentType } from './PctMetadataTypes'
+import type { ImageType, TorrentType, RatingType } from './PctMetadataTypes'
 
-export const formatImages = (images: imageType) => {
+export const formatImages = (images: ImageType) => {
   const replaceWidthPart = (uri: string, replaceWith: string) => uri.replace('w500', replaceWith)
 
   return {
@@ -22,24 +22,26 @@ export const formatTorrents = (torrents) => {
     const ratio = seed && !!peer ? seed / peer : seed
 
     if (ratio > 1 && seed >= 50 && seed < 100) {
-      return 'decent'
+      return {
+        text  : 'decent',
+        number: 1,
+      }
     }
 
     if (ratio > 1 && seed >= 100) {
-      return 'healthy'
+      return {
+        text  : 'healthy',
+        number: 2,
+      }
     }
 
-    return 'poor'
-
     return {
-      health: {
-        text: 'poor',
-        number: 0,
-      }
+      text  : 'poor',
+      number: 0,
     }
   }
 
-  const formatTorrent = (torrent: torrentType) => ({
+  const formatTorrent = (torrent: TorrentType) => ({
     ...torrent,
     health: getHealth(torrent.seed, torrent.peer),
   })
@@ -49,3 +51,7 @@ export const formatTorrents = (torrents) => {
     '720p' : !torrents['720p'] ? null : formatTorrent(torrents['720p']),
   }
 }
+
+export const formatRating = (rating: RatingType) => ({
+  stars: (rating.percentage / 100) * 5,
+})

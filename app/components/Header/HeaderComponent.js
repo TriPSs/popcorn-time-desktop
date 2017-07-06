@@ -1,10 +1,8 @@
 // @flow
-/* eslint react/no-set-state: 0 */
 import React, { Component } from 'react'
 import classNames from 'classnames'
 import { Link } from 'react-router-dom'
-import { history as browserHistory } from '../../store/configureStore'
-import Butter from '../../api/Butter'
+import { history as browserHistory } from 'store/configureStore'
 
 type Props = {
   setActiveMode: (mode: string, options: ? { searchQuery: string }) => void,
@@ -12,35 +10,25 @@ type Props = {
 };
 
 export default class Header extends Component {
+
   props: Props
 
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      searchQuery: ''
-    }
+  state = {
+    searchQuery: '',
   }
 
-  /**
-   * Set the mode of the movies to be 'search'
-   */
-  setSearchState = (searchQuery: string) => {
-    this.props.setActiveMode('search', { searchQuery })
-  }
+  handleSearchChange = event => this.setState({ searchQuery: event.target.value })
 
-  handleSearchChange = (event: SyntheticEvent) => {
-    this.setState({
-      searchQuery: event.target.value
-    })
-  }
-
-  handleKeyPress = (event: SyntheticEvent) => {
+  handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      browserHistory.replace('/item/search')
-      this.props.setActiveMode('search', {
-        searchQuery: this.state.searchQuery
+      const { setActiveMode } = this.props
+      const { searchQuery }   = this.state
+
+      setActiveMode('search', {
+        searchQuery,
       })
+
+      browserHistory.replace('/item/search')
     }
   }
 
@@ -55,31 +43,25 @@ export default class Header extends Component {
             <div className="row">
               <div className="col-sm-6">
                 <ul className="nav navbar-nav">
-                  <li
-                    className={classNames('nav-item', {
-                      active: activeMode === 'movies'
-                    })}
-                  >
+                  <li className={classNames('nav-item', {
+                    active: activeMode === 'movies',
+                  })}>
                     <Link
                       to={'/item/movies'}
                       replace
                       className="nav-link"
-                      onClick={() => setActiveMode('movies')}
-                    >
+                      onClick={() => setActiveMode('movies')}>
                       Movies <span className="sr-only">(current)</span>
                     </Link>
                   </li>
-                  <li
-                    className={classNames('nav-item', {
-                      active: activeMode === 'shows'
-                    })}
-                  >
+                  <li className={classNames('nav-item', {
+                    active: activeMode === 'shows',
+                  })}>
                     <Link
                       className="nav-link"
                       to={'/item/shows'}
                       replace
-                      onClick={() => setActiveMode('shows')}
-                    >
+                      onClick={() => setActiveMode('shows')}>
                       TV Shows
                     </Link>
                   </li>
@@ -93,8 +75,8 @@ export default class Header extends Component {
                   <input
                     className="form-control"
                     value={searchQuery}
-                    onKeyPress={event => this.handleKeyPress(event)}
-                    onChange={event => this.handleSearchChange(event)}
+                    onKeyPress={this.handleKeyPress}
+                    onChange={this.handleSearchChange}
                     type="text"
                     placeholder="Search"
                   />

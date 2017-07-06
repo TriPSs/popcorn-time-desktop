@@ -1,19 +1,55 @@
 // @flow
-import * as Constants from './HomeConstants'
-import type { activeModeOptionsType, itemType } from './HomeTypes'
+import Butter from 'api/Butter'
 
-export function setActiveMode(activeMode: string, activeModeOptions?: activeModeOptionsType = {}) {
+import * as Constants from './HomeConstants'
+import * as Selectors from './HomeSelectors'
+
+import type { activeModeOptionsType } from './HomeTypes'
+
+export function fetchItems() {
   return {
-    type: Constants.SET_ACTIVE_MODE,
-    activeMode,
-    activeModeOptions,
+    type: Constants.FETCH_ITEMS,
   }
 }
 
-export function paginate(items: Array<itemType>) {
+export function fetchedItems(items, type) {
   return {
-    type: Constants.PAGINATE,
-    items,
+    type   : Constants.FETCHED_ITEMS,
+    payload: {
+      items,
+      type,
+    },
+  }
+}
+
+export function getItems(activeMode, page = 1) {
+  return (dispatch) => {
+    dispatch(fetchItems())
+
+    switch (activeMode) {
+      case 'movies':
+        return Butter.getMovies(page).then(movies => dispatch(fetchedItems(movies, activeMode)))
+
+      case 'shows':
+        return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+
+      case 'search':
+        // TODO:: Get searchQuery from state
+        // return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+
+      default:
+        return null
+    }
+  }
+}
+
+export function setActiveMode(activeMode: string, activeModeOptions?: activeModeOptionsType = {}) {
+  return {
+    type   : Constants.SET_ACTIVE_MODE,
+    payload: {
+      activeMode,
+      activeModeOptions,
+    },
   }
 }
 
@@ -23,22 +59,15 @@ export function clearItems() {
   }
 }
 
-export function clearAllItems() {
-  return {
-    type: Constants.CLEAR_ALL_ITEMS,
-  }
-}
+export function switchMode(newMode, page) {
+  return (dispatch, getState) => {
+    const items = Selectors.getModes(getState())[newMode].items
 
-export function setLoading(isLoading: boolean) {
-  return {
-    type: Constants.SET_LOADING,
-    isLoading,
-  }
-}
+    if (items.length > 0) {
+      dispatch(fetchedItems([], newMode))
 
-export function setCurrentPlayer(player: string) {
-  return {
-    type: Constants.SET_CURRENT_PLAYER,
-    player,
+    } else {
+      dispatch(getItems(newMode, page))
+    }
   }
 }

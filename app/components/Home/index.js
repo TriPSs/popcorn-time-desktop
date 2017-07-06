@@ -3,6 +3,7 @@ import HomeContainer from './HomeContainer'
 import HomeComponent from './HomeComponent'
 import * as HomeConstants from './HomeConstants'
 import * as HomeSelectors from './HomeSelectors'
+import * as HomeActions from './HomeActions'
 
 export {
   HomeReducer,
@@ -10,6 +11,7 @@ export {
   HomeComponent,
   HomeConstants,
   HomeSelectors,
+  HomeActions,
 }
 
 export default HomeContainer

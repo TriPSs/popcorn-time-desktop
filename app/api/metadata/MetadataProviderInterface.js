@@ -1,84 +1,17 @@
 // @flow
-type seasonType = {
-  // @DEPRECATE (in favor of .ids)
-  id: string,
-  ids: {
-    imdbId?: string,
-    tmdbId?: string
-  },
-  title: string,
-  season: number,
-  overview: string,
-  rating: number | 'n/a',
-  images: {
-    full: string,
-    medium: string,
-    thumb: string
-  }
-};
-
-type episodeType = seasonType & {
-  episode: number
-};
-
-export type runtimeType = {
-  full: string,
-  hours: number,
-  minutes: number
-};
-
-export type certificationType = 'G' | 'PG' | 'PG-13' | 'R' | 'n/a';
-
-export type imagesType = {
-  fanart: ?{
-    full: string,
-    medium: string,
-    thumb: string
-  },
-  poster: ?{
-    full: string,
-    medium: string,
-    thumb: string
-  }
-};
-
-export type contentType = {
-  title: string,
-  year: number,
-  // @DEPRECATE (in favor of .ids)
-  imdbId?: string,
-  // @DEPRECATE (in favor of .ids)
-  id: string,
-  ids: {
-    imdbId?: string,
-    tmdbId?: string
-  },
-  type: 'movies' | 'shows',
-  certification: certificationType,
-  summary: string,
-  genres: Array<string>,
-  rating: number | 'n/a',
-  runtime: runtimeType,
-  trailer: string | 'n/a',
-  images: imagesType
-};
-
-type optionsType = {
-  sort?: 'ratings' | 'popular' | 'trending',
-  genres?: Array<string>
-};
+import type { MovieType, ShowType } from './MetadataTypes'
 
 export interface MetadataProviderInterface {
 
-  getMovies: (page: number, limit: number, options: optionsType) => Promise<contentType>,
+  getMovies: (page: number, limit: number, options: optionsType) => Promise<MovieType>,
 
-  getMovie: (itemId: string) => contentType,
+  getMovie: (itemId: string) => MovieType,
 
-  getShows: (page: number, limit: number) => Promise<contentType>,
+  getShows: (page: number, limit: number) => Promise<ShowType>,
 
-  getShow: (itemId: string) => contentType,
+  getShow: (itemId: string) => ShowType,
 
-  provide: (itemId: string, type: string) => Promise<Array<torrentType>>,
+  // provide: (itemId: string, type: string) => Promise<Array<torrentType>>,
 
   getStatus: () => Promise<boolean>,
 
