@@ -485,8 +485,7 @@ export default class Item extends React.Component {
 //      ...MediaPlayer.nativePlaybackFormats
     ]
 
-    this.torrent.start(magnet, metadata, formats,
-      async (servingUrl: string, file: { name: string }, files: string, torrent: string, subtitle: string) => {
+    this.torrent.start(magnet, metadata, formats, async (servingUrl: string, file: { name: string }, files: string, torrent: string, subtitle: string) => {
         log(`Serving at: ${servingUrl}`)
         this.setState({ servingUrl })
 

@@ -15,8 +15,6 @@ export const QualitySwitch = ({ torrents, torrent, setTorrent }: Props) => {
     setTorrent(torrents[on ? '1080p' : '720p'])
   }
 
-  console.log(torrent.health.color)
-
   return (
     <div className={classes.container}>
       <div className={classes.quality}>

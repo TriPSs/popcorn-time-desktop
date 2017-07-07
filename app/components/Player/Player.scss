@@ -34,7 +34,14 @@
 	  height: $item-background-height;
 	  overflow: hidden;
 
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  background: black;
+
 	  &__video-wrapper {
+		width: 100%;
+
 		&.plyr--setup {
 		  padding: 0;
 		  height: 100%;

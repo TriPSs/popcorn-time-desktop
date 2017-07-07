@@ -2,20 +2,38 @@
  * @flow
  */
 import React from 'react'
-import classNames from 'classnames'
 
+import Torrent from 'api/Torrent'
 import MediaPlayer from 'api/Player'
 import type { Props } from './PlayerTypes'
 import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
+import Buffering from './Buffering'
 
 export class Player extends React.Component {
 
   props: Props
 
+  state = {
+    loading: true,
+  }
+
+  constructor(props) {
+    super(props)
+
+    Torrent.addEventListener(Torrent.EVENT_START, this.onDoneBuffering)
+    Torrent.addEventListener(Torrent.EVENT_DONE_BUFFERING, this.onDoneBuffering)
+  }
+
+  onStart = () => this.setState({ loading: true })
+
+  onDoneBuffering = (data) => {
+    console.log('done Buffering', data)
+  }
+
   componentWillReceiveProps(nextProps) {
-    const { status: newStatus, playerType: newPlayerType, uri: newUri } = nextProps
-    const { status: oldStatus, playerType: oldPlayerType, uri: oldUri } = this.props
+    const { status: newStatus, playerType: newPlayerType } = nextProps
+    const { status: oldStatus, playerType: oldPlayerType } = this.props
 
     if (oldPlayerType !== newPlayerType) {
       MediaPlayer.updatePlayerType(newPlayerType)
@@ -24,17 +42,12 @@ export class Player extends React.Component {
     if (oldStatus !== newStatus) {
       const { uri, metadata } = nextProps
 
-      MediaPlayer.handlePlayerStatusChange(newStatus, { uri, metadata })
+      MediaPlayer.changePlayerStatus(newStatus, { uri, metadata })
     }
   }
 
-  render() {
-    const { playerType, stop } = this.props
-    const { status, uri }      = this.props
-
-    if (playerType !== Constants.PLAYER_TYPE_PLYR) {
-      return null
-    }
+  renderVideo = () => {
+    const { status, uri, stop } = this.props
 
     return (
       <div
@@ -47,6 +60,25 @@ export class Player extends React.Component {
         <a role={'button'} onClick={stop}>Close</a>
 
         <video controls />
+      </div>
+    )
+  }
+
+  render() {
+    const { playerType, item } = this.props
+    const { loading }              = this.state
+
+    if (playerType !== Constants.PLAYER_TYPE_PLYR) {
+      return null
+    }
+
+    return (
+      <div>
+        {loading && (
+          <Buffering item={item} />
+        )}
+
+        {this.renderVideo()}
       </div>
     )
   }

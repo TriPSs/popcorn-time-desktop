@@ -33,7 +33,7 @@
 :global {
   .switch {
 	width: 32px;
-	height: 19px;
+	height: 20px;
 	border-radius: 13px;
 	cursor: pointer;
 	display: inline-block;
@@ -42,7 +42,7 @@
 	&.on {
 	  .switch-toggle {
 		left: 17px;
-		top: 3.5px;
+		top: 4px;
 	  }
 	}
 
@@ -54,7 +54,7 @@
 	  width: 13px;
 	  height: 13px;
 	  left: 2px;
-	  top: 3.5px;
+	  top: 4px;
 	  border-radius: 12px;
 	  background: darken(#999, 20%);
 	  position: relative;

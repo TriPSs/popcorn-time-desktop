@@ -11,22 +11,26 @@ export interface PlayerProviderInterface {
 
   stop: () => Promise<void>,
 
+  registerEvent: (event: string, callback: () => void) => void,
+
+  isPlaying: () => boolean,
+
   /*provider: string,
 
-  supportedFormats: Array<string>,
+   supportedFormats: Array<string>,
 
-  supportsSubtitles: boolean,
+   supportsSubtitles: boolean,
 
-  svgIconFilename: string,
+   svgIconFilename: string,
 
-  contentUrl: string,
+   contentUrl: string,
 
-  port: number,
+   port: number,
 
-  constructor: () => void,
+   constructor: () => void,
 
-  restart: () => Promise<void>,
+   restart: () => Promise<void>,
 
-  destroy: () => Promise<void>,*/
+   destroy: () => Promise<void>,*/
 
 }

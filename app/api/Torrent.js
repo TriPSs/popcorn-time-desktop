@@ -2,225 +2,187 @@
  * Torrents controller, responsible for playing, stoping, etc
  * @flow
  */
-import os from 'os';
-import WebTorrent from 'webtorrent';
+import os from 'os'
+import WebTorrent from 'webtorrent'
 import debug from 'debug'
-import { isExactEpisode } from './torrents/BaseTorrentProvider';
+import type { MetadataType } from './players/PlayerProviderTypes'
 
 const log  = debug('api:torrent')
-const port = 9091;
+const port = 9091
 
-type metadataType = {
-  season: number,
-  episode: number,
-  activeMode: string
-};
+export class Torrent {
 
-export default class Torrent {
+  EVENT_START           = 'starting'
+  EVENT_BUFFERING       = 'buffering'
+  EVENT_DONE_BUFFERING  = 'buffered'
+  EVENT_DONE_DOWNLOADED = 'downloaded'
+  EVENT_DOWNLOADING     = 'downloading'
 
-  inProgress: boolean = false;
+  eventListeners = []
 
-  finished: boolean = false;
+  cacheLocation: string
 
-  callbackCalled: boolean = false;
+  inProgress: boolean = false
 
-  checkDownloadInterval: number;
+  doneBuffering: boolean = false
 
-  engine: WebTorrent;
+  finished: boolean = false
 
-  magnetURI: string;
+  checkBufferInterval: number
+  checkDownloadInterval: number
 
-  server: | {}
-    | {
+  engine: WebTorrent
+
+  server: {
     close: () => void,
     listen: (port: number) => void
-  };
-
-  start(magnetURI: string, metadata: metadataType, supportedFormats: Array<string>, cb) {
-    if (this.inProgress) {
-      throw new Error('Torrent already in progress');
-    }
-
-    log('Start', magnetURI)
-
-    const { season, episode, activeMode } = metadata;
-
-    if (!this.engine) {
-      const maxConns = process.env.CONFIG_MAX_CONNECTIONS
-        ? parseInt(process.env.CONFIG_MAX_CONNECTIONS, 10)
-        : 20;
-
-      this.engine = new WebTorrent({ maxConns });
-    }
-
-    this.inProgress = true;
-    this.magnetURI  = magnetURI;
-
-    const cacheLocation = process.env.CONFIG_PERSIST_DOWNLOADS === 'true'
-      ? process.env.CONFIG_DOWNLOAD_LOCATION || '/tmp/popcorn-time-desktop'
-      : os.tmpdir();
-
-    log('Using', cacheLocation, 'to save the file!')
-
-    this.engine.add(magnetURI, { path: cacheLocation }, torrent => {
-      if (!this.server) {
-        const server = torrent.createServer();
-        server.listen(port);
-        this.server = server;
-      }
-
-      const { file, torrentIndex } = torrent.files.reduce(
-        (previous, current, index) => {
-          const formatIsSupported = !!supportedFormats.find(format =>
-            current.name.includes(format)
-          );
-
-          switch (activeMode) {
-            // Check if the current file is the exact episode we're looking for
-            case 'season_complete':
-              if (formatIsSupported && isExactEpisode(current.name, season, episode)) {
-                previous.file.deselect();
-                return {
-                  file        : current,
-                  torrentIndex: index
-                };
-              }
-
-              return previous;
-
-            // Check if the current file is greater than the previous file
-            default:
-              if (formatIsSupported && current.length > previous.file.length) {
-                previous.file.deselect();
-                return {
-                  file        : current,
-                  torrentIndex: index
-                };
-              }
-
-              return previous;
-          }
-        },
-        { file: torrent.files[0], torrentIndex: 0 }
-      );
-
-      if (typeof torrentIndex !== 'number') {
-        console.warn('File List', torrent.files.map(_file => _file.name));
-        throw new Error(`No torrent could be selected. Torrent Index: ${torrentIndex}`);
-      }
-
-      const buffer = 1 * 1024 * 1024; // 1MB
-      const files  = torrent.files;
-
-      file.select();
-
-      torrent.on('done', () => {
-        log('Loaded')
-        this.inProgress = false;
-        this.clearIntervals();
-
-        if (!this.callbackCalled) {
-          this.callbackCalled = true
-
-          cb(
-            `http://localhost:${port}/${torrentIndex}`,
-            file,
-            files,
-            torrent,
-            selectSubtitleFile(files, activeMode, metadata)
-          );
-        }
-      });
-
-      this.checkDownloadInterval = setInterval(() => {
-        log('Buffering:', torrent.downloaded, buffer)
-
-        if (torrent.downloaded > buffer) {
-
-          if (!this.callbackCalled) {
-            this.callbackCalled = true
-
-            cb(
-              `http://localhost:${port}/${torrentIndex}`,
-              file,
-              files,
-              torrent,
-              selectSubtitleFile(files, activeMode, metadata)
-            );
-          }
-
-          this.clearIntervals();
-        }
-      }, 1000);
-    });
   }
 
-  clearIntervals() {
-    clearInterval(this.checkDownloadInterval);
+  constructor() {
+    this.engine        = new WebTorrent({ maxConns: 20 })
+    this.cacheLocation = os.tmpdir()
+  }
+
+  start(magnetURI: string, metadata: MetadataType, supportedFormats: Array<string>) {
+    if (this.inProgress) {
+      throw new Error('Torrent already in progress')
+    }
+
+    this.inProgress = true
+
+    this.fireEvent(this.EVENT_START, null)
+
+    log(`Using ${this.cacheLocation} to save the file!`)
+    this.engine.add(magnetURI, { path: this.cacheLocation }, (torrent) => {
+      if (!this.server) {
+        const server = torrent.createServer()
+        server.listen(port)
+        this.server = server
+      }
+
+      const { file, torrentIndex } = torrent.files.reduce((previous, current, index) => {
+          const formatIsSupported = !!supportedFormats.find(format => current.name.includes(format))
+
+          if (formatIsSupported) {
+            if (previous && current.length > previous.file.length) {
+              previous.file.deselect()
+            }
+
+            return {
+              file        : current,
+              torrentIndex: index,
+            }
+          }
+        },
+        { file: torrent.files[0], torrentIndex: 0 },
+      )
+
+      if (typeof torrentIndex !== 'number') {
+        console.warn('File List', torrent.files.map(_file => _file.name))
+        throw new Error(`No torrent could be selected. Torrent Index: ${torrentIndex}`)
+      }
+
+      file.select()
+
+      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, metadata })
+    })
+  }
+
+  clearIntervals = () => {
+    if (this.checkBufferInterval) {
+      clearInterval(this.checkBufferInterval)
+    }
+
+    if (this.checkDownloadInterval) {
+      clearInterval(this.checkDownloadInterval)
+    }
+  }
+
+  bufferInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
+    if (torrent.downloaded > (1024 * 1024) * 50) {
+      this.fireEvent(this.EVENT_DONE_BUFFERING, {
+        torrent,
+        torrentIndex,
+        metadata,
+        uri: `http://localhost:${port}/${torrentIndex}`,
+      })
+
+      this.clearIntervals()
+      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, metadata })
+
+    } else {
+      this.fireEvent(this.EVENT_BUFFERING, {
+        downloaded   : torrent.downloaded,
+        toDownload   : torrent.length,
+        downloadSpeed: torrent.downloadSpeed,
+        uploadSpeed  : torrent.uploadSpeed,
+      })
+    }
+
+  }, 1000)
+
+  downloadInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
+    if (torrent.downloaded >= torrent.length) {
+      log('Download complete...')
+
+      this.fireEvent(this.EVENT_DONE_DOWNLOADED, {
+        torrent,
+        torrentIndex,
+        metadata,
+        uri: `http://localhost:${port}/${torrentIndex}`,
+      })
+
+      this.clearIntervals()
+
+    } else {
+      log('Downloading...')
+
+      this.fireEvent(this.EVENT_DOWNLOADING, {
+        downloaded   : torrent.downloaded,
+        toDownload   : torrent.length,
+        downloadSpeed: torrent.downloadSpeed,
+        uploadSpeed  : torrent.uploadSpeed,
+      })
+    }
+  }, 1000)
+
+  addEventListener = (event, callback) => {
+    if (!this.eventListeners[event]) {
+      this.eventListeners[event] = []
+    }
+
+    this.eventListeners[event].push(callback)
+  }
+
+  fireEvent = (event, data) => {
+    if (!this.eventListeners[event]) {
+      return
+    }
+
+    log(`Fire event: ${event}`, data)
+    this.eventListeners[event].forEach(callback => callback(data))
   }
 
   destroy() {
     if (this.inProgress) {
-      console.log('Destroyed Torrent...');
+      console.log('Destroyed Torrent...')
 
       if (this.server && typeof this.server.close === 'function') {
-        this.server.close();
-        this.server = {};
+        this.server.close()
+        this.server = {}
       }
 
-      this.clearIntervals();
+      this.clearIntervals()
 
-      this.engine.destroy();
-      this.engine = undefined;
+      this.engine.destroy()
+      this.engine = undefined
 
-      this.inProgress = false;
+      this.inProgress = false
     }
   }
 }
 
-type torrentSpeedsType = {
-  downloadSpeed: number,
-  uploadSpeed: number,
-  progress: number,
-  numPeers: number,
-  ratio: number
-};
+export const instance = new Torrent()
 
-export function formatSpeeds(torrentSpeeds: torrentSpeedsType): torrentSpeedsType {
-  const { downloadSpeed, uploadSpeed, progress, numPeers, ratio } = torrentSpeeds;
+export default instance
 
-  return {
-    downloadSpeed: downloadSpeed / 1000000,
-    uploadSpeed  : uploadSpeed / 1000000,
-    progress     : Math.round(progress * 100) / 100,
-    numPeers,
-    ratio
-  };
-}
-
-/**
- * Get the subtitle file buffer given an array of files
- */
-export function selectSubtitleFile(files: Array<{ name: string }> = [],
-                                   activeMode: string,
-                                   metadata: { season: number, episode: number }): { name: string } | boolean {
-  return (
-    files.find(file => {
-      const formatIsSupported = file.name.includes('.srt');
-
-      switch (activeMode) {
-        // Check if the current file is the exact episode we're looking for
-        case 'season_complete': {
-          const { season, episode } = metadata;
-          return (
-            formatIsSupported && isExactEpisode(file.name, season, episode)
-          );
-        }
-
-        // Check if the current file is greater than the previous file
-        default:
-          return formatIsSupported;
-      }
-    }) || false
-  );
-}

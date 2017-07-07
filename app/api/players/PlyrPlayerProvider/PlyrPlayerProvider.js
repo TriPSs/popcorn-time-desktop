@@ -17,6 +17,18 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   powerSaveBlockerId: number
 
+  state: string = null
+
+  supportedFormats = [
+    'mp4',
+    'ogg',
+    'mov',
+    'webmv',
+    'mkv',
+    'wmv',
+    'avi',
+  ]
+
   constructor() {
     this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension')
   }
@@ -30,34 +42,54 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
       })[0]
 
       if (this.player) {
-        this.setListeners()
+        this.setEventListeners()
       }
     }
 
     return this.player
   }
 
-  load = (uri: string, metaData: MetadataType) => {
+  load = (uri: string, metadata: MetadataType) => {
     const player = this.getPlayer()
 
     player.source({
-      title  : metaData.title,
+      title  : metadata.title,
       type   : 'video',
       sources: [
         {
           src : uri,
-          type: metaData.type || 'video/mp4',
+          type: metadata.type || 'video/mp4',
         },
       ],
     })
   }
 
-  play = (uri: ?string, metaData: ?MetadataType) => {
-    if (uri && metaData) {
-      this.load(uri, metaData)
+  play = (uri: ?string, metadata: ?MetadataType) => {
+    if (uri && metadata) {
+      this.load(uri, metadata)
     }
 
     this.player.play()
+  }
+
+  isPlaying = () => this.state === 'playing'
+
+  setEventListeners = () => {
+    this.player.on('play', this.onPlay)
+    this.player.on('pause', this.onPause)
+    this.player.on('ended', this.onEnded)
+
+  }
+  onPlay = () => {
+    this.state = 'playing'
+  }
+
+  onPause = () => {
+    this.state = 'paused'
+  }
+
+  onEnded = () => {
+    this.state = 'ended'
   }
 
   destroy = () => {
@@ -70,29 +102,8 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     }
   }
 
-  setListeners = () => {
-    log('Set events listeners...')
-
-    this.player.on('play', this.onPlay)
-    this.player.on('pause', this.onPause)
-    this.player.on('ended', this.onEnded)
-    this.player.on('progress', this.onProgress)
-  }
-
-  onPlay = (event) => {
-    log('onPlay', event)
-  }
-
-  onPause = (event) => {
-    log('onPause', event)
-  }
-
-  onEnded = (event) => {
-    log('onEnded', event)
-  }
-
-  onProgress = (event) => {
-    log('onProgress', event)
+  registerEvent = (event, callback) => {
+    this.player.on(event, callback)
   }
 
 }

@@ -3,6 +3,7 @@
  */
 import React from 'react'
 import classNames from 'classnames'
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap'
 
 import Rating from 'components/Rating'
 import type { Props } from './InfoTypes'
@@ -32,9 +33,9 @@ export const Info = ({ item, play }: Props) => (
       )}
     </div>
 
-    <h6 className={classNames('row-margin', classes.info__summary)}>
+    <div className={classNames('row-margin', classes.info__summary)}>
       {item.summary}
-    </h6>
+    </div>
 
     <div className={classNames('row-margin row-center', classes.info__details)}>
       {item.rating && (
@@ -63,6 +64,7 @@ export const Info = ({ item, play }: Props) => (
           />
         </div>
       )}
+
     </div>
   </div>
 )

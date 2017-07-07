@@ -6,6 +6,7 @@ import { PlayerProviderInterface } from './players/PlayerProviderInterface'
 import PlyrPlayerProvider from './players/PlyrPlayerProvider'
 import PlayerAdapter from './players/PlayerAdapter'
 import type { MetadataType } from './players/PlayerProviderTypes'
+import Torrent from './Torrent'
 
 const log = debug('api:player')
 
@@ -13,15 +14,16 @@ export class Player implements PlayerProviderInterface {
 
   playerSelected = 'plyr'
 
-  playerStatus = null
-
   playerAdapter: PlayerAdapter
 
   plyrAdapter: PlyrPlayerProvider
 
   constructor() {
-    // this.playerAdapter = new PlayerAdapter()
-    this.plyrAdapter = new PlyrPlayerProvider()
+    this.playerAdapter = new PlayerAdapter()
+    this.plyrAdapter   = new PlyrPlayerProvider()
+
+    Torrent.addEventListener(Torrent.EVENT_DONE_BUFFERING, this.play)
+    Torrent.addEventListener(Torrent.EVENT_DONE_DOWNLOADED, this.play)
   }
 
   updatePlayerType = (player: string) => {
@@ -29,11 +31,16 @@ export class Player implements PlayerProviderInterface {
     this.playerSelected = player
   }
 
-  handlePlayerStatusChange = (status, { uri, metadata }) => {
+  changePlayerStatus = (status, { uri, metadata }) => {
     log(`Player state changes to: ${status}`)
     switch (status) {
       case PlayerConstants.PLAYER_PLAY:
-        this.play(uri, metadata)
+        if (!metadata.type) {
+          Torrent.start(uri, metadata, this.getRightPlayer().supportedFormats)
+
+        } else {
+          this.play({ uri, metadata })
+        }
         break
 
       case PlayerConstants.PLAYER_PAUSE:
@@ -48,15 +55,14 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  play = (uri: string, metaData: MetadataType, autoPlay: boolean = true) => {
+  play = ({ uri, metadata }) => {
     const player = this.getRightPlayer()
 
-    if (player) {
-      player.load(uri, metaData)
+    if (player && !player.isPlaying()) {
+      log(`Load ${uri} into player...`)
 
-      if (autoPlay) {
-        player.play()
-      }
+      player.load(uri, metadata)
+      player.play()
     }
   }
 
@@ -74,11 +80,10 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  getStatus = () => this.playerStatus
+  getStatus = () => this.getRightPlayer().getStatus()
 
-  /**
-   * Cleanup all traces of the player UI
-   */
+  registerPlayerEvent = (event, callback) => this.getRightPlayer().registerEvent(event, callback)
+
   destroy() {
     this.getRightPlayer().destroy()
   }

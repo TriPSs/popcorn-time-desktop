@@ -1,62 +1,31 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
-import debug from 'debug'
 
-import Torrent from 'api/Torrent'
 import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
 import Info from './Info'
 import classes from './Item.scss'
 
-const log = debug('app:item')
-
 export default class Item extends React.Component {
 
-  props: Props
+  static defaultProps: Props
 
-  torrent: Torrent
+  props: Props
 
   state: State = {
     torrent: null,
   }
 
-//  playerProvider: ChromecastPlayerProvider
-
   constructor(props: Props) {
     super(props)
 
-    this.torrent = new Torrent()
+    // this.torrent = new Torrent()
 
 //    this.playerProvider = new ChromecastPlayerProvider()
 
     // this.subtitleServer = startSubtitleServer()
-  }
-
-  static defaultProps: Props
-
-  /**
-   * Check which players are available on the system
-   */
-  play = (playerType) => {
-    switch (playerType) {
-      case 'youtube':
-        const { item, player } = this.props
-
-        player.play(item.trailer, {
-          title   : item.title,
-          type    : 'youtube',
-          image   : {
-            poster: item.images.poster.medium,
-          },
-          autoPlay: true,
-        })
-
-        break
-
-      default:
-    }
   }
 
   componentDidMount() {
@@ -86,6 +55,35 @@ export default class Item extends React.Component {
 
     } else if (!isLoading && wasLoading) {
       this.getBestTorrent(nextProps)
+    }
+  }
+
+  play = (playerType) => {
+    const { item, player } = this.props
+
+    switch (playerType) {
+      case 'youtube':
+        player.play(item.trailer, {
+          title   : item.title,
+          type    : 'youtube',
+          image   : {
+            poster: item.images.poster.medium,
+          },
+          autoPlay: true,
+        })
+
+        break
+
+      default:
+        const { torrent } = this.state
+
+        player.play(torrent.url, {
+          title   : item.title,
+          image   : {
+            poster: item.images.poster.medium,
+          },
+          autoPlay: true,
+        })
     }
   }
 
@@ -137,9 +135,6 @@ export default class Item extends React.Component {
       return null
     }
 
-    console.log(item)
-    console.log('best torrent', torrent)
-
     return (
       <div className={classNames('container-fluid', classes.item)}>
         <Link to={'/'}>
@@ -148,24 +143,25 @@ export default class Item extends React.Component {
           </button>
         </Link>
 
-        <Player />
-
         <Background
           {...{
             activeMode,
             torrent,
             torrents       : item.torrents,
             setTorrent     : this.setTorrent,
+            play           : this.play,
             backgroundImage: item.images.fanart.full,
             poster         : item.images.poster.thumb,
           }}>
 
-          <Info
-            {...{
-              item,
-              activeMode,
-              play: this.play,
-            }} />
+          {/* <Info
+           {...{
+           item,
+           activeMode,
+           play: this.play,
+           }} />*/}
+
+          <Player item={item} />
 
         </Background>
 
