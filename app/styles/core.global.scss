@@ -17,14 +17,15 @@
 
 @import './components/stars';
 
-@import './components/Movie';
-@import './components/Item';
-
 //
 // Utilities
 //
 
 @import './utilities/container';
+
+html, body, #root {
+  height: 100%;
+}
 
 a {
   text-decoration: none;

@@ -11,6 +11,19 @@ export default class Home extends Component {
 
   props: Props
 
+  constructor(props: Props) {
+    super(props)
+
+    // Temporary hack to preserve scroll position
+    if (!global.pct) {
+      global.pct = {
+        moviesScrollTop: 0,
+        showsScrollTop : 0,
+        searchScrollTop: 0,
+      }
+    }
+  }
+
   handleOnVisibilityChange = (isVisible: boolean) => {
     const { isLoading, activeMode } = this.props
 
@@ -22,9 +35,18 @@ export default class Home extends Component {
     }
   }
 
+  componentDidMount() {
+    const { activeMode } = this.props
+
+    window.scrollTo(0, global.pct[`${activeMode}ScrollTop`])
+  }
+
   componentWillReceiveProps(nextProps: Props) {
     const { activeMode: newMode } = nextProps
     const { activeMode: oldMode } = this.props
+
+    // Save the scroll position
+    global.pct[`${oldMode}ScrollTop`] = document.body.scrollTop
 
     if (newMode !== oldMode) {
       window.scrollTo(0, 0)
@@ -35,6 +57,25 @@ export default class Home extends Component {
       const { page } = modes[newMode]
       switchMode(newMode, page)
     }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { activeMode } = this.props
+    const { oldMode }    = prevProps
+
+    if (oldMode !== activeMode) {
+      window.scrollTo(0, global.pct[`${activeMode}ScrollTop`])
+    }
+  }
+
+  componentWillUnmount() {
+    if (!document.body) {
+      throw new Error('"document" not defined. You are probably not running in the renderer process')
+    }
+
+    const { activeMode } = this.props
+
+    global.pct[`${activeMode}ScrollTop`] = document.body.scrollTop
   }
 
   render() {

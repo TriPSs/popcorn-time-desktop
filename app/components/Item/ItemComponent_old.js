@@ -1,8 +1,14 @@
-/**
- * Movie component that is responsible for playing movies
- * @flow
- */
-import React, { Component } from 'react'
+import React from 'react'
+import debug from 'debug'
+
+import type { MetadataType } from 'api/players/PlayerProviderTypes'
+import type { Props, State } from './ItemTypes'
+import Background from './Background'
+import Player from 'components/Player'
+import classes from './Item.scss'
+
+const log = debug('app:item')
+
 import {
   Dropdown,
   DropdownToggle,
@@ -19,65 +25,24 @@ import CardList from '../CardList'
 import Rating from '../Rating'
 import Show from '../show/Show'
 import { convertFromBuffer, startServer as startSubtitleServer } from '../../api/Subtitle'
-import Player from '../../api/Player'
+
 import type { contentType, imagesType } from '../../api/metadata/MetadataProviderInterface'
-import type { torrentType, qualityType } from '../../api/torrents/TorrentProviderInterface'
 import ChromecastPlayerProvider from '../../api/players/ChromecastPlayerProvider'
 import type { deviceType } from '../../api/torrents/TorrentProviderInterface'
-import debug from 'debug'
-import classes from './Item.scss'
-
-const log = debug('app:item')
 
 const SUMMARY_CHAR_LIMIT = 300
 
 type playerType = 'default' | 'plyr' | 'chromecast' | 'youtube';
 
-type itemType = contentType & {
-  images: ?imagesType
-};
+export default class Item extends React.Component {
 
-type Props = {
-  itemId: string,
-  activeMode: string
-};
-
-type State = {
-  item: itemType,
-  similarItems: Array<contentType>,
-  selectedSeason: number,
-  selectedEpisode: number,
-  seasons: [],
-  season: [],
-  episode: {},
-  episodes: [],
-  castingDevices: Array<deviceType>,
-  currentPlayer: playerType,
-  playbackIsActive: boolean,
-  fetchingTorrents: boolean,
-  dropdownOpen: boolean,
-  idealTorrent: torrentType,
-  torrent: torrentSelectionType,
-  servingUrl: string,
-  similarLoading: boolean,
-  metadataLoading: boolean,
-  torrentInProgress: boolean,
-  torrentProgress: number,
-  isFinished: boolean
-};
-
-export default class Item extends Component {
   props: Props
-
-  state: State
 
   butter: Butter
 
   torrent: Torrent
 
-  player: Player
-
-  state = {
+  state: State = {
     dropdownOpen     : false,
     isFinished       : false,
     selectedSeason   : 1,
@@ -103,7 +68,6 @@ export default class Item extends Component {
     super(props)
 
     this.torrent        = new Torrent()
-    this.player         = new Player()
     this.playerProvider = new ChromecastPlayerProvider()
 
     // this.subtitleServer = startSubtitleServer()
@@ -121,8 +85,17 @@ export default class Item extends Component {
       case 'youtube':
         const { item } = this.props
 
-        this.player.initYouTube(title, item.trailer)
-        this.toggleActive()
+        const metaData: MetadataType = {
+          title   : item.title,
+          type    : 'youtube',
+          image   : {
+            poster: item.images.poster.medium,
+          },
+          autoPlay: true,
+        }
+
+        MediaPlayer.play(item.trailer, metaData)
+
         break
 
       default:
@@ -138,7 +111,7 @@ export default class Item extends Component {
 
   async initCastingDevices() {
     this.setState({
-      castingDevices: await this.playerProvider.getDevices()
+      castingDevices: await this.playerProvider.getDevices(),
     })
   }
 
@@ -146,14 +119,12 @@ export default class Item extends Component {
     window.scrollTo(0, 0)
 
     this.getAllData()
-    this.initCastingDevices()
+    // this.initCastingDevices()
     this.stopPlayback()
-    this.player.destroy()
   }
 
   componentWillUnmount() {
     this.stopPlayback()
-    this.player.destroy()
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -392,14 +363,10 @@ export default class Item extends Component {
     }
   }
 
-  stopPlayback() {
-    this.player.destroy()
+  stopPlayback = () => {
+    // MediaPlayer.destroy()
     this.torrent.destroy()
     this.setState({ torrentInProgress: false })
-
-    if (process.env.NODE_ENV === 'development') {
-      clearInterval(this.torrentInfoInterval)
-    }
   }
 
   selectShow = (type: string, selectedSeason: number, selectedEpisode: number = 1) => {
@@ -476,15 +443,16 @@ export default class Item extends Component {
     return mergedResults
   }
 
-  closeVideo() {
-    if (this.player.player.isFullscreen()) {
-      this.player.player.toggleFullscreen()
-    } else {
-      this.player.player.pause()
-      // this.player.pause();
-      this.toggleActive()
-    }
-  }
+  /*
+   closeVideo() {
+   if (MediaPlayer.MediaPlayer.isFullscreen()) {
+   MediaPlayer.MediaPlayer.toggleFullscreen()
+   } else {
+   MediaPlayer.MediaPlayer.pause()
+   // MediaPlayer.pause();
+   this.toggleActive()
+   }
+   }*/
 
   toggleActive() {
     this.setState({
@@ -513,8 +481,8 @@ export default class Item extends Component {
     }
 
     const formats = [
-      ...Player.experimentalPlaybackFormats,
-      ...Player.nativePlaybackFormats
+      //  ...MediaPlayer.experimentalPlaybackFormats,
+//      ...MediaPlayer.nativePlaybackFormats
     ]
 
     this.torrent.start(magnet, metadata, formats,
@@ -535,23 +503,23 @@ export default class Item extends Component {
 
         switch (currentPlayer) {
           case 'vlc':
-            return this.player.initVLC(servingUrl)
+            return MediaPlayer.initVLC(servingUrl)
 
           case 'chromecast':
-            this.player.initCast(this.playerProvider, servingUrl, this.state.item)
+            MediaPlayer.initCast(PlayerProvider, servingUrl, this.state.item)
             break
 
           case 'default':
-            if (Player.isFormatSupported(filename, Player.nativePlaybackFormats)) {
-              this.player.initPlyr(servingUrl, {
+            if (MediaPlayer.isFormatSupported(filename, MediaPlayer.nativePlaybackFormats)) {
+              MediaPlayer.initPlyr(servingUrl, {
                 poster: this.state.item.images.fanart.thumb,
                 tracks: subtitles
               })
               this.toggleActive()
             } else if (
-              Player.isFormatSupported(filename, [
-                ...Player.nativePlaybackFormats,
-                ...Player.experimentalPlaybackFormats
+              MediaPlayer.isFormatSupported(filename, [
+                ...MediaPlayer.nativePlaybackFormats,
+                ...MediaPlayer.experimentalPlaybackFormats
               ])
             ) {
               notie.alert(2, 'The format of this video is not playable', 2)
@@ -575,7 +543,6 @@ export default class Item extends Component {
 
   render() {
     const {
-            servingUrl, torrentInProgress, fetchingTorrents,
             dropdownOpen, currentPlayer, seasons, selectedSeason, episodes, selectedEpisode,
             similarItems,
             similarLoading,
@@ -591,12 +558,10 @@ export default class Item extends Component {
 
     console.log(item)
 
-    const torrent                   = item.torrents
-    const torrentLoadingStatusStyle = { color: 'maroon' }
-
+  /*  const torrent    = item.torrents
     let idealTorrent = torrent['1080p']
-
-    const statusColorStyle = {
+*/
+   /* const statusColorStyle = {
       backgroundColor: (() => {
         switch (idealTorrent.health) {
           case 'healthy':
@@ -608,37 +573,21 @@ export default class Item extends Component {
         }
       })()
     }
-
-    const itemBackgroundUrl = {
-      backgroundImage: [
-        `-webkit-image-set(url(${item.images.fanart.full}) 1x,`,
-        `url(${item.images.fanart.full}) 2x,`,
-        `url(${item.images.fanart.full}) 3x`,
-      ].join(''),
-    }
-
+*/
     return (
-      <div className={classNames('container-fluid', 'Item', {
-        active: playbackIsActive,
-      })}>
-        <Link to="/">
-          <button className="btn btn-back" onClick={() => this.stopPlayback()}>
+      <div className={classNames('container-fluid', classes.item)}>
+        <Link to={'/'}>
+          <button className={'btn btn-back'} onClick={this.stopPlayback}>
             Back
           </button>
         </Link>
 
         <div className="row">
-          <div className="plyr col-sm-12">
-            <a id="close-button" onClick={() => this.closeVideo()}>Close</a>
-            <video controls poster={item.images.poster} />
-          </div>
+          <Player />
 
-          <div className="col-sm-12 Item--background" style={itemBackgroundUrl}>
-            <div className="col-sm-6 Item--image">
-              <img height="350px" width="233px"
-                   role="presentation"
-                   src={item.images.poster.thumb} />
-            </div>
+          <Background
+            backgroundImage={item.images.fanart.full}
+            poster={item.images.poster.thumb}>
 
             <div className="Movie col-sm-6">
               <h1 className="row-margin" id="title">
@@ -710,11 +659,9 @@ export default class Item extends Component {
                   : null}
               </div>
             </div>
+          </Background>
 
-            <div className="Item--overlay" />
-          </div>
-
-          <div className="row">
+        {/*  <div className="row">
             <div className="col-sm-6">
               <span>
                       <button
@@ -790,15 +737,8 @@ export default class Item extends Component {
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <div className="col-sm-12">
-              <h3 style={torrentLoadingStatusStyle}>
-                {!servingUrl && torrentInProgress ? 'Loading torrent...' : null}
-              </h3>
-              <h3 style={torrentLoadingStatusStyle}>
-                {fetchingTorrents ? 'Fetching torrents...' : null}
-              </h3>
-            </div>
-          </div>
+
+          </div>*/}
 
           {activeMode === 'shows'
             ? <Show
@@ -825,5 +765,5 @@ export default class Item extends Component {
 
 Item.defaultProps = {
   itemId    : '',
-  activeMode: 'movies'
+  activeMode: 'movies',
 }

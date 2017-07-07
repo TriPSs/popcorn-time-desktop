@@ -1,28 +1,17 @@
 // @flow
-// Initialize the player
-
-export type deviceType = {
-  id: string,
-  name: string,
-  address: string,
-  port: number
-};
-
-export type metadataType = {
-  title: string,
-  image: {
-    poster: string
-  }
-};
+import type { MetadataType } from './PlayerProviderTypes'
 
 export interface PlayerProviderInterface {
-  provider: string,
 
-  providerId: string,
+  load: (uri: string, metadata: MetadataType) => Promise<void>,
 
-  selectedDevice?: deviceType,
+  play: (uri: ?string, metadata: ?MetadataType) => Promise<void>,
 
-  devices: Array<deviceType>,
+  pause: () => Promise<void>,
+
+  stop: () => Promise<void>,
+
+  /*provider: string,
 
   supportedFormats: Array<string>,
 
@@ -36,25 +25,8 @@ export interface PlayerProviderInterface {
 
   constructor: () => void,
 
-  getDevices: (timeout: number) => Promise<Array<deviceType>>,
-
-  seek: (seconds: number) => void,
-
-  selectDevice: (deviceId: string) => deviceType,
-
-  play: (contentUrl: string, metadata: metadataType) => Promise<void>,
-
-  pause: () => Promise<void>,
-
   restart: () => Promise<void>,
 
-  /**
-   * Handle any logic to remove the traces of the player from memory
-   */
-    destroy: () => Promise<void>,
+  destroy: () => Promise<void>,*/
 
-  /**
-   * Check if the plugin is supported on the machine
-   */
-    isSupported: () => Promise<boolean>
 }

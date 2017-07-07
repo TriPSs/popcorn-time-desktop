@@ -6,12 +6,12 @@ import { ConnectedRouter } from 'react-router-redux'
 import 'styles/core.global.scss'
 import Routes from '../routes'
 
-type RootType = {
+type Props = {
   store: Object,
   history: Object
 }
 
-export default ({ store, history }: RootType) => (
+export default ({ store, history }: Props) => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Routes />

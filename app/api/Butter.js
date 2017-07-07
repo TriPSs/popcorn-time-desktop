@@ -4,7 +4,6 @@
  */
 import TorrentAdapter from './torrents/TorrentAdapter'
 import MetadataAdapter from './metadata/MetadataAdapter'
-
 import PctMetadataProvider from './metadata/PctMetadataProvider'
 
 export class Butter {
@@ -74,4 +73,6 @@ export class Butter {
 
 }
 
-export default new Butter()
+export const instance = new Butter()
+
+export default instance

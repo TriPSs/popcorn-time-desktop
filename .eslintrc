@@ -86,6 +86,7 @@
     "react/sort-comp": [2, {
       "order": [
         "static-methods",
+        "props",
         "state",
         "lifecycle",
         "/^on.+$/",

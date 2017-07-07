@@ -36,6 +36,7 @@ export type TorrentType = {
   health: {
     text: string,
     number: number,
+    color: string,
   }
 }
 

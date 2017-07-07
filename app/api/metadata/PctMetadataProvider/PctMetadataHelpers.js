@@ -24,6 +24,7 @@ export const formatTorrents = (torrents) => {
     if (ratio > 1 && seed >= 50 && seed < 100) {
       return {
         text  : 'decent',
+        color : '#FF9800',
         number: 1,
       }
     }
@@ -31,24 +32,29 @@ export const formatTorrents = (torrents) => {
     if (ratio > 1 && seed >= 100) {
       return {
         text  : 'healthy',
+        color : '#4CAF50',
         number: 2,
       }
     }
 
     return {
       text  : 'poor',
+      color : '#F44336',
       number: 0,
     }
   }
 
-  const formatTorrent = (torrent: TorrentType) => ({
+  const formatTorrent = (torrent: TorrentType, quality: string) => ({
     ...torrent,
-    health: getHealth(torrent.seed, torrent.peer),
+    quality,
+    health: {
+      ...getHealth(torrent.seed, torrent.peer),
+    },
   })
 
   return {
-    '1080p': !torrents['1080p'] ? null : formatTorrent(torrents['1080p']),
-    '720p' : !torrents['720p'] ? null : formatTorrent(torrents['720p']),
+    '1080p': !torrents['1080p'] ? null : formatTorrent(torrents['1080p'], '1080p'),
+    '720p' : !torrents['720p'] ? null : formatTorrent(torrents['720p'], '720p'),
   }
 }
 
