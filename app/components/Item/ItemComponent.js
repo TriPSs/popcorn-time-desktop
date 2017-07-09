@@ -2,6 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
+import Events from 'api/Events'
+import * as TorrentEvents from 'api/Torrent/TorrentEvents'
+import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
+
 import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
@@ -15,7 +20,8 @@ export default class Item extends React.Component {
   props: Props
 
   state: State = {
-    torrent: null,
+    torrent      : null,
+    torrentStatus: TorrentStatuses.NONE,
   }
 
   constructor(props: Props) {
@@ -34,6 +40,16 @@ export default class Item extends React.Component {
     this.getAllData()
     // this.initCastingDevices()
     this.stopPlayback()
+
+    Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+  }
+
+  torrentStatusChange = (event, data) => {
+    const { newStatus } = data
+
+    this.setState({
+      torrentStatus: newStatus,
+    })
   }
 
   componentWillUnmount() {
@@ -121,9 +137,20 @@ export default class Item extends React.Component {
   }
 
   stopPlayback = () => {
-    // MediaPlayer.destroy()
-    // this.torrent.destroy()
-    // this.setState({ torrentInProgress: false })
+    const { player } = this.props
+
+    player.stop()
+  }
+
+  showInfo = () => {
+    const { torrentStatus } = this.state
+    const { playerStatus }  = this.props
+
+    if (playerStatus === PlayerStatuses.PLAYING) {
+      return false
+    }
+
+    return torrentStatus === TorrentStatuses.NONE
   }
 
   render() {
@@ -138,7 +165,9 @@ export default class Item extends React.Component {
     return (
       <div className={classNames('container-fluid', classes.item)}>
         <Link to={'/'}>
-          <button className={'btn btn-back'} onClick={this.stopPlayback}>
+          <button
+            style={{ zIndex: 1060 }}
+            className={'btn btn-back'} onClick={this.stopPlayback}>
             Back
           </button>
         </Link>
@@ -152,14 +181,17 @@ export default class Item extends React.Component {
             play           : this.play,
             backgroundImage: item.images.fanart.full,
             poster         : item.images.poster.thumb,
+            showPlayInfo   : this.showInfo(),
           }}>
 
-          {/* <Info
-           {...{
-           item,
-           activeMode,
-           play: this.play,
-           }} />*/}
+          {this.showInfo() && (
+            <Info
+              {...{
+                item,
+                activeMode,
+                play: this.play,
+              }} />
+          )}
 
           <Player item={item} />
 

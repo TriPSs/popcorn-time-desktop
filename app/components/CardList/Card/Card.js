@@ -14,7 +14,7 @@ import Cover from './Cover'
 import classes from './Card.scss'
 
 export const Card = ({ type, image, id, rating, title, starColor }: Props) => (
-  <div className={classNames(classes.card, 'animated', 'fadeInUp')}>
+  <div className={classes.card}>
 
     <Link replace to={`/item/${type}/${id}`}>
       <Cover {...{ image }} />
@@ -25,7 +25,7 @@ export const Card = ({ type, image, id, rating, title, starColor }: Props) => (
         {title}
       </Link>
 
-      <Rating {...{ starColor, rating }} />
+
     </div>
 
   </div>

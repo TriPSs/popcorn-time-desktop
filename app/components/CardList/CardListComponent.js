@@ -23,7 +23,7 @@ export const CardList = ({ items, isLoading, isFinished, title, limit }: Props) 
       <div className={classes.container}>
         {(limit ? items.filter((e, i) => i < limit) : items).map(item => (
           <Card
-            image={item.images.fanart.medium}
+            image={item.images.poster.thumb}
             title={item.title}
             id={item.id}
             key={item.id}

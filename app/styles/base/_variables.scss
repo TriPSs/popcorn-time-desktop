@@ -44,7 +44,7 @@ $headings-color: white;
 $navbar-dark-color: #848484;
 
 // Fonts
-$font-family-base: 'Roboto', sans-serif;
+$font-family-base: 'Open Sans', sans-serif;
 $headings-font-weight: 400;
 
 .row-margin {
@@ -75,10 +75,10 @@ $headings-font-weight: 400;
 $card-list-color: #848484;
 
 // Card
-$card-max-with: 295px;
-$card-min-with: 275px;
-$card-max-height: 190px;
-$card-min-height: 170px;
+$card-max-with: 140px;
+$card-min-with: 140px;
+$card-max-height: 210px;
+$card-min-height: 210px;
 $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 

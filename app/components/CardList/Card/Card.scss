@@ -5,8 +5,8 @@
   max-width: $card-max-with;
   min-width: $card-min-with;
   width: 100%;
-  max-height: $card-max-height;
-  min-height: $card-min-height;
+  max-height: $card-max-height + 25px;
+  min-height: $card-min-height + 25px;
   height: 100%;
   margin: 10px;
   overflow: hidden;
@@ -30,6 +30,8 @@
 	width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	font-size: 14px;
+	font-weight: 100;
 
 	&:hover {
 	  color: $card-title-color-hover;

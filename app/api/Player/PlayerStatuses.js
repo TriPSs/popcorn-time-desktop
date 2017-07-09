@@ -1,0 +1,5 @@
+export const PLAYING   = 'player.status.playing'
+export const LOADING   = 'player.status.loading'
+export const STREAMING = 'player.status.streaming'
+export const PAUSED    = 'player.status.paused'
+export const ENDED     = 'player.status.ended'

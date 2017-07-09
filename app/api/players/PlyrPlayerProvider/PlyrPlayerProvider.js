@@ -3,6 +3,9 @@ import { remote } from 'electron'
 import debug from 'debug'
 import plyr from 'plyr'
 
+import Events from 'api/Events'
+import * as PlayerEvents from 'api/Player/PlayerEvents'
+import * as PlayerStatuses from 'api/Player/PlayerStatuses'
 import { PlayerProviderInterface } from '../PlayerProviderInterface'
 import type { MetadataType } from '../PlayerProviderTypes'
 
@@ -17,7 +20,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   powerSaveBlockerId: number
 
-  state: string = null
+  status: string = null
 
   supportedFormats = [
     'mp4',
@@ -72,24 +75,36 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     this.player.play()
   }
 
-  isPlaying = () => this.state === 'playing'
+  pause = () => {
+    this.player.pause()
+  }
+
+  stop = () => {
+    this.player.stop()
+  }
+
+  isPlaying = () => this.status === PlayerStatuses.PLAYING
 
   setEventListeners = () => {
     this.player.on('play', this.onPlay)
     this.player.on('pause', this.onPause)
     this.player.on('ended', this.onEnded)
-
-  }
-  onPlay = () => {
-    this.state = 'playing'
   }
 
-  onPause = () => {
-    this.state = 'paused'
-  }
+  onPlay = () => this.updateStatus(PlayerStatuses.PLAYING)
 
-  onEnded = () => {
-    this.state = 'ended'
+  onPause = () => this.updateStatus(PlayerStatuses.PAUSED)
+
+  onEnded = () => this.updateStatus(PlayerStatuses.ENDED)
+
+  updateStatus = (newStatus) => {
+    log(`Update status to ${newStatus}`)
+
+    Events.emit(PlayerEvents.STATUS_CHANGE, {
+      oldState: this.status,
+      newStatus,
+    })
+    this.status = newStatus
   }
 
   destroy = () => {
@@ -100,10 +115,6 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     if (this.player) {
       this.player.destroy()
     }
-  }
-
-  registerEvent = (event, callback) => {
-    this.player.on(event, callback)
   }
 
 }

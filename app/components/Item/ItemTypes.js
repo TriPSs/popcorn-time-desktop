@@ -6,6 +6,7 @@ export type Props = {
   isLoading: boolean,
 
   player: PlayerProviderInterface,
+  playerStatus: string,
 }
 
 export type State = {

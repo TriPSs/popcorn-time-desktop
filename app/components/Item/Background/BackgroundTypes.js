@@ -7,4 +7,5 @@ export type Props = {
   children: Element,
   activeMode: string,
   setTorrent: () => void,
+  showPlayInfo: boolean,
 }

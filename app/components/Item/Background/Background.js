@@ -17,13 +17,11 @@ export const Background = ({
                              torrents,
                              setTorrent,
                              play,
+                             showPlayInfo,
                            }: Props) =>
   (
     <div
-      className={classNames('col-sm-12', classes.background)}
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-      }}>
+      className={classNames('col-sm-12', classes.background__container)}>
       <div className={classNames('col-sm-6', classes.background__image)}>
         <div className={classes.background__cover}>
           <img
@@ -33,13 +31,15 @@ export const Background = ({
 
           <div className={classes['background__cover-overlay']} />
 
-          <i
-            onClick={play}
-            className={'ion-ios-play'} />
+          {showPlayInfo && (
+            <i
+              onClick={play}
+              className={'ion-ios-play'} />
+          )}
 
         </div>
 
-        {activeMode === 'movie' && (
+        {showPlayInfo && activeMode === 'movie' && (
           <QualtiySwitch
             setTorrent={setTorrent}
             torrents={torrents}
@@ -49,8 +49,10 @@ export const Background = ({
 
       {children}
 
-      <div className={classes.background__overlay} />
+      <div className={classes.background__poster} style={{ backgroundImage: `url(${backgroundImage})` }}>
 
+        <div className={classes.background__overlay} />
+      </div>
     </div>
   )
 

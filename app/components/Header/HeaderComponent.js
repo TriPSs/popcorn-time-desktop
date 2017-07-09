@@ -37,7 +37,7 @@ export default class Header extends Component {
     const { searchQuery }               = this.state
 
     return (
-      <div className="row">
+      <div className="row" style={{ height: 64 }}>
         <div className="col-sm-12">
           <nav className="navbar navbar-dark navbar-fixed-top bg-inverse">
             <div className="row">

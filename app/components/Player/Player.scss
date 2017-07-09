@@ -1,5 +1,9 @@
 @import 'base/variables';
 
+.player {
+  z-index: 10;
+}
+
 .plyr {
   min-height: $item-background-height;
   padding: 0;

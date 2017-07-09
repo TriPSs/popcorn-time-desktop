@@ -4,7 +4,7 @@ import * as Constants from './PlayerConstants'
 
 export function play(uri: string, metadata: MetadataType) {
   return {
-    type   : Constants.PLAYER_PLAY,
+    type   : Constants.PLAYER_ACTION_PLAY,
     payload: {
       uri,
       metadata,
@@ -14,17 +14,24 @@ export function play(uri: string, metadata: MetadataType) {
 
 export function pause() {
   return {
-    type: Constants.PLAYER_PAUSE,
+    type: Constants.PLAYER_ACTION_PAUSE,
   }
 }
 
 export function stop() {
   return {
-    type: Constants.PLAYER_STOP,
+    type: Constants.PLAYER_ACTION_STOP,
   }
 }
 
-export function updatePlayerType(type: string) {
+export function updateStatus(newStatus) {
+  return {
+    type   : Constants.UPDATE_PLAYER_STATUS,
+    payload: newStatus,
+  }
+}
+
+export function updateType(type: string) {
   return {
     type   : Constants.UPDATE_PLAYER_TYPE,
     payload: {

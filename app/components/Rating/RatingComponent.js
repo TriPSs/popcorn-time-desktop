@@ -18,7 +18,7 @@ export const Rating = ({ rating, starColor, emptyStarColor }: Props) => (
 
 Rating.defaultProps = {
   rating        : 0,
-  starColor     : '#848484',
+  starColor     : '#ffffff',
   emptyStarColor: 'rgba(255, 255, 255, 0.2)',
 }
 

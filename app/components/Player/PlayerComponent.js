@@ -2,9 +2,15 @@
  * @flow
  */
 import React from 'react'
+import classNames from 'classnames'
 
-import Torrent from 'api/Torrent'
+import Events from 'api/Events'
 import MediaPlayer from 'api/Player'
+import * as TorrentEvents from 'api/Torrent/TorrentEvents'
+import * as PlayerEvents from 'api/Player/PlayerEvents'
+import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+
 import type { Props } from './PlayerTypes'
 import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
@@ -15,44 +21,63 @@ export class Player extends React.Component {
   props: Props
 
   state = {
-    loading: true,
+    torrentStatus: TorrentStatuses.NONE,
   }
 
-  constructor(props) {
-    super(props)
-
-    Torrent.addEventListener(Torrent.EVENT_START, this.onDoneBuffering)
-    Torrent.addEventListener(Torrent.EVENT_DONE_BUFFERING, this.onDoneBuffering)
-  }
-
-  onStart = () => this.setState({ loading: true })
-
-  onDoneBuffering = (data) => {
-    console.log('done Buffering', data)
+  componentDidMount() {
+    Events.on(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
+    Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { status: newStatus, playerType: newPlayerType } = nextProps
-    const { status: oldStatus, playerType: oldPlayerType } = this.props
+    const { playerAction: newPlayerAction, playerType: newPlayerType } = nextProps
+    const { playerAction: oldPlayerAction, playerType: oldPlayerType } = this.props
 
     if (oldPlayerType !== newPlayerType) {
       MediaPlayer.updatePlayerType(newPlayerType)
     }
 
-    if (oldStatus !== newStatus) {
+    if (oldPlayerAction !== newPlayerAction) {
       const { uri, metadata } = nextProps
 
-      MediaPlayer.changePlayerStatus(newStatus, { uri, metadata })
+      MediaPlayer.firePlayerAction(newPlayerAction, { uri, metadata })
     }
   }
 
+  playerStatusChanged = (event, data) => {
+    const { newStatus }     = data
+    const { updateStatus } = this.props
+
+    updateStatus(newStatus)
+  }
+
+  torrentStatusChange = (event, data) => {
+    const { newStatus } = data
+
+    this.setState({
+      torrentStatus: newStatus,
+    })
+  }
+
+  isHidden = () => {
+    const { torrentStatus } = this.state
+    const { playerStatus }  = this.props
+
+    if (playerStatus === PlayerStatuses.PLAYING) {
+      return false
+    }
+
+    return torrentStatus === TorrentStatuses.NONE && playerStatus !== PlayerStatuses.PLAYING
+  }
+
   renderVideo = () => {
-    const { status, uri, stop } = this.props
+    const { playerStatus, playerAction, uri, stop } = this.props
 
     return (
       <div
         style={{
-          visibility: status !== Constants.PLAYER_STOP ? 'inherit' : 'hidden',
+          visibility: playerStatus === PlayerStatuses.PLAYING &&
+                      playerAction !== Constants.PLAYER_ACTION_STOP ? 'inherit' : 'hidden',
           display   : !!uri ? 'inherit' : 'none',
         }}
         className={classes.plyr}>
@@ -65,17 +90,29 @@ export class Player extends React.Component {
   }
 
   render() {
-    const { playerType, item } = this.props
-    const { loading }              = this.state
+    const { playerType, playerStatus, item } = this.props
 
     if (playerType !== Constants.PLAYER_TYPE_PLYR) {
       return null
     }
 
+    const { torrentStatus } = this.state
+
     return (
-      <div>
-        {loading && (
-          <Buffering item={item} />
+      <div className={classNames({
+        'col-sm-6': playerStatus !== PlayerStatuses.PLAYING,
+        hidden    : this.isHidden(),
+      }, classes.player)}>
+        {torrentStatus === TorrentStatuses.CONNECTING && (
+          <div className="col-sm-12" style={{ color: 'white' }}>
+            Connecting
+          </div>
+        )}
+
+        {torrentStatus === TorrentStatuses.BUFFERING && (
+          <div className="col-sm-12" style={{ color: 'white' }}>
+            Buffering
+          </div>
         )}
 
         {this.renderVideo()}

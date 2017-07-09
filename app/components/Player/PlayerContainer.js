@@ -6,10 +6,11 @@ import * as Selectors from './PlayerSelectors'
 import Player from './PlayerComponent'
 
 export const mapStateToProps = state => ({
-  uri       : Selectors.getUri(state),
-  metadata  : Selectors.getMetadata(state),
-  status    : Selectors.getStatus(state),
-  playerType: Selectors.getPlayerType(state),
+  uri         : Selectors.getUri(state),
+  metadata    : Selectors.getMetadata(state),
+  playerAction: Selectors.getPlayerAction(state),
+  playerStatus: Selectors.getPlayerStatus(state),
+  playerType  : Selectors.getPlayerType(state),
 })
 
 export default connect(mapStateToProps, { ...Actions })(Player)
