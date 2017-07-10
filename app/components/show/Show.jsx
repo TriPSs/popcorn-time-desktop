@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import type { Props } from './ShowConstants'
 
 export default function Show(props: Props) {
-  const { seasons, selectShow, selectedSeason, episodes, selectedEpisode } = props;
+  const { seasons, selectedSeason, selectedEpisode} = props;
 
   return (
     <div className="row">
@@ -17,7 +17,6 @@ export default function Show(props: Props) {
               className={classNames('list-group-item', {
                 active: season.season === selectedSeason
               })}
-              onClick={() => selectShow('episodes', season.season)}
               key={season.season}
             >
               Season {season.season}
@@ -29,13 +28,11 @@ export default function Show(props: Props) {
       <div className="col-sm-12 col-md-6">
         <h4>Episodes:</h4>
         <div className="list-group">
-          {episodes.map(episode =>
+          {seasons[selectedSeason].episodes.map(episode =>
             <a
               className={classNames('list-group-item', {
                 active: episode.episode === selectedEpisode
               })}
-              onClick={() =>
-                selectShow('episode', selectedSeason, episode.episode)}
               key={episode.episode}
             >
               Ep {episode.episode}. {episode.title}
@@ -62,8 +59,8 @@ export default function Show(props: Props) {
         </li>
         <li>
           <h6>
-            {episodes.length && selectedSeason && episodes[selectedEpisode]
-              ? episodes[selectedEpisode].overview
+            {seasons[selectedSeason].episodes.length && selectedSeason && seasons[selectedSeason].episodes[selectedEpisode]
+              ? seasons[selectedSeason].episodes[selectedEpisode].overview
               : null}
           </h6>
         </li>

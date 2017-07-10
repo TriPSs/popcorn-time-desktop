@@ -8,23 +8,44 @@ export type ContentType = {
     fanart: ImageType,
   },
   type: string,
-  rating: RatingType
+  rating: RatingType,
+  summary: string,
+  genres: string,
+  runtime: string,
 }
 
 export type MovieType = ContentType & {
   certification: string,
-  summary: string,
-  runtime: string,
   trailer: string,
-  genres: string,
-  rating: string,
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,
   },
 }
 
-export type ShowType = ContentType & {}
+export type ShowType = ContentType & {
+  genres: string,
+  seasons: Array<SeasonType>,
+}
+
+export type SeasonType = {
+  title: string,
+  summary: string,
+  number: number,
+  episodes: Array<EpisodeType>,
+}
+
+export type EpisodeType = {
+  id: string,
+  title: string,
+  number: number,
+  summary: string,
+  torrents: {
+    '1080p': TorrentType,
+    '720p': TorrentType,
+    '420p': TorrentType,
+  },
+}
 
 export type TorrentType = {
   url: string,
@@ -58,13 +79,6 @@ export type RuntimeType = {
   minutes: number
 }
 
-type seasonType = {}
-
-type episodeType = seasonType & {}
-
-export type certificationType = 'G' | 'PG' | 'PG-13' | 'R' | 'n/a'
-
-export type imagesType = {}
-
-//  sort?: 'ratings' | 'popular' | 'trending',
-export type optionsType = {}
+export type filterType = {
+  sort?:  'populaity' | 'trending',
+}

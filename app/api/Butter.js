@@ -26,17 +26,12 @@ export class Butter {
 
   getShows = (page: number = 1, limit: number = 50) => this.pctAdapter.getShows(page, limit)
 
-  getShow = (itemId: string) => {
-    return this.pctAdapter.getShow(itemId).then(pctShow => {
-
-      // Deze wordt leidend! Episode info van pctShow hier in mergen
-      this.trakt.getSeasons(pctShow.id).then(show => {
-        console.log('trakt', show)
-      })
-
-      return pctShow
-    })
-  }
+  getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
+                                    .then(pctShow => this.trakt.getSeasons(pctShow.id, pctShow.seasons)
+                                                         .then(seasons => ({
+                                                           ...pctShow,
+                                                           seasons,
+                                                         })))
 
   searchTorrent = (itemId: string, type: string) => {
     return TorrentAdapter(itemId, type, {}, false)

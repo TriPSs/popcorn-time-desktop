@@ -66,11 +66,11 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
     if (isDetail) {
       formattedShow = {
         ...formattedShow,
-        runtime : this.formatRuntimeMinutesToObject(show.runtime),
-        episodes: Helpers.formatShowEpisodes(show.episodes),
-        summary : show.synopsis,
-        genres  : show.genres,
-        status  : show.status,
+        runtime: this.formatRuntimeMinutesToObject(show.runtime),
+        seasons: Helpers.formatShowEpisodes(show.episodes),
+        summary: show.synopsis,
+        genres : show.genres,
+        status : show.status,
       }
     }
 

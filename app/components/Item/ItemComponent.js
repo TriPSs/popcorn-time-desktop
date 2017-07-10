@@ -11,6 +11,8 @@ import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
 import Info from './Info'
+import Cover from './Cover'
+import Seasons from './Seasons'
 import classes from './Item.scss'
 
 export default class Item extends React.Component {
@@ -20,8 +22,10 @@ export default class Item extends React.Component {
   props: Props
 
   state: State = {
-    torrent      : null,
-    torrentStatus: TorrentStatuses.NONE,
+    torrent        : null,
+    torrentStatus  : TorrentStatuses.NONE,
+    selectedSeason : 1,
+    selectedEpisode: 1,
   }
 
   constructor(props: Props) {
@@ -134,6 +138,11 @@ export default class Item extends React.Component {
     return torrents[bestQuality]
   }
 
+  selectSeasonAndEpisode = (season, episode) => this.setState({
+    selectedSeason : season,
+    selectedEpisode: episode,
+  })
+
   setTorrent = (torrent) => {
     this.setState({
       torrent,
@@ -157,14 +166,29 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
+  getEpisode = () => {
+    const { item }                            = this.props
+    const { selectedSeason, selectedEpisode } = this.state
+
+    if (!item.seasons[selectedSeason] || item.seasons[selectedSeason].episodes.length < selectedEpisode) {
+      return {}
+    }
+
+    return item.seasons[selectedSeason].episodes.find(episode => episode.number === selectedEpisode)
+  }
+
   render() {
     const { match: { params: { itemId, activeMode } } } = this.props
     const { item, isLoading }                           = this.props
-    const { torrent }                                   = this.state
+    const { torrent, selectedSeason, selectedEpisode }  = this.state
 
     if (isLoading || item === null || item.id !== itemId) {
       return null
     }
+
+    const episode = this.getEpisode()
+    console.log(episode)
+    const torrents = episode ? episode.torrents : {}
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
@@ -180,29 +204,69 @@ export default class Item extends React.Component {
 
         <Background
           {...{
-            activeMode,
-            torrent,
-            torrents       : item.torrents,
-            setTorrent     : this.setTorrent,
-            play           : this.play,
             backgroundImage: item.images.fanart.high,
-            poster         : item.images.poster.thumb,
-            showPlayInfo   : this.showPlayInfo(),
-          }}>
+          }} />
 
-          {this.showPlayInfo() && (
-            <Info
-              {...{
-                item,
-                activeMode,
-                play: this.play,
-              }} />
+        <div className={classes[`item__content--${activeMode}`]}>
+          <div className={classes[`item__row--${activeMode}`]}>
+            <Cover {...{
+              activeMode,
+              torrent,
+              torrents       : item.torrents,
+              setTorrent     : this.setTorrent,
+              play           : this.play,
+              backgroundImage: item.images.fanart.high,
+              poster         : item.images.poster.thumb,
+              showPlayInfo   : this.showPlayInfo(),
+            }} />
+
+            {this.showPlayInfo() && (
+              <Info
+                {...{
+                  item,
+                  activeMode,
+                  play: this.play,
+                }} />
+            )}
+
+            <Player item={item} />
+          </div>
+
+          {item.type === 'show' && (
+            <div className={classNames(classes[`item__row--${activeMode}`], classes.actions)}>
+
+              {torrents && Object.keys(torrents).map(quality => (
+                <button
+                  key={quality}
+                  style={{ zIndex: 1060 }}
+                  className={classNames('pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
+                    { 'pct-btn-available': torrents[quality] !== null })}>
+                  {torrents[quality] !== null && (
+                    <div>Play in {quality}</div>
+                  )}
+
+                  {torrents[quality] === null && (
+                    <div>Search for {quality}</div>
+                  )}
+                </button>
+              ))}
+
+            </div>
           )}
 
-          <Player item={item} />
+          {item.type === 'show' && (
+            <div className={classes[`item__row--${activeMode}`]}>
+              <Seasons {...{
+                seasons               : item.seasons,
+                selectedSeason,
+                selectedEpisode,
+                selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              }} />
 
-        </Background>
+            </div>
+          )}
 
+        </div>
       </div>
     )
   }

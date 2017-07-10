@@ -5,31 +5,29 @@
  * If it doesn't, create it and initialize it with the fields:
  * 'favorites', 'watchList', 'recentlyWatched'
  */
-import ConfigStore from 'configstore';
+import ConfigStore from 'configstore'
 
-export default function setupConfig() {
-  return new ConfigStore('popcorn-time-experimental', {
-    favorites: [],
-    recentlyWatched: [],
-    watchList: [],
-    state: {}
-  });
-}
-
-const config = setupConfig();
+export const config = new ConfigStore('popcorn-time', {
+  favorites      : [],
+  recentlyWatched: [],
+  watchList      : [],
+  state          : {},
+})
 
 export function set(key: string, value: any) {
-  return config.set(key, value);
+  return config.set(key, value)
 }
 
 export function get(key: string) {
-  return config.get(key);
+  return config.get(key)
 }
 
 export function remove(key: string) {
-  return config.delete(key);
+  return config.delete(key)
 }
 
 export function clear() {
-  return config.clear();
+  return config.clear()
 }
+
+export default config
