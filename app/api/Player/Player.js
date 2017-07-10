@@ -20,6 +20,8 @@ export class Player implements PlayerProviderInterface {
 
   plyrAdapter: PlyrPlayerProvider
 
+  lastPlayer = null
+
   constructor() {
     this.playerAdapter = new PlayerAdapter()
     this.plyrAdapter   = new PlyrPlayerProvider()
@@ -88,7 +90,7 @@ export class Player implements PlayerProviderInterface {
         return null
 
       default:
-        return this.plyrAdapter
+        return this.lastPlayer = this.plyrAdapter
     }
   }
 
@@ -96,7 +98,10 @@ export class Player implements PlayerProviderInterface {
 
   destroy() {
     Torrent.destroy()
-    this.getRightPlayer().destroy()
+
+    if (this.lastPlayer) {
+      this.lastPlayer.destroy()
+    }
   }
 
   restart() {

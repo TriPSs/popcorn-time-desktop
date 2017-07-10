@@ -2,7 +2,6 @@
 /* eslint prefer-template: 0 */
 import cache from 'lru-cache';
 import url from 'url';
-import TheMovieDbMetadataProvider from '../metadata/TheMovieDBMetadataProvider';
 import type { torrentType } from './TorrentProviderInterface';
 
 export const providerCache = cache({
@@ -72,14 +71,14 @@ export function determineQuality(magnet: string, metadata: string = ''): string 
 }
 
 export async function convertTmdbToImdb(tmdbId: string): Promise<string> {
-  const theMovieDbProvider = new TheMovieDbMetadataProvider();
+  /*const theMovieDbProvider = new TheMovieDbMetadataProvider();
   const movie              = await theMovieDbProvider.getMovie(tmdbId);
 
   if (!movie.ids.imdbId) {
     throw new Error('Cannot convert tmdbId to imdbId');
   }
 
-  return movie.ids.imdbId;
+  return movie.ids.imdbId;*/
 }
 
 // export async function convertImdbtoTmdb(imdbId: string): Promise<string> {

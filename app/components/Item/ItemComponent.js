@@ -69,7 +69,7 @@ export default class Item extends React.Component {
       this.getAllData()
       window.scrollTo(0, 0)
 
-    } else if (!isLoading && wasLoading) {
+    } else if (!isLoading && wasLoading && newItem.type === 'movie') {
       this.getBestTorrent(nextProps)
     }
   }
@@ -158,9 +158,11 @@ export default class Item extends React.Component {
     const { item, isLoading }                   = this.props
     const { torrent }                           = this.state
 
-    if (isLoading || item === null || !torrent) {
+    if (isLoading || item === null) {
       return null
     }
+
+    console.log(item)
 
     return (
       <div className={classNames('container-fluid', classes.item)}>

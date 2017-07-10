@@ -16,7 +16,7 @@ export const Info = ({ item, play }: Props) => (
     </h1>
 
     <div className={'row'}>
-      {item.runtime.short && (
+      {item.runtime && item.runtime.short && (
         <div className={'col-sm-3'}>
           <h6>
             {item.runtime.short}

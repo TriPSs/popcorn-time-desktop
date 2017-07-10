@@ -17,7 +17,7 @@ export const formatImages = (images: ImageType) => {
   }
 }
 
-export const formatTorrents = (torrents) => {
+export const formatTorrents = (torrents, type = 'movie') => {
   const getHealth = (seed, peer) => {
     const ratio = seed && !!peer ? seed / peer : seed
 
@@ -48,16 +48,43 @@ export const formatTorrents = (torrents) => {
     ...torrent,
     quality,
     health: {
-      ...getHealth(torrent.seed, torrent.peer),
+      ...getHealth(torrent.seed || torrent.seeds, torrent.peer || torrent.peers),
     },
   })
+
+  if (type === 'movie') {
+    return {
+      '1080p': !torrents['1080p'] ? null : formatTorrent(torrents['1080p'], '1080p'),
+      '720p' : !torrents['720p'] ? null : formatTorrent(torrents['720p'], '720p'),
+    }
+  }
 
   return {
     '1080p': !torrents['1080p'] ? null : formatTorrent(torrents['1080p'], '1080p'),
     '720p' : !torrents['720p'] ? null : formatTorrent(torrents['720p'], '720p'),
+    '480p' : !torrents['480p'] ? null : formatTorrent(torrents['480p'], '480p'),
   }
 }
 
 export const formatRating = (rating: RatingType) => ({
   stars: (rating.percentage / 100) * 5,
 })
+
+export const formatShowEpisodes = (episodes) => {
+  let seasons = []
+
+  episodes.map(episode => {
+    if (!seasons[episode.season]) {
+      seasons[episode.season] = []
+    }
+
+    seasons[episode.season][episode.episode] = {
+      summary : episode.overview,
+      season  : episode.season,
+      episode : episode.episode,
+      torrents: formatTorrents(episode.torrents, 'show'),
+    }
+  })
+
+  return seasons
+}

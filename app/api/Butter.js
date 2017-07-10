@@ -5,16 +5,19 @@
 import TorrentAdapter from './torrents/TorrentAdapter'
 import MetadataAdapter from './metadata/MetadataAdapter'
 import PctMetadataProvider from './metadata/PctMetadataProvider'
+import TraktMetadataProvider from './metadata/TraktMetadataProvider'
 
 export class Butter {
 
   metadata: MetadataAdapter
 
+  trakt: TraktMetadataProvider
   pctAdapter: PctMetadataProvider
 
   constructor() {
     this.metadata   = MetadataAdapter
     this.pctAdapter = new PctMetadataProvider()
+    this.trakt      = new TraktMetadataProvider()
   }
 
   getMovies = (page: number = 1, limit: number = 50) => this.pctAdapter.getMovies(page, limit)
@@ -23,7 +26,17 @@ export class Butter {
 
   getShows = (page: number = 1, limit: number = 50) => this.pctAdapter.getShows(page, limit)
 
-  getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
+  getShow = (itemId: string) => {
+    return this.pctAdapter.getShow(itemId).then(pctShow => {
+
+      // Deze wordt leidend! Episode info van pctShow hier in mergen
+      this.trakt.getSeasons(pctShow.id).then(show => {
+        console.log('trakt', show)
+      })
+
+      return pctShow
+    })
+  }
 
   searchTorrent = (itemId: string, type: string) => {
     return TorrentAdapter(itemId, type, {}, false)

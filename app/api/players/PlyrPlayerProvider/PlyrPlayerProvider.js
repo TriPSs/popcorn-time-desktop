@@ -20,7 +20,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   powerSaveBlockerId: number
 
-  status: string = null
+  status: string = PlayerStatuses.NONE
 
   supportedFormats = [
     'mp4',
@@ -114,6 +114,9 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
     if (this.player) {
       this.player.destroy()
+      this.player = null
+
+      this.updateStatus(PlayerStatuses.NONE)
     }
   }
 

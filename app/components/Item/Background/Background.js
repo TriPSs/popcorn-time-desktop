@@ -31,7 +31,7 @@ export const Background = ({
 
           <div className={classes['background__cover-overlay']} />
 
-          {showPlayInfo && (
+          {showPlayInfo && activeMode === 'movie' && (
             <i
               onClick={play}
               className={'ion-ios-play'} />

@@ -22,27 +22,13 @@ export function getItem(itemId, activeMode) {
 
     switch (activeMode) {
       case 'movie':
-        getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
-        break
+        return Butter.getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
 
       case 'show':
-        return dispatch(fetchedItem(getShow(itemId)))
+        return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
 
       default:
         return null
     }
-
-    return null
   }
-}
-
-export function getMovie(itemId) {
-  // TODO:: Check if the movie is not already in the fetched movies
-
-  return Butter.getMovie(itemId)
-               .then(movie => movie)
-}
-
-export function getShow(itemId) {
-  return Butter.getShow(itemId)
 }

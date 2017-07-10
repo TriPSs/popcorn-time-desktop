@@ -44,6 +44,10 @@ export class Player extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    MediaPlayer.destroy()
+  }
+
   playerStatusChanged = (event, data) => {
     const { newStatus }     = data
     const { updateStatus } = this.props

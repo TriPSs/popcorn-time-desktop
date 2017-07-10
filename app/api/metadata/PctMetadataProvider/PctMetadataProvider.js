@@ -30,7 +30,7 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
 
   getShow = (itemId: string) => (
     this.popcornAPI.get(`show/${itemId}`)
-        .then(response => this.formatShow(response.data))
+        .then(response => this.formatShow(response.data, true))
   )
 
   formatMovies = (movies: Array<MovieType>) => (movies.map((movie: MovieType) => this.formatMovie(movie)))
@@ -66,7 +66,11 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
     if (isDetail) {
       formattedShow = {
         ...formattedShow,
-        episodes: show.episodes,
+        runtime : this.formatRuntimeMinutesToObject(show.runtime),
+        episodes: Helpers.formatShowEpisodes(show.episodes),
+        summary : show.synopsis,
+        genres  : show.genres,
+        status  : show.status,
       }
     }
 

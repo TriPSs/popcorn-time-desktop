@@ -1,3 +1,4 @@
+export const NONE      = 'player.status.none'
 export const PLAYING   = 'player.status.playing'
 export const LOADING   = 'player.status.loading'
 export const STREAMING = 'player.status.streaming'
