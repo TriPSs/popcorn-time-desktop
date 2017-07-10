@@ -97,6 +97,15 @@ export class Info extends React.Component {
             </div>
           )}
 
+          <div className={classes.info__player}>
+            <button
+              style={{ zIndex: 1060 }}
+              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}>
+              <i className={'ion-ios-arrow-down'} />
+              Popcorn Time
+            </button>
+          </div>
+
         </div>
       </div>
     )

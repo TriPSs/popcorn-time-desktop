@@ -40,6 +40,7 @@ export type EpisodeType = {
   title: string,
   number: number,
   summary: string,
+  aired: number,
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,

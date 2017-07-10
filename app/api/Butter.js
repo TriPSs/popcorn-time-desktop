@@ -20,11 +20,11 @@ export class Butter {
     this.trakt      = new TraktMetadataProvider()
   }
 
-  getMovies = (page: number = 1, limit: number = 50) => this.pctAdapter.getMovies(page, limit)
+  getMovies = (page: number = 1) => this.pctAdapter.getMovies(page)
 
   getMovie = (itemId: string) => this.pctAdapter.getMovie(itemId)
 
-  getShows = (page: number = 1, limit: number = 50) => this.pctAdapter.getShows(page, limit)
+  getShows = (page: number = 1) => this.pctAdapter.getShows(page)
 
   getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
                                     .then(pctShow => this.trakt.getSeasons(pctShow.id, pctShow.seasons)

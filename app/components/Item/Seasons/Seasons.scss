@@ -57,4 +57,12 @@
   &--active {
 	background: lighten($body-bg, 20%);
   }
+
+  &--disabled {
+	background: darken($body-bg, 5%);
+
+	&:hover {
+	  background: darken($body-bg, 5%);
+	}
+  }
 }

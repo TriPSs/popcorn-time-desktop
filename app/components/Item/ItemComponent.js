@@ -66,7 +66,7 @@ export default class Item extends React.Component {
       window.scrollTo(0, 0)
 
     } else if (!isLoading && wasLoading && newItem.type === 'movie') {
-      this.getBestTorrent(nextProps)
+      this.getBestMovieTorrent(nextProps)
     }
   }
 
@@ -82,7 +82,16 @@ export default class Item extends React.Component {
     })
   }
 
-  play = (playerType) => {
+  playEpisode = (torrent) => {
+    if (torrent !== null) {
+      this.setTorrent('plyr', torrent)
+
+    } else {
+      // TODO:: Search
+    }
+  }
+
+  play = (playerType, torrent = this.state.torrent) => {
     const { item, player } = this.props
 
     switch (playerType) {
@@ -99,8 +108,6 @@ export default class Item extends React.Component {
         break
 
       default:
-        const { torrent } = this.state
-
         player.play(torrent.url, {
           title   : item.title,
           image   : {
@@ -117,7 +124,7 @@ export default class Item extends React.Component {
     getItem(itemId, activeMode)
   }
 
-  getBestTorrent = (props = this.props) => {
+  getBestMovieTorrent = (props = this.props) => {
     const { torrent } = this.state
 
     if (torrent) {
@@ -128,7 +135,7 @@ export default class Item extends React.Component {
 
     let bestQuality = null
     Object.keys(torrents).map((quality) => {
-      if (bestQuality === null || parseInt(bestQuality) < parseInt(quality)) {
+      if (bestQuality === null || parseInt(bestQuality, 10) < parseInt(quality, 10)) {
         bestQuality = quality
       }
     })
@@ -166,29 +173,42 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
-  getEpisode = () => {
-    const { item }                            = this.props
-    const { selectedSeason, selectedEpisode } = this.state
+  getSeason = () => {
+    const { item }           = this.props
+    const { selectedSeason } = this.state
 
-    if (!item.seasons[selectedSeason] || item.seasons[selectedSeason].episodes.length < selectedEpisode) {
-      return {}
+    if (!item.seasons) {
+      return null
     }
 
-    return item.seasons[selectedSeason].episodes.find(episode => episode.number === selectedEpisode)
+    return item.seasons.find(season => season.number === selectedSeason)
+  }
+
+  getEpisode = () => {
+    const { selectedEpisode } = this.state
+    const season              = this.getSeason()
+
+    if (!season || !season.episodes) {
+      return null
+    }
+
+    return season.episodes.find(episode => episode.number === selectedEpisode)
   }
 
   render() {
     const { match: { params: { itemId, activeMode } } } = this.props
     const { item, isLoading }                           = this.props
-    const { torrent, selectedSeason, selectedEpisode }  = this.state
+    const { torrent }                                   = this.state
 
     if (isLoading || item === null || item.id !== itemId) {
       return null
     }
 
-    const episode = this.getEpisode()
-    console.log(episode)
-    const torrents = episode ? episode.torrents : {}
+    let torrents = {}
+    if (activeMode === 'show') {
+      const episode = this.getEpisode()
+      torrents      = episode ? episode.torrents : {}
+    }
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
@@ -239,6 +259,7 @@ export default class Item extends React.Component {
                 <button
                   key={quality}
                   style={{ zIndex: 1060 }}
+                  onClick={() => this.playEpisode(torrents[quality])}
                   className={classNames('pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
                     { 'pct-btn-available': torrents[quality] !== null })}>
                   {torrents[quality] !== null && (
@@ -258,8 +279,8 @@ export default class Item extends React.Component {
             <div className={classes[`item__row--${activeMode}`]}>
               <Seasons {...{
                 seasons               : item.seasons,
-                selectedSeason,
-                selectedEpisode,
+                selectedSeason        : this.getSeason(),
+                selectedEpisode       : this.getEpisode(),
                 selectSeasonAndEpisode: this.selectSeasonAndEpisode,
               }} />
 

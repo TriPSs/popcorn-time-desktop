@@ -13,8 +13,8 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
     baseURL: 'https://movies-v2.api-fetch.website/',
   })
 
-  getMovies = (page: number = 1, limit: number = 50) => (
-    this.popcornAPI.get(`movies/${page}`, { params: { page, limit } })
+  getMovies = (page: number = 1, filters = { limit: 50, sort: 'trending' }) => (
+    this.popcornAPI.get(`movies/${page}`, { params: { ...filters } })
         .then(response => this.formatMovies(response.data))
   )
 
@@ -23,8 +23,8 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
         .then(response => this.formatMovie(response.data))
   )
 
-  getShows = (page: number = 1, limit: number = 50) => (
-    this.popcornAPI.get(`shows/${page}`, { params: { page, limit } })
+  getShows = (page: number = 1, filters = { limit: 50, sort: 'trending' }) => (
+    this.popcornAPI.get(`shows/${page}`, { params: { ...filters } })
         .then(response => this.formatShows(response.data))
   )
 

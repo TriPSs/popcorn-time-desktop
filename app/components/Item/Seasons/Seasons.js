@@ -30,29 +30,11 @@ export class Seasons extends React.Component {
     })
   }
 
-  getBetTorrent = (torrents) => {
-    let bestTorrent = null
-
-    Object.keys(torrents).map(quality => {
-      if (torrents[quality] !== null && (!bestTorrent || parseInt(bestTorrent) < parseInt(quality))) {
-        bestTorrent = quality
-      }
-    })
-
-    if (bestTorrent) {
-      return torrents[bestTorrent]
-    }
-
-    return {
-      health: {
-        color: 'black',
-      },
-    }
-  }
-
   render() {
     const { seasons, selectedSeason, selectedEpisode, selectSeasonAndEpisode } = this.props
     const { tooltips }                                                         = this.state
+
+    const today = new Date().getTime()
 
     return (
       <div className={'col-sm-12'}>
@@ -61,7 +43,7 @@ export class Seasons extends React.Component {
             {seasons.map(season =>
               <a
                 className={classNames(classes['list-item'], {
-                  [classes['list-item--active']]: season.number === selectedSeason,
+                  [classes['list-item--active']]: season.number === selectedSeason.number,
                 })}
                 key={season.number}
                 onClick={() => selectSeasonAndEpisode(season.number, 1)}
@@ -76,13 +58,18 @@ export class Seasons extends React.Component {
 
         <div className={classNames('col-sm-6', classes.seasons)}>
           <div className={classes.seasons__list}>
-            {seasons[selectedSeason].episodes.map(episode =>
+            {selectedSeason.episodes.map(episode =>
               <a
                 className={classNames(classes['list-item'], {
-                  [classes['list-item--active']]: episode.number === selectedEpisode,
+                  [classes['list-item--active']]  : episode.number === selectedEpisode.number,
+                  [classes['list-item--disabled']]: episode.aired > today,
                 })}
                 key={episode.number}
-                onClick={() => selectSeasonAndEpisode(selectedSeason, episode.number)}
+                onClick={() => {
+                  if (episode.aired < today) {
+                    selectSeasonAndEpisode(selectedSeason.number, episode.number)
+                  }
+                }}
               >
                 <div className={classes['list-item__text']}>
                   {episode.number}. {episode.title}
@@ -94,30 +81,38 @@ export class Seasons extends React.Component {
 
                   <div
                     className={classes['list-item__health-status']}
-                    style={{ backgroundColor: episode.torrents['480p']
-                      ? episode.torrents['480p'].health.color
-                      : 'black' }} />
+                    style={{
+                      backgroundColor: episode.torrents['480p']
+                        ? episode.torrents['480p'].health.color
+                        : 'black',
+                    }} />
 
                   <div
                     className={classes['list-item__health-status']}
-                    style={{ backgroundColor: episode.torrents['720p']
-                      ? episode.torrents['720p'].health.color
-                      : 'black' }} />
+                    style={{
+                      backgroundColor: episode.torrents['720p']
+                        ? episode.torrents['720p'].health.color
+                        : 'black',
+                    }} />
                   <div
                     className={classes['list-item__health-status']}
-                    style={{ backgroundColor: episode.torrents['1080p']
-                      ? episode.torrents['1080p'].health.color
-                      : 'black' }} />
+                    style={{
+                      backgroundColor: episode.torrents['1080p']
+                        ? episode.torrents['1080p'].health.color
+                        : 'black',
+                    }} />
 
-                  <Tooltip
-                    placement={'top'}
-                    isOpen={tooltips[episode.number]}
-                    target={`episode-${episode.number}`}
-                    toggle={() => this.toggleMagnetTooltip(episode.number)}>
-                    <div>{`480p: ${episode.torrents['480p'] ? episode.torrents['480p'].seeds : 0} seeders`}</div>
-                    <div>{`720p: ${episode.torrents['720p'] ? episode.torrents['720p'].seeds : 0} seeders`}</div>
-                    <div>{`1080p: ${episode.torrents['1080p'] ? episode.torrents['1080p'].seeds : 0} seeders`}</div>
-                  </Tooltip>
+                  {episode.aired < today && (
+                    <Tooltip
+                      placement={'top'}
+                      isOpen={tooltips[episode.number]}
+                      target={`episode-${episode.number}`}
+                      toggle={() => this.toggleMagnetTooltip(episode.number)}>
+                      <div>{`480p: ${episode.torrents['480p'] ? episode.torrents['480p'].seeds : 0} seeders`}</div>
+                      <div>{`720p: ${episode.torrents['720p'] ? episode.torrents['720p'].seeds : 0} seeders`}</div>
+                      <div>{`1080p: ${episode.torrents['1080p'] ? episode.torrents['1080p'].seeds : 0} seeders`}</div>
+                    </Tooltip>
+                  )}
                 </div>
 
               </a>

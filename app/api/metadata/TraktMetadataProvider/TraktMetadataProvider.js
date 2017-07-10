@@ -38,6 +38,7 @@ export default class TraktMetadataAdapter implements MetadataProviderInterface {
     title   : episode.title,
     summary : episode.overview,
     number  : episode.number,
+    aired   : new Date(episode.first_aired).getTime(),
     torrents: this.getEpisodeTorrents(episode, pctSeason),
   }))
 
