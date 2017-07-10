@@ -1,57 +1,66 @@
-import path from 'path';
-import webpack from 'webpack';
-import ProgressBarPlugin from 'progress-bar-webpack-plugin';
+import path from 'path'
+import webpack from 'webpack'
+import fs from 'fs'
+import dotenv from 'dotenv'
+import { dependencies as externals } from './app/package.json'
 
+import config from './config'
 
-export const stats = {
-  colors: true,
-  hash: false,
-  version: false,
-  timings: false,
-  assets: false,
-  chunks: false,
-  modules: false,
-  reasons: false,
-  children: false,
-  source: false,
-  errors: true,
-  errorDetails: false,
-  warnings: false,
-  publicPath: false
-};
+// Get all the possible flags
+const data   = fs.readFileSync('.env.example', { encoding: 'utf8' })
+const buffer = new Buffer(data)
+const flags  = Object.keys(dotenv.parse(buffer))
+
 
 export default {
+  externals: Object.keys(externals || {}),
+
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loader: 'babel-loader',
-      exclude: /node_modules/
-    }, {
-      test: /\.node$/,
-      loader: 'node-loader'
-    }, {
-      test: /\.json$/,
-      loader: 'json-loader'
-    }]
+    rules: [
+      {
+        test   : /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use    : {
+          loader : 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          },
+        },
+      },
+    ],
   },
+
   output: {
-    path: path.join(__dirname, './app/dist'),
-    filename: 'renderer.js',
-    libraryTarget: 'commonjs2'
+    path         : path.join(__dirname, 'app'),
+    filename     : 'bundle.js',
+    libraryTarget: 'commonjs2',
   },
+
   resolve: {
-    extensions: ['', '.js', '.jsx', '.json'],
-    packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main'],
-    alias: {
-      castv2: 'castv2-webpack'
-    }
+    extensions: ['.js', '.jsx', '.json'],
+    modules   : [
+      path.join(__dirname, 'app'),
+      'node_modules',
+    ],
+    // alias: {
+    //   castv2: 'castv2-webpack'
+    // }
   },
+
   plugins: [
-    new webpack.IgnorePlugin(/^(README.md)$/),
-    new ProgressBarPlugin()
+    new webpack.DefinePlugin({
+      ...config.globals,
+      ...config.custom_globals,
+    }),
+
+    new webpack.EnvironmentPlugin(['NODE_ENV', 'DEBUG_PROD', ...flags]),
+    new webpack.NamedModulesPlugin(),
+
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        context: __dirname,
+      },
+    }),
   ],
-  externals: [
-    // put your node 3rd party libraries which can't be built with webpack here
-    // (mysql, mongodb, and so on..)
-  ]
-};
+
+}

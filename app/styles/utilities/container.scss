@@ -1,15 +1,16 @@
-.container-fluid {
-  padding: 0;
-}
-
 ::-webkit-scrollbar-corner {
   background-color: transparent;
 }
 
+.row-center {
+  display: flex;
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   z-index: 0;
-  width: 8px;
-  height: 8px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-thumb {

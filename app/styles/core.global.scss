@@ -1,0 +1,36 @@
+//
+// Modules
+//
+
+@import 'base/fonts';
+@import 'base/variables';
+
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~animate.css';
+@import '~ionicons-temp/scss/ionicons.scss';
+@import '~plyr/src/scss/plyr.scss';
+@import '~notie/src/notie.scss';
+
+//
+// Components
+//
+
+@import './components/stars';
+
+//
+// Utilities
+//
+
+@import './utilities/container';
+
+html, body, #root {
+  height: 100%;
+}
+
+a {
+  text-decoration: none;
+}
+
+.hidden {
+  display: none;
+}

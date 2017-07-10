@@ -1,0 +1,49 @@
+@import 'base/variables';
+
+.info {
+  z-index: 10;
+  color: white;
+
+  &__genres * {
+	text-transform: capitalize;
+  }
+
+  .dv-star-rating-star {
+	font-size: 1.3rem;
+	margin: 0 10px 0 0;
+  }
+
+  &__certification {
+	border: 1px solid white;
+	box-sizing: border-box;
+	color: white;
+	display: inline-block;
+	padding: 1px 9px;
+  }
+
+  &__details {
+	height: 30px;
+
+	> div {
+	  margin-right: 50px;
+	}
+
+	:global {
+	  .ion-videocamera {
+		font-size: 30px;
+		cursor: pointer;
+	  }
+	}
+  }
+
+  i {
+	color: white;
+  }
+
+  &__summary {
+	font-weight: 100;
+	line-height: 150%;
+	max-width: 600px;
+  }
+
+}

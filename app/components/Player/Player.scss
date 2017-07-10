@@ -1,0 +1,56 @@
+@import 'base/variables';
+
+.player {
+  z-index: 10;
+}
+
+.plyr {
+  min-height: $item-background-height;
+  padding: 0;
+  width: 100%;
+  z-index: 1055;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  > div {
+	z-index: 1055;
+  }
+
+  &__close-button {
+	position: absolute !important;
+	top: 0;
+	right: 0;
+	z-index: 1060;
+	color: white !important;
+  }
+
+  :global {
+	.plyr {
+	  position: absolute;
+	  left: 0;
+	  right: 0;
+	  top: 0;
+	  z-index: -100;
+	  min-height: $item-background-height;
+	  opacity: 1;
+	  height: $item-background-height;
+	  overflow: hidden;
+
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  background: black;
+
+	  &__video-wrapper {
+		width: 100%;
+
+		&.plyr--setup {
+		  padding: 0;
+		  height: 100%;
+		}
+	  }
+	}
+  }
+}

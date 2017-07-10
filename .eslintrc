@@ -1,91 +1,171 @@
 {
-  "parser": "babel-eslint",
-  "extends": "airbnb",
+  "parser"  : "babel-eslint",
+  "extends" : [
+    "standard",
+    "standard-react",
+    "airbnb"
+  ],
+  "plugins": [
+    "babel",
+    "react",
+    "promise",
+    "jsx-a11y"
+  ],
   "env": {
     "browser": true,
-    "node": true,
-    "es6": true
+    "node": true
+  },
+  "globals" : {
+    "__DEV__"      : false,
+    "__PROD__"     : false,
+    "__DEBUG__"    : false,
+    "__COVERAGE__" : false,
+    "__BASENAME__" : false,
+    "__IMG__"      : false,
+    "__API__"      : false,
+    "NODE_ENV"     : false,
+    "DEBUG_PROD"   : false
   },
   "rules": {
-    "arrow-parens": 0,
-    "class-methods-use-this": 0,          # HACK: Classes will be replaced by pure fn's
-    "comma-dangle": ["error", "never"],
-    "consistent-return": 2,
-    "func-names": 2,
-    # "fp/no-class": "error",             # TODO: In progress
-    "fp/no-delete": "error",
-    "fp/no-events": "error",
-    "fp/no-let": "error",
-    "fp/no-loops": "error",
-    "fp/no-mutating-assign": "error",
-    "flowtype-errors/show-errors": 2,
-    # "fp/no-mutation": "error",          # TODO: In progress
-    # "fp/no-nil": "error",               # TODO: In progress
-    # "fp/no-proxy": "error",             # TODO: In progress
-    # "fp/no-this": "error",              # TODO: In progress
-    # "fp/no-throw": "error",             # TODO: In progress
-    # "fp/no-unused-expression": "error", # TODO: In progress
-    "generator-star-spacing": [0],        # HACK: https://github.com/airbnb/javascript/issues/948
-    "import/no-extraneous-dependencies": ["off"],
-    "import/no-unresolved": [2, { "ignore": ["electron"] }],
-    "jsx-filename-extension": 0,
-    "jsx-a11y/no-static-element-interactions": 0,
-    "new-cap": 0,
-    "no-implicit-coercion": "error",
-    "no-mixed-operators": 0,
-    "no-use-before-define": 0,
-    "no-nested-ternary": 0,
-    "no-underscore-dangle": 0,
-    "no-console": 0,
-    "no-var": "error",
-    "promise/param-names": 2,
-    "promise/always-return": 2,
-    "promise/catch-or-return": 2,
-    "promise/no-native": 0,
-    # "react/no-set-state": 2,            # TODO: In progress
-    "react/no-unused-prop-types": 0,
-    "react/jsx-no-bind": 1,               # TODO: In progress
-    "react/prefer-stateless-function": 2,
-    "react/jsx-filename-extension": 0,
-    "react/sort-comp": 0,
-    "flowtype/define-flow-type": 2,
-    # "flowtype/require-parameter-type": 2,
-    # "flowtype/require-return-type": [   # TODO: In progress
-    #   2,
-    #   "always",
-    #   {
-    #     "annotateUndefined": "never"
-    #   }
-    # ],
-    "flowtype/space-after-type-colon": [
-      2,
-      "always"
-    ],
-    "flowtype/space-before-type-colon": [
-      2,
-      "never"
-    ],
-    "flowtype/type-id-match": [
-      2,
-      "^([A-Z][a-z0-9]+)+Type$"
-    ],
-    "flowtype/use-flow-type": 2,
-    "flowtype/valid-syntax": 2
+    // ESLint Rules
+    "no-console": 2,
+    "no-extra-semi": 2,
+    "no-multi-spaces": 0,
+    "key-spacing": 0,
+    "no-return-assign": 0,
+    "curly": 0,
+    "padded-blocks": 0,
+    "brace-style": 0,
+
+    "space-before-function-paren": [2, "never"],
+    "semi" : [2, "never"],
+    "max-len": [2, 120, 2],
+    "no-trailing-spaces": 0,
+    "jsx-quotes": [2, "prefer-double"],
+
+    // Babel Rules
+
+    "babel/generator-star-spacing": 2,
+    "babel/new-cap": 2,
+    "babel/array-bracket-spacing": 2,
+    "babel/object-curly-spacing": [2, "always"],
+    "babel/object-shorthand": 2,
+
+    // Switch to error when requireForBlockBody works
+    "babel/arrow-parens": [0, "as-needed"/*, { "requireForBlockBody": true }*/],
+    "babel/no-await-in-loop": 2,
+    "babel/flow-object-type": 2,
+    "babel/func-params-comma-dangle": 2,
+    // "babel/no-invalid-this": 1,
+
+    // React Rules
+    "react/forbid-component-props": [0],
+    "react/forbid-prop-types": [0],
+    "react/no-children-prop": [2],
+    "react/no-danger": [0],
+    "react/no-danger-with-children": [2],
+    "react/no-deprecated": [2],
+    "react/no-did-mount-set-state": [2],
+    "react/no-did-update-set-state": [2],
+    "react/no-direct-mutation-state": [2],
+    "react/no-find-dom-node": [2],
+    "react/no-is-mounted": [2],
+    "react/no-multi-comp": [2],
+    "react/no-set-state": [0],
+    "react/no-string-refs": [2],
+    "react/no-unescaped-entities": [2],
+    "react/no-unknown-property": [2],
+    "react/no-unused-prop-types": [0],
+    "react/prefer-es6-class": [2, "always"],
+    "react/prefer-stateless-function": [2],
+    "react/prop-types": [2],
+    "react/react-in-jsx-scope": [2],
+    "react/require-optimization": [1],
+    "react/require-render-return": [2],
+    "react/self-closing-comp": [2],
+    "react/sort-comp": [2, {
+      "order": [
+        "static-methods",
+        "props",
+        "state",
+        "lifecycle",
+        "/^on.+$/",
+        "/^handle.+$/",
+        "everything-else",
+        "/^get.+$/",
+        "rendering"
+      ],
+      "groups": {
+        "rendering": [
+          "/^render.+$/",
+          "render"
+        ]
+      }
+    }],
+    "react/sort-prop-types": [0],
+    "react/style-prop-object": [2],
+
+    // React JSX Rules
+    "react/jsx-boolean-value": [0],
+    "react/jsx-closing-bracket-location": [0],
+    "react/jsx-curly-spacing": [2],
+    "react/jsx-equals-spacing": [2],
+    "react/jsx-filename-extension": [2, { "extensions": [".js"] }],
+    "react/jsx-first-prop-new-line": [2, "multiline-multiprop"],
+    "react/jsx-handler-names": [2],
+    "react/jsx-indent": [2, 2],
+    "react/jsx-indent-props": [0, 2],
+    "react/jsx-key": [2],
+
+    "react/jsx-no-bind": [1],
+    "react/jsx-no-comment-textnodes": [2],
+    "react/jsx-no-duplicate-props": [2],
+    "react/jsx-no-literals": [0],
+    "react/jsx-no-target-blank": [2],
+    "react/jsx-no-undef": [2],
+    "react/jsx-pascal-case": [2],
+
+    "react/jsx-space-before-closing": [2],
+    "react/jsx-uses-react": [2],
+    "react/jsx-uses-vars": [2],
+    "react/jsx-wrap-multilines": [2],
+
+    // a11y Rules
+    "jsx-a11y/img-has-alt": [0],
+    "jsx-a11y/img-redundant-alt": [2],
+    "jsx-a11y/aria-role": [2],
+    "jsx-a11y/no-access-key": [2],
+
+    "class-methods-use-this": "off",
+    "fp/no-arguments": "off",
+    "fp/no-class": "off",
+    "fp/no-delete": "off",
+    "fp/no-events": "off",
+    "fp/no-get-set": "off",
+    "fp/no-let": "off",
+    "fp/no-loops": "off",
+    "fp/no-mutating-assign": "off",
+    "fp/no-mutating-methods": "off",
+    "fp/no-mutation": "off",
+    "fp/no-nil": "off",
+    "fp/no-proxy": "off",
+    "fp/no-rest-parameters": "off",
+    "fp/no-this": "off",
+    "fp/no-throw": "off",
+    "fp/no-unused-expression": "off",
+    "fp/no-valueof-field": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-var": "off",
+    "no-let": "off",
+    "no-plusplus": "off",
+    "no-use-before-define": "off",
+    "promise/avoid-new": "off",
   },
-  "plugins": [
-    "import",
-    "fp",
-    "promise",
-    "flowtype",
-    "flowtype-errors",
-    "react"
-  ],
   "settings": {
-    "webpack": {
-      "config": "webpack.config.eslint.js"
-    },
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": false
+    "import/resolver": {
+      "node": {
+        "paths": ["app"]
+      }
     }
-  }
+  },
 }

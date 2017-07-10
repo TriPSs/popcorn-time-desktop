@@ -1,15 +1,12 @@
 [ignore]
 .*/node_modules/fbjs/.*
-.*/node_modules/*
-.*/app/node_modules/*
 .*/app/main.js
 .*/app/dist/.*
 .*/release/.*
 .*/git/.*
 
 [include]
-./app/*.js
-./node_modules/
+app
 
 [libs]
 
@@ -17,3 +14,10 @@
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
 esproposal.export_star_as=enable
+module.name_mapper.extension='css' -> '<PROJECT_ROOT>/internals/flow/CSSModule.js.flow'
+module.name_mapper.extension='styl' -> '<PROJECT_ROOT>/internals/flow/CSSModule.js.flow'
+module.name_mapper.extension='scss' -> '<PROJECT_ROOT>/internals/flow/CSSModule.js.flow'
+module.name_mapper.extension='png' -> '<PROJECT_ROOT>/internals/flow/WebpackAsset.js.flow'
+module.name_mapper.extension='jpg' -> '<PROJECT_ROOT>/internals/flow/WebpackAsset.js.flow'
+suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
