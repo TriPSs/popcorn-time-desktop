@@ -6,11 +6,13 @@ export const formatImages = (images: ImageType) => {
   return {
     poster: {
       full  : replaceWidthPart(images.poster, 'original'),
+      high  : replaceWidthPart(images.poster, 'w1280'),
       medium: replaceWidthPart(images.poster, 'w780'),
       thumb : replaceWidthPart(images.poster, 'w342'),
     },
     fanart: {
       full  : replaceWidthPart(images.fanart, 'original'),
+      high  : replaceWidthPart(images.fanart, 'w1280'),
       medium: replaceWidthPart(images.fanart, 'w780'),
       thumb : replaceWidthPart(images.fanart, 'w342'),
     },
@@ -50,6 +52,8 @@ export const formatTorrents = (torrents, type = 'movie') => {
     health: {
       ...getHealth(torrent.seed || torrent.seeds, torrent.peer || torrent.peers),
     },
+    seeds : torrent.seed || torrent.seeds,
+    peers : torrent.peer || torrent.peers,
   })
 
   if (type === 'movie') {
@@ -68,6 +72,7 @@ export const formatTorrents = (torrents, type = 'movie') => {
 
 export const formatRating = (rating: RatingType) => ({
   stars: (rating.percentage / 100) * 5,
+  ...rating,
 })
 
 export const formatShowEpisodes = (episodes) => {

@@ -34,26 +34,18 @@ export default class Item extends React.Component {
     // this.subtitleServer = startSubtitleServer()
   }
 
-  componentDidMount() {
-    window.scrollTo(0, 0)
+  componentWillMount() {
+    const { getItem, match: { params: { itemId, activeMode } } } = this.props
 
     this.getAllData()
     // this.initCastingDevices()
     this.stopPlayback()
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0)
 
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
-  }
-
-  torrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    this.setState({
-      torrentStatus: newStatus,
-    })
-  }
-
-  componentWillUnmount() {
-    this.stopPlayback()
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -72,6 +64,18 @@ export default class Item extends React.Component {
     } else if (!isLoading && wasLoading && newItem.type === 'movie') {
       this.getBestTorrent(nextProps)
     }
+  }
+
+  componentWillUnmount() {
+    this.stopPlayback()
+  }
+
+  torrentStatusChange = (event, data) => {
+    const { newStatus } = data
+
+    this.setState({
+      torrentStatus: newStatus,
+    })
   }
 
   play = (playerType) => {
@@ -142,7 +146,7 @@ export default class Item extends React.Component {
     player.stop()
   }
 
-  showInfo = () => {
+  showPlayInfo = () => {
     const { torrentStatus } = this.state
     const { playerStatus }  = this.props
 
@@ -154,22 +158,22 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const { match: { params: { activeMode } } } = this.props
-    const { item, isLoading }                   = this.props
-    const { torrent }                           = this.state
+    const { match: { params: { itemId, activeMode } } } = this.props
+    const { item, isLoading }                           = this.props
+    const { torrent }                                   = this.state
 
-    if (isLoading || item === null) {
+    if (isLoading || item === null || item.id !== itemId) {
       return null
     }
-
-    console.log(item)
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
         <Link to={'/'}>
           <button
             style={{ zIndex: 1060 }}
-            className={'btn btn-back'} onClick={this.stopPlayback}>
+            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+            onClick={this.stopPlayback}>
+            <i className={'ion-ios-arrow-back'} />
             Back
           </button>
         </Link>
@@ -181,12 +185,12 @@ export default class Item extends React.Component {
             torrents       : item.torrents,
             setTorrent     : this.setTorrent,
             play           : this.play,
-            backgroundImage: item.images.fanart.full,
+            backgroundImage: item.images.fanart.high,
             poster         : item.images.poster.thumb,
-            showPlayInfo   : this.showInfo(),
+            showPlayInfo   : this.showPlayInfo(),
           }}>
 
-          {this.showInfo() && (
+          {this.showPlayInfo() && (
             <Info
               {...{
                 item,

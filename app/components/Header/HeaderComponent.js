@@ -67,7 +67,7 @@ export default class Header extends Component {
                   </li>
                 </ul>
               </div>
-              <div className="col-md-offset-3 col-md-3">
+             {/* <div className="col-md-offset-3 col-md-3">
                 <div className="input-group pull-right">
                 <span className="input-group-addon" id="basic-addon1">
                   <i className="ion-ios-search-strong" />
@@ -81,16 +81,7 @@ export default class Header extends Component {
                     placeholder="Search"
                   />
                 </div>
-              </div>
-            </div>
-          </nav>
-          {/* // HACK: Add spacing from top of page */}
-          <nav className="navbar hidden navbar-dark bg-inverse">
-            <div className="nav navbar-nav">
-              <a className="nav-item nav-link active">
-                Popcorn Time
-                <span className="sr-only">(current)</span>
-              </a>
+              </div>*/}
             </div>
           </nav>
         </div>

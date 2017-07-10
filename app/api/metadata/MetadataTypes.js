@@ -28,8 +28,8 @@ export type ShowType = ContentType & {}
 
 export type TorrentType = {
   url: string,
-  seed: number,
-  peer: number,
+  seeds: number,
+  peers: number,
   size: number,
   filesize: string,
   provider: string,
@@ -42,12 +42,14 @@ export type TorrentType = {
 
 export type ImageType = {
   full: string,
+  high: string,
   medium: string,
   thumb: string,
 }
 
 export type RatingType = {
   stars: number,
+  percentage: number,
 }
 
 export type RuntimeType = {

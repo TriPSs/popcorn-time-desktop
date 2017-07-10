@@ -9,32 +9,28 @@ import QualtiySwitch from './QualitySwitch'
 import classes from './Background.scss'
 
 export const Background = ({
-                             backgroundImage,
-                             poster,
-                             children,
-                             activeMode,
-                             torrent,
-                             torrents,
-                             setTorrent,
-                             play,
-                             showPlayInfo,
+                             backgroundImage, poster, children, activeMode, torrent, torrents,
+                             setTorrent, play, showPlayInfo,
                            }: Props) =>
   (
     <div
       className={classNames('col-sm-12', classes.background__container)}>
       <div className={classNames('col-sm-6', classes.background__image)}>
-        <div className={classes.background__cover}>
+        <div
+          onClick={() => showPlayInfo ? play() : null}
+          className={classes.background__cover}>
           <img
             alt={'presentation'}
             role={'presentation'}
             src={poster} />
 
-          <div className={classes['background__cover-overlay']} />
+          <div className={classNames(
+            classes['background__cover-overlay'],
+            { [classes['background__cover-overlay--with-hover']]: showPlayInfo },
+          )} />
 
           {showPlayInfo && activeMode === 'movie' && (
-            <i
-              onClick={play}
-              className={'ion-ios-play'} />
+            <i className={'ion-ios-play'} />
           )}
 
         </div>
@@ -49,7 +45,9 @@ export const Background = ({
 
       {children}
 
-      <div className={classes.background__poster} style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <div
+        className={classNames(classes.background__poster, 'animated fadeIn')}
+        style={{ backgroundImage: `url(${backgroundImage})` }}>
 
         <div className={classes.background__overlay} />
       </div>
