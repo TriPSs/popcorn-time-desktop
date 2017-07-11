@@ -11,7 +11,7 @@ import classes from './Cover.scss'
 export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
   <div className={classNames('col-sm-6', classes.cover)}>
     <div
-      onClick={() => showPlayInfo ? play() : null}
+      onClick={() => showPlayInfo && activeMode === 'movie' ? play() : null}
       className={classes.cover__image}>
       <img
         alt={'presentation'}

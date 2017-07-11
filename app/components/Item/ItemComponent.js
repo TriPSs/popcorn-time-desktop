@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import Events from 'api/Events'
+import Butter from 'api/Butter'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
@@ -87,7 +88,9 @@ export default class Item extends React.Component {
       this.setTorrent('plyr', torrent)
 
     } else {
-      // TODO:: Search
+      const { item, searchEpisodeTorrents } = this.props
+
+      searchEpisodeTorrents(item, this.getSeason().number, this.getEpisode().number)
     }
   }
 

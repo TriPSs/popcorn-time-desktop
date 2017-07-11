@@ -1,4 +1,5 @@
-import type { ImageType, TorrentType, RatingType } from './PctMetadataTypes'
+import { getHealth, formatRuntimeMinutesToObject } from 'api/Torrents/TorrentHelpers'
+import type { ImageType, TorrentType, RatingType } from './PctTorrentTypes'
 
 export const formatImages = (images: ImageType) => {
   const replaceWidthPart = (uri: string, replaceWith: string) => uri.replace('w500', replaceWith)
@@ -20,52 +21,10 @@ export const formatImages = (images: ImageType) => {
 }
 
 export const formatTorrents = (torrents, type = 'movie') => {
-  const getHealth = (seeds, peers) => {
-    const ratio = seeds && !!peers ? seeds / peers : seeds
-
-    // Normalize the data. Convert each to a percentage
-    // Ratio: Anything above a ratio of 5 is good
-    const normalizedRatio = Math.min(ratio / 5 * 100, 100)
-    // Seeds: Anything above 30 seeds is good
-    const normalizedSeeds = Math.min(seeds / 30 * 100, 100)
-
-    // Weight the above metrics differently
-    // Ratio is weighted 60% whilst seeders is 40%
-    const weightedRatio = normalizedRatio * 0.6
-    const weightedSeeds = normalizedSeeds * 0.4
-    const weightedTotal = weightedRatio + weightedSeeds
-
-    // Scale from [0, 100] to [0, 3]. Drops the decimal places
-    const scaledTotal = ((weightedTotal * 3) / 100) | 0
-
-    if (scaledTotal === 1) {
-      return {
-        text  : 'decent',
-        color : '#FF9800',
-        number: 1,
-      }
-
-    } else if (scaledTotal >= 2) {
-      return {
-        text  : 'healthy',
-        color : '#4CAF50',
-        number: 2,
-      }
-    }
-
-    return {
-      text  : 'poor',
-      color : '#F44336',
-      number: 0,
-    }
-  }
-
   const formatTorrent = (torrent: TorrentType, quality: string) => ({
     ...torrent,
     quality,
-    health: {
-      ...getHealth(torrent.seed || torrent.seeds, torrent.peer || torrent.peers),
-    },
+    health: getHealth(torrent.seed || torrent.seeds, torrent.peer || torrent.peers),
     seeds : torrent.seed || torrent.seeds,
     peers : torrent.peer || torrent.peers,
   })
@@ -107,4 +66,8 @@ export const formatShowEpisodes = (episodes) => {
   })
 
   return seasons
+}
+
+export {
+  formatRuntimeMinutesToObject,
 }

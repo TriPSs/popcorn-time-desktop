@@ -1,4 +1,6 @@
 // @flow
+import type { TorrentType } from 'api/Torrents/TorrentsTypes'
+
 export type ContentType = {
   id: string,
   title: string,
@@ -11,7 +13,7 @@ export type ContentType = {
   rating: RatingType,
   summary: string,
   genres: string,
-  runtime: string,
+  runtime: RuntimeType,
 }
 
 export type MovieType = ContentType & {
@@ -48,20 +50,6 @@ export type EpisodeType = {
   },
 }
 
-export type TorrentType = {
-  url: string,
-  seeds: number,
-  peers: number,
-  size: number,
-  filesize: string,
-  provider: string,
-  health: {
-    text: string,
-    number: number,
-    color: string,
-  }
-}
-
 export type ImageType = {
   full: string,
   high: string,
@@ -81,5 +69,5 @@ export type RuntimeType = {
 }
 
 export type filterType = {
-  sort?:  'populaity' | 'trending',
+  sort?: 'populaity' | 'trending',
 }

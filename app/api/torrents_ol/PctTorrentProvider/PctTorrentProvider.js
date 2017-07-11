@@ -1,13 +1,12 @@
 // @flow
 import axios from 'axios'
 
-import BaseMetadataProvider from '../BaseMetadataProvider'
-import * as Helpers from './PctMetadataHelpers'
+import * as Helpers from './PctTorrentHelpers'
 
-import type { MetadataProviderInterface } from '../MetadataProviderInterface'
-import type { MovieType, ShowType, ShowDetailType } from './PctMetadataTypes'
+import type { TorrentProviderInterface } from '../TorrentProviderInterface'
+import type { MovieType, ShowType, ShowDetailType } from './PctTorrentTypes'
 
-export default class PctMetadataProvider extends BaseMetadataProvider implements MetadataProviderInterface {
+export default class PctTorrentProvider implements TorrentProviderInterface {
 
   popcornAPI: axios = axios.create({
     baseURL: 'https://movies-v2.api-fetch.website/',
@@ -41,7 +40,7 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
     year         : movie.year,
     certification: movie.certification,
     summary      : movie.synopsis,
-    runtime      : this.formatRuntimeMinutesToObject(movie.runtime),
+    runtime      : Helpers.formatRuntimeMinutesToObject(movie.runtime),
     trailer      : movie.trailer,
     images       : Helpers.formatImages(movie.images),
     genres       : movie.genres,
@@ -66,7 +65,7 @@ export default class PctMetadataProvider extends BaseMetadataProvider implements
     if (isDetail) {
       formattedShow = {
         ...formattedShow,
-        runtime: this.formatRuntimeMinutesToObject(show.runtime),
+        runtime: Helpers.formatRuntimeMinutesToObject(show.runtime),
         seasons: Helpers.formatShowEpisodes(show.episodes),
         summary: show.synopsis,
         genres : show.genres,
