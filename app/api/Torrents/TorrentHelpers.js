@@ -4,7 +4,6 @@ import cache from 'lru-cache'
 import url from 'url'
 
 export const formatShowToSearchQuery = (title, season, episode) => {
-  console.log('title', title)
   let searchTitle = title.toLowerCase()
                          .replace(' ', '.')
 

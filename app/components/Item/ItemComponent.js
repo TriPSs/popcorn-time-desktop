@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import Events from 'api/Events'
-import Butter from 'api/Butter'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
@@ -13,7 +12,7 @@ import type { Props, State } from './ItemTypes'
 import Background from './Background'
 import Info from './Info'
 import Cover from './Cover'
-import Seasons from './Seasons'
+import Show from './Show'
 import classes from './Item.scss'
 
 export default class Item extends React.Component {
@@ -25,18 +24,6 @@ export default class Item extends React.Component {
   state: State = {
     torrent        : null,
     torrentStatus  : TorrentStatuses.NONE,
-    selectedSeason : 1,
-    selectedEpisode: 1,
-  }
-
-  constructor(props: Props) {
-    super(props)
-
-    // this.torrent = new Torrent()
-
-//    this.playerProvider = new ChromecastPlayerProvider()
-
-    // this.subtitleServer = startSubtitleServer()
   }
 
   componentWillMount() {
@@ -81,17 +68,6 @@ export default class Item extends React.Component {
     this.setState({
       torrentStatus: newStatus,
     })
-  }
-
-  playEpisode = (torrent) => {
-    if (torrent !== null) {
-      this.setTorrent('plyr', torrent)
-
-    } else {
-      const { item, searchEpisodeTorrents } = this.props
-
-      searchEpisodeTorrents(item, this.getSeason().number, this.getEpisode().number)
-    }
   }
 
   play = (playerType, torrent = this.state.torrent) => {
@@ -148,11 +124,6 @@ export default class Item extends React.Component {
     return torrents[bestQuality]
   }
 
-  selectSeasonAndEpisode = (season, episode) => this.setState({
-    selectedSeason : season,
-    selectedEpisode: episode,
-  })
-
   setTorrent = (torrent) => {
     this.setState({
       torrent,
@@ -176,27 +147,6 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
-  getSeason = () => {
-    const { item }           = this.props
-    const { selectedSeason } = this.state
-
-    if (!item.seasons) {
-      return null
-    }
-
-    return item.seasons.find(season => season.number === selectedSeason)
-  }
-
-  getEpisode = () => {
-    const { selectedEpisode } = this.state
-    const season              = this.getSeason()
-
-    if (!season || !season.episodes) {
-      return null
-    }
-
-    return season.episodes.find(episode => episode.number === selectedEpisode)
-  }
 
   render() {
     const { match: { params: { itemId, activeMode } } } = this.props
@@ -205,12 +155,6 @@ export default class Item extends React.Component {
 
     if (isLoading || item === null || item.id !== itemId) {
       return null
-    }
-
-    let torrents = {}
-    if (activeMode === 'show') {
-      const episode = this.getEpisode()
-      torrents      = episode ? episode.torrents : {}
     }
 
     return (
@@ -256,38 +200,7 @@ export default class Item extends React.Component {
           </div>
 
           {item.type === 'show' && (
-            <div className={classNames(classes[`item__row--${activeMode}`], classes.actions)}>
-
-              {torrents && Object.keys(torrents).map(quality => (
-                <button
-                  key={quality}
-                  style={{ zIndex: 1060 }}
-                  onClick={() => this.playEpisode(torrents[quality])}
-                  className={classNames('pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-                    { 'pct-btn-available': torrents[quality] !== null })}>
-                  {torrents[quality] !== null && (
-                    <div>Play in {quality}</div>
-                  )}
-
-                  {torrents[quality] === null && (
-                    <div>Search for {quality}</div>
-                  )}
-                </button>
-              ))}
-
-            </div>
-          )}
-
-          {item.type === 'show' && (
-            <div className={classes[`item__row--${activeMode}`]}>
-              <Seasons {...{
-                seasons               : item.seasons,
-                selectedSeason        : this.getSeason(),
-                selectedEpisode       : this.getEpisode(),
-                selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-              }} />
-
-            </div>
+            <Show />
           )}
 
         </div>

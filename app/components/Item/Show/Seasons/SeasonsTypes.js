@@ -1,8 +1,6 @@
-import type { SeasonType } from 'api/metadata/MetadataTypes'
+// @flow
+import type { SeasonType } from 'api/Metadata/MetadataTypes'
 
-/**
- * @flow
- */
 export type Props = {
   seasons: Array<SeasonType>,
   selectedSeason: number,

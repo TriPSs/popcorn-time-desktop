@@ -1,13 +1,11 @@
-/**
- * @flow
- */
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 
 export type Props = {
   item: ContentType,
-  play: () => void,
+  fetchingEpisodeTorrents: boolean,
 }
 
 export type State = {
-  trailerTooltipOpen: boolean,
+  selectedSeason : number,
+  selectedEpisode: number,
 }

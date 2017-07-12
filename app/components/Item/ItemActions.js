@@ -47,11 +47,11 @@ export function getItem(itemId, activeMode) {
   }
 }
 
-export function searchEpisodeTorrents(item, season, episode) {
-  return (dispatch, getState) => {
+export function searchEpisodeTorrents(item, inSeason, forEpisode) {
+  return (dispatch) => {
     dispatch(fetchEpisodeTorrents())
 
-    Butter.searchEpisode(item, season, episode).then((response) => {
+    Butter.searchEpisode(item, inSeason, forEpisode).then((response) => {
       const bestTorrents = {}
 
       response.forEach((torrents) => Object.keys(torrents).forEach((quality) => {
@@ -61,8 +61,39 @@ export function searchEpisodeTorrents(item, season, episode) {
         }
       }))
 
-      // TODO:: Update the episode with the torrents
-      // dispatch(fetchedEpisodeTorrents(bestTorrents))
+      /**
+       * Map the torrents to the right episode
+       */
+      const nItem = {
+        ...item,
+        seasons: item.seasons.map((season) => {
+          if (season.number === inSeason) {
+            return {
+              ...season,
+              episodes: season.episodes.map((episode) => {
+                if (episode.number === forEpisode) {
+                  return {
+                    ...episode,
+                    torrents: {
+                      ...episode.torrents,
+                      ...bestTorrents,
+                    },
+                    searched: true,
+                  }
+
+                } else {
+                  return episode
+                }
+              }),
+            }
+
+          } else {
+            return season
+          }
+        }),
+      }
+
+      dispatch(fetchedEpisodeTorrents(nItem))
     })
   }
 }

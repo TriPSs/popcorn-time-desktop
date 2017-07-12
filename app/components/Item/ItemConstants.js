@@ -1,9 +1,10 @@
 export const REDUCER_NAME = 'item'
 
 export const INITIAL_STATE = {
-  isLoading   : false,
-  item        : null,
-  playerStatus: null,
+  fetchingEpisodeTorrents: false,
+  isLoading              : false,
+  item                   : null,
+  playerStatus           : null,
 }
 
 export const FETCH_ITEM   = `${REDUCER_NAME}.fetch.item`

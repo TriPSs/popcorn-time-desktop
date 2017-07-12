@@ -17,10 +17,17 @@ export default (state = Constants.INITIAL_STATE, action) => {
         item     : action.payload,
       }
 
+    case Constants.FETCH_EPISODE_TORRENTS:
+      return {
+        ...state,
+        fetchingEpisodeTorrents: true,
+      }
+
     case Constants.FETCHED_EPISODE_TORRENTS:
       return {
         ...state,
-        item: action.payload,
+        fetchingEpisodeTorrents: false,
+        item                   : action.payload,
       }
 
     default:

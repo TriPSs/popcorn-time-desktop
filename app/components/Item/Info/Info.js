@@ -6,19 +6,15 @@ import { Tooltip } from 'reactstrap'
 import classNames from 'classnames'
 
 import Rating from 'components/Rating'
-import type { Props } from './InfoTypes'
+import type { Props, State } from './InfoTypes'
 import classes from './Info.scss'
 
 export class Info extends React.Component {
 
   props: Props
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      trailerTooltipOpen: false,
-    }
+  state: State = {
+    trailerTooltipOpen: false,
   }
 
   toggleTrailerTooltip = () => {

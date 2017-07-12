@@ -31,21 +31,11 @@
 	  width: 100%;
 	  margin-top: 100px;
 
-	  &:last-child {
+	  &:last-of-type {
+		display: flex;
 		margin-bottom: 100px;
 	  }
 	}
   }
 }
 
-
-.actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  button {
-	position: relative;
-	margin: 0 20px;
-  }
-}
