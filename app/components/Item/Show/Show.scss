@@ -1,0 +1,12 @@
+.show {
+  &__actions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	button {
+	  position: relative;
+	  margin: 0 20px;
+	}
+  }
+}

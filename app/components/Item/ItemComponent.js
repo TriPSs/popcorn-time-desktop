@@ -11,6 +11,8 @@ import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
 import Info from './Info'
+import Cover from './Cover'
+import Show from './Show'
 import classes from './Item.scss'
 
 export default class Item extends React.Component {
@@ -24,19 +26,7 @@ export default class Item extends React.Component {
     torrentStatus: TorrentStatuses.NONE,
   }
 
-  constructor(props: Props) {
-    super(props)
-
-    // this.torrent = new Torrent()
-
-//    this.playerProvider = new ChromecastPlayerProvider()
-
-    // this.subtitleServer = startSubtitleServer()
-  }
-
   componentWillMount() {
-    const { getItem, match: { params: { itemId, activeMode } } } = this.props
-
     this.getAllData()
     // this.initCastingDevices()
     this.stopPlayback()
@@ -62,7 +52,7 @@ export default class Item extends React.Component {
       window.scrollTo(0, 0)
 
     } else if (!isLoading && wasLoading && newItem.type === 'movie') {
-      this.getBestTorrent(nextProps)
+      this.getBestMovieTorrent(nextProps)
     }
   }
 
@@ -78,7 +68,7 @@ export default class Item extends React.Component {
     })
   }
 
-  play = (playerType) => {
+  play = (playerType, torrent = this.state.torrent) => {
     const { item, player } = this.props
 
     switch (playerType) {
@@ -95,8 +85,6 @@ export default class Item extends React.Component {
         break
 
       default:
-        const { torrent } = this.state
-
         player.play(torrent.url, {
           title   : item.title,
           image   : {
@@ -113,7 +101,7 @@ export default class Item extends React.Component {
     getItem(itemId, activeMode)
   }
 
-  getBestTorrent = (props = this.props) => {
+  getBestMovieTorrent = (props = this.props) => {
     const { torrent } = this.state
 
     if (torrent) {
@@ -124,7 +112,7 @@ export default class Item extends React.Component {
 
     let bestQuality = null
     Object.keys(torrents).map((quality) => {
-      if (bestQuality === null || parseInt(bestQuality) < parseInt(quality)) {
+      if (bestQuality === null || parseInt(bestQuality, 10) < parseInt(quality, 10)) {
         bestQuality = quality
       }
     })
@@ -180,29 +168,39 @@ export default class Item extends React.Component {
 
         <Background
           {...{
-            activeMode,
-            torrent,
-            torrents       : item.torrents,
-            setTorrent     : this.setTorrent,
-            play           : this.play,
             backgroundImage: item.images.fanart.high,
-            poster         : item.images.poster.thumb,
-            showPlayInfo   : this.showPlayInfo(),
-          }}>
+          }} />
 
-          {this.showPlayInfo() && (
-            <Info
-              {...{
-                item,
-                activeMode,
-                play: this.play,
-              }} />
+        <div className={classes[`item__content--${activeMode}`]}>
+          <div className={classes[`item__row--${activeMode}`]}>
+            <Cover {...{
+              activeMode,
+              torrent,
+              torrents       : item.torrents,
+              setTorrent     : this.setTorrent,
+              play           : this.play,
+              backgroundImage: item.images.fanart.high,
+              poster         : item.images.poster.thumb,
+              showPlayInfo   : this.showPlayInfo(),
+            }} />
+
+            {this.showPlayInfo() && (
+              <Info
+                {...{
+                  item,
+                  activeMode,
+                  play: this.play,
+                }} />
+            )}
+
+            <Player item={item} />
+          </div>
+
+          {item.type === 'show' && (
+            <Show play={this.play} />
           )}
 
-          <Player item={item} />
-
-        </Background>
-
+        </div>
       </div>
     )
   }

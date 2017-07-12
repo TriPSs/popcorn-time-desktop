@@ -72,7 +72,7 @@ $headings-font-weight: 400;
 //
 
 // Card list
-$card-list-color: #848484;
+$card-list-color: $navbar-dark-color;
 
 // Card
 $card-max-with: 140px;
@@ -92,3 +92,6 @@ $notie-font-size-small: 18px;
 // Plyr
 $plyr-color-main: gray;
 $plyr-tooltip-radius: 0;
+
+$box-shadow: rgba(0, 0, 0, 0.6) 0 6px 16px 4px;
+

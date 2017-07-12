@@ -31,4 +31,13 @@
 	border-radius: 30px;
   }
 
+  &.pct-btn-available {
+	transition: opacity 0.1s ease-out;
+	opacity: 1;
+
+	&:hover {
+	  opacity: 0.8;
+	}
+  }
+
 }

@@ -6,19 +6,15 @@ import { Tooltip } from 'reactstrap'
 import classNames from 'classnames'
 
 import Rating from 'components/Rating'
-import type { Props } from './InfoTypes'
+import type { Props, State } from './InfoTypes'
 import classes from './Info.scss'
 
 export class Info extends React.Component {
 
   props: Props
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      trailerTooltipOpen: false,
-    }
+  state: State = {
+    trailerTooltipOpen: false,
   }
 
   toggleTrailerTooltip = () => {
@@ -96,6 +92,15 @@ export class Info extends React.Component {
               </Tooltip>
             </div>
           )}
+
+          <div className={classes.info__player}>
+            <button
+              style={{ zIndex: 1060 }}
+              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}>
+              <i className={'ion-ios-arrow-down'} />
+              Popcorn Time
+            </button>
+          </div>
 
         </div>
       </div>

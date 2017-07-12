@@ -1,0 +1,64 @@
+.list {
+  box-shadow: $box-shadow;
+  background: $body-bg;
+  width: 100%;
+  color: #FFF;
+  max-height: 600px;
+  overflow-x: auto;
+
+  &-item {
+	display: flex;
+	width: 100%;
+	background: $body-bg;
+	padding: 5px 30px;
+	cursor: pointer;
+
+	&__text {
+	  height: 60px;
+	  line-height: 60px;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
+
+	&__health {
+	  margin-left: auto;
+	  display: flex;
+	  align-items: center;
+
+	  i {
+		font-size: 22px;
+		color: rgba(255, 255, 255, 0.6);
+	  }
+
+	  &-status {
+		margin-left: 5px;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		transition: background-color 500ms linear;
+
+		&:first-of-type {
+		  margin-left: 20px;
+		}
+	  }
+	}
+
+	&:hover {
+	  background: lighten($body-bg, 20%);
+	  transition: background-color 200ms linear;
+	}
+
+	&--active {
+	  background: lighten($body-bg, 20%);
+	}
+
+	&--disabled {
+	  background: darken($body-bg, 5%);
+
+	  &:hover {
+		background: darken($body-bg, 5%);
+	  }
+	}
+  }
+
+}
