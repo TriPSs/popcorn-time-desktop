@@ -38,12 +38,6 @@ export class Butter {
 
   search = (...args) => this.torrentAdapter.search(...args)
 
-  /*
-   searchTorrent = (itemId: string, type: string) => {
-   return TorrentAdapter(itemId, type, {}, false)
-   }
-   */
-
   /* getSeasons(itemId: string) {
    return MetadataAdapter.getSeasons(itemId);
    }

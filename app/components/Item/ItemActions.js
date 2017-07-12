@@ -1,6 +1,6 @@
 // @flow
 import Butter from 'api/Butter'
-import { getBestTorrent } from 'api/Torrents/TorrentHelpers'
+import { getBestTorrent } from 'api/Torrents/TorrentsHelpers'
 
 import * as Constants from './ItemConstants'
 

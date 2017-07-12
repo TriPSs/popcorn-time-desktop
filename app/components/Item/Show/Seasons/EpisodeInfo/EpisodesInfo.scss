@@ -6,6 +6,8 @@
   box-shadow: $box-shadow;
   color: white;
   padding: 5px 40px;
+  max-height: $list-max-height;
+  overflow-x: auto;
 
   &__title {
 	height: 60px;

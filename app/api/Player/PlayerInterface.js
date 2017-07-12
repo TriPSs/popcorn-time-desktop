@@ -1,36 +1,24 @@
 // @flow
-import type { MetadataType } from './PlayerProviderTypes'
+import type { MetadataType } from './PlayerTypes'
 
 export interface PlayerProviderInterface {
 
-  load: (uri: string, metadata: MetadataType) => Promise<void>,
+  provider: string,
 
-  play: (uri: ?string, metadata: ?MetadataType) => Promise<void>,
+  supportsSubtitles: boolean,
+
+  status: string,
+
+  play: (uri: string, metadata: MetadataType) => Promise<void>,
 
   pause: () => Promise<void>,
 
   stop: () => Promise<void>,
 
-  registerEvent: (event: string, callback: () => void) => void,
-
   isPlaying: () => boolean,
 
-  /*provider: string,
+  getDevices: (timeout: number) => Promise<void>,
 
-   supportedFormats: Array<string>,
-
-   supportsSubtitles: boolean,
-
-   svgIconFilename: string,
-
-   contentUrl: string,
-
-   port: number,
-
-   constructor: () => void,
-
-   restart: () => Promise<void>,
-
-   destroy: () => Promise<void>,*/
+  destroy: () => Promise<void>,
 
 }

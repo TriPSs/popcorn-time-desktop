@@ -2,9 +2,9 @@
 import rbg from 'torrentapi-wrapper'
 import debug from 'debug'
 
-import * as Helpers from 'api/Torrents/TorrentHelpers'
+import * as Helpers from 'api/Torrents/TorrentsHelpers'
 import type { ShowType } from 'api/Metadata/MetadataTypes'
-import type { TorrentProviderInterface } from '../TorrentProviderInterface'
+import type { TorrentProviderInterface } from '../TorrentsProviderInterface'
 import type { TorrentType } from '../TorrentsTypes'
 
 const log = debug('api:torrents:providers:rarbg')
@@ -14,7 +14,7 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
   static providerName = 'rbg'
 
   searchEpisode = (item: ShowType, season: string, episode: string, retry: boolean = false) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       log('Searching...')
 
       rbg.search({
@@ -27,25 +27,27 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
         results.filter(torrent => torrent.episode_info.imdb === item.id)
                .map(torrent => this.formatTorrent(torrent, Helpers.determineQuality(torrent.download)))
                .forEach((torrent: TorrentType) => {
-                 if (!bestTorrents[torrent.quality] || Helpers.betBestTorrent(bestTorrents[torrent.quality], torrent)) {
+                 if (!bestTorrents[torrent.quality] || Helpers.getBestTorrent(bestTorrents[torrent.quality], torrent)) {
                    bestTorrents[torrent.quality] = torrent
                  }
                })
 
         resolve(bestTorrents)
 
-      }).catch(() => {
+      }).catch((error) => {
+        log(`Failed search ${error}`)
+
         if (!retry) {
           return resolve(this.searchEpisode(item, season, episode, true))
 
         } else {
-          return reject()
+          return resolve([])
         }
       })
     })
 
   search = (query: string, category: string, retry: boolean = false) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       log(`Search ${query} in ${category}`)
       rbg.search({
         query,
@@ -53,12 +55,14 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
         sort    : 'seeders',
         verified: false,
       }).then((results) => results.map(torrent => this.formatTorrent(torrent)))
-         .catch(() => {
+         .catch((error) => {
+           log(`Failed search ${error}`)
+
            if (!retry) {
              return resolve(this.search(query, category, true))
 
            } else {
-             return reject()
+             return resolve([])
            }
          })
     })

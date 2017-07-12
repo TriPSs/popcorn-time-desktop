@@ -8,6 +8,7 @@ import classNames from 'classnames'
 import Rating from 'components/Rating'
 import type { Props, State } from './InfoTypes'
 import classes from './Info.scss'
+import Devices from './Devices'
 
 export class Info extends React.Component {
 
@@ -93,15 +94,7 @@ export class Info extends React.Component {
             </div>
           )}
 
-          <div className={classes.info__player}>
-            <button
-              style={{ zIndex: 1060 }}
-              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}>
-              <i className={'ion-ios-arrow-down'} />
-              Popcorn Time
-            </button>
-          </div>
-
+          <Devices />
         </div>
       </div>
     )

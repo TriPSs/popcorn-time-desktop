@@ -19,6 +19,12 @@
 	margin-right: 5px;
   }
 
+  &.pct-btn-no-hover {
+	&:hover {
+	  opacity: 0.2;
+	}
+  }
+
   &.pct-btn-trans {
 	background: transparent;
   }

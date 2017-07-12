@@ -11,6 +11,7 @@
   .dv-star-rating-star {
 	font-size: 1.3rem;
 	margin: 0 10px 0 0;
+	min-width: 100px;
   }
 
   &__certification {
@@ -22,10 +23,10 @@
   }
 
   &__details {
-	height: 30px;
+	height: 40px;
 
 	> div {
-	  margin-right: 50px;
+	  margin-right: 40px;
 	}
 
 	:global {
@@ -44,10 +45,6 @@
 	font-weight: 100;
 	line-height: 150%;
 	max-width: 600px;
-  }
-
-  &__player {
-	height: 75px;
   }
 
 }

@@ -78,7 +78,7 @@ export default class Item extends React.Component {
   /**
    * Check which players are available on the system
    */
-  setPlayer = (player: playerType) => {
+  setPlayer = (player: playerProvider) => {
     log('Set player:', player)
 
     switch (player) {

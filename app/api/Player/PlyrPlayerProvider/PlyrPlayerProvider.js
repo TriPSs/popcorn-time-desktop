@@ -6,8 +6,8 @@ import plyr from 'plyr'
 import Events from 'api/Events'
 import * as PlayerEvents from 'api/Player/PlayerEvents'
 import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import { PlayerProviderInterface } from '../PlayerProviderInterface'
-import type { MetadataType } from '../PlayerProviderTypes'
+import { PlayerProviderInterface } from '../PlayerInterface'
+import type { MetadataType } from '../PlayerTypes'
 
 const { powerSaveBlocker } = remote
 const log                  = debug('api:players:plyr')
@@ -21,16 +21,6 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   powerSaveBlockerId: number
 
   status: string = PlayerStatuses.NONE
-
-  supportedFormats = [
-    'mp4',
-    'ogg',
-    'mov',
-    'webmv',
-    'mkv',
-    'wmv',
-    'avi',
-  ]
 
   constructor() {
     this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension')
@@ -54,6 +44,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   load = (uri: string, metadata: MetadataType) => {
     const player = this.getPlayer()
+    log(`Load ${uri} into player...`)
 
     player.source({
       title  : metadata.title,
@@ -67,7 +58,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     })
   }
 
-  play = (uri: ?string, metadata: ?MetadataType) => {
+  play = (uri: string, metadata: MetadataType) => {
     if (uri && metadata) {
       this.load(uri, metadata)
     }

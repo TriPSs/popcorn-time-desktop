@@ -1,1 +1,1 @@
-export default from './TorrentAdapter'
+export default from './TorrentsAdapter'

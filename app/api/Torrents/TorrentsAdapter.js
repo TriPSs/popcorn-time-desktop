@@ -2,12 +2,12 @@ import debug from 'debug'
 import TorrentCollection from 'TorrentCollection'
 
 import type { ShowType } from 'api/Metadata/MetadataTypes'
-import { TorrentProviderInterface } from './TorrentProviderInterface'
+import { TorrentProviderInterface } from './TorrentsProviderInterface'
 import torrentProviders from './TorrentProviders'
 
 const log = debug('api:torrents:adapter')
 
-export class TorrentAdapter implements TorrentProviderInterface {
+export class TorrentsAdapter implements TorrentProviderInterface {
 
   providers = torrentProviders()
 
@@ -29,4 +29,4 @@ export class TorrentAdapter implements TorrentProviderInterface {
 
 }
 
-export default TorrentAdapter
+export default TorrentsAdapter

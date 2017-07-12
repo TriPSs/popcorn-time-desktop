@@ -31,7 +31,6 @@ export class Buffering extends React.Component {
           {item.title}
         </h1>
 
-
       </div>
     )
   }

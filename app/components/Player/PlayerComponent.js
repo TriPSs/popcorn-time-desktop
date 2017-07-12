@@ -30,12 +30,8 @@ export class Player extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { playerAction: newPlayerAction, playerType: newPlayerType } = nextProps
-    const { playerAction: oldPlayerAction, playerType: oldPlayerType } = this.props
-
-    if (oldPlayerType !== newPlayerType) {
-      MediaPlayer.updatePlayerType(newPlayerType)
-    }
+    const { playerAction: newPlayerAction } = nextProps
+    const { playerAction: oldPlayerAction } = this.props
 
     if (oldPlayerAction !== newPlayerAction) {
       const { uri, metadata } = nextProps
@@ -49,7 +45,7 @@ export class Player extends React.Component {
   }
 
   playerStatusChanged = (event, data) => {
-    const { newStatus }     = data
+    const { newStatus }    = data
     const { updateStatus } = this.props
 
     updateStatus(newStatus)
@@ -94,13 +90,8 @@ export class Player extends React.Component {
   }
 
   render() {
-    const { playerType, playerStatus, item } = this.props
-
-    if (playerType !== Constants.PLAYER_TYPE_PLYR) {
-      return null
-    }
-
-    const { torrentStatus } = this.state
+    const { playerProvider, playerStatus } = this.props
+    const { torrentStatus }                = this.state
 
     return (
       <div className={classNames({
@@ -119,7 +110,7 @@ export class Player extends React.Component {
           </div>
         )}
 
-        {this.renderVideo()}
+        {playerProvider !== Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

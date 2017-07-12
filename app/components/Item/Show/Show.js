@@ -74,8 +74,13 @@ export class Show extends React.Component {
               key={quality}
               style={{ zIndex: 1060 }}
               onClick={() => !fetchingEpisodeTorrents ? this.playEpisode(torrents[quality]) : null}
-              className={classNames('pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-                { 'pct-btn-available': torrents[quality] !== null })}>
+              className={classNames(
+                'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
+                { 'pct-btn-available': torrents[quality] !== null },
+                { 'pct-btn-no-hover': fetchingEpisodeTorrents },
+                { 'pct-btn-no-hover': torrents[quality] === null && searched },
+              )}>
+
               {torrents[quality] !== null && !fetchingEpisodeTorrents && (
                 <div>Play in {quality}</div>
               )}

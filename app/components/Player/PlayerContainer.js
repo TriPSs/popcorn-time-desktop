@@ -10,7 +10,8 @@ export const mapStateToProps = state => ({
   metadata    : Selectors.getMetadata(state),
   playerAction: Selectors.getPlayerAction(state),
   playerStatus: Selectors.getPlayerStatus(state),
-  playerType  : Selectors.getPlayerType(state),
+  playerProvider  : Selectors.getPlayerProvider(state),
+  devices     : Selectors.getDevices(state),
 })
 
 export default connect(mapStateToProps, { ...Actions })(Player)

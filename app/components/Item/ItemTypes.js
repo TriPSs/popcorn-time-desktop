@@ -1,6 +1,7 @@
+import type { DeviceType } from 'api/Player/StreamingProviders/StreamingTypes'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { TorrentType } from 'api/Torrents/TorrentsTypes'
-import { PlayerProviderInterface } from 'api/players/PlayerProviderInterface'
+import { PlayerProviderInterface } from 'api/Player/PlayerInterface'
 
 export type Props = {
   item: ContentType,
@@ -9,6 +10,7 @@ export type Props = {
 
   player: PlayerProviderInterface,
   playerStatus: string,
+  devices: Array<DeviceType>,
 }
 
 export type State = {

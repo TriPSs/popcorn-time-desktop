@@ -1,9 +1,7 @@
 import RarbgTorrentProvider from './RarbgTorrentProvider'
 
-export const TorrentProviders = () => ([
+export const torrentProviders = () => ([
   new RarbgTorrentProvider(),
-  // new PbTorrentProvider(),
-  // new YtsTorrentProvider(),
 ])
 
-export default TorrentProviders
+export default torrentProviders

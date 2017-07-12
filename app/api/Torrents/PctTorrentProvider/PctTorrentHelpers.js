@@ -1,4 +1,4 @@
-import { getHealth, formatRuntimeMinutesToObject } from 'api/Torrents/TorrentHelpers'
+import { getHealth, formatRuntimeMinutesToObject } from 'api/Torrents/TorrentsHelpers'
 import type { ImageType, TorrentType, RatingType } from './PctTorrentTypes'
 
 export const formatImages = (images: ImageType) => {

@@ -7,6 +7,7 @@ import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
 
+import Loader from 'components/Loader'
 import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
@@ -28,7 +29,6 @@ export default class Item extends React.Component {
 
   componentWillMount() {
     this.getAllData()
-    // this.initCastingDevices()
     this.stopPlayback()
   }
 
@@ -68,10 +68,10 @@ export default class Item extends React.Component {
     })
   }
 
-  play = (playerType, torrent = this.state.torrent) => {
+  play = (playerProvider, torrent = this.state.torrent) => {
     const { item, player } = this.props
 
-    switch (playerType) {
+    switch (playerProvider) {
       case 'youtube':
         player.play(item.trailer, {
           title   : item.title,
@@ -96,9 +96,10 @@ export default class Item extends React.Component {
   }
 
   getAllData() {
-    const { getItem, match: { params: { itemId, activeMode } } } = this.props
+    const { player, getItem, match: { params: { itemId, activeMode } } } = this.props
 
     getItem(itemId, activeMode)
+    player.getDevices()
   }
 
   getBestMovieTorrent = (props = this.props) => {
@@ -151,7 +152,7 @@ export default class Item extends React.Component {
     const { torrent }                                   = this.state
 
     if (isLoading || item === null || item.id !== itemId) {
-      return null
+      return <Loader />
     }
 
     return (
