@@ -58,6 +58,7 @@ export class Episodes extends React.Component {
               {Object.keys(episode.torrents).map(quality => (
                 <div
                   className={'list-item__health-status'}
+                  key={quality}
                   style={{
                     backgroundColor: episode.torrents[quality]
                       ? episode.torrents[quality].health.color

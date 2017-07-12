@@ -29,8 +29,9 @@ export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play,
 
     </div>
 
-    {showPlayInfo && activeMode === 'movie' && (
+    {activeMode === 'movie' && (
       <QualitySwitch
+        showPlayInfo={showPlayInfo}
         setTorrent={setTorrent}
         torrents={torrents}
         torrent={torrent} />

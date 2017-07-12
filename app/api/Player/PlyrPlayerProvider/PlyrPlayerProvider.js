@@ -1,16 +1,15 @@
 // @flow
-import { remote } from 'electron'
 import debug from 'debug'
 import plyr from 'plyr'
 
+import Power from 'api/Power'
 import Events from 'api/Events'
 import * as PlayerEvents from 'api/Player/PlayerEvents'
 import * as PlayerStatuses from 'api/Player/PlayerStatuses'
 import { PlayerProviderInterface } from '../PlayerInterface'
 import type { MetadataType } from '../PlayerTypes'
 
-const { powerSaveBlocker } = remote
-const log                  = debug('api:players:plyr')
+const log = debug('api:players:plyr')
 
 class PlyrPlayerProvider implements PlayerProviderInterface {
 
@@ -18,13 +17,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   player: plyr
 
-  powerSaveBlockerId: number
-
   status: string = PlayerStatuses.NONE
-
-  constructor() {
-    this.powerSaveBlockerId = powerSaveBlocker.start('prevent-app-suspension')
-  }
 
   getPlayer = () => {
     if (!this.player) {
@@ -63,6 +56,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
       this.load(uri, metadata)
     }
 
+    Power.enableSaveMode()
     this.player.play()
   }
 
@@ -99,9 +93,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   }
 
   destroy = () => {
-    if (this.powerSaveBlockerId) {
-      powerSaveBlocker.stop(this.powerSaveBlockerId)
-    }
+    Power.disableSaveMode()
 
     if (this.player) {
       this.player.destroy()

@@ -82,8 +82,14 @@ $card-min-height: 210px;
 $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 
+// List
+$list-item-bg: $body-bg;
+$list-item-bg-hover: lighten($body-bg, 20%);
+$list-item-bg-disabled: darken($body-bg, 5%);
+
 // Item
 $item-background-height: 100%;
+$item-summary-max-with: 600px;
 
 // Notie
 $notie-font-size-big: 18px;
@@ -94,5 +100,5 @@ $plyr-color-main: gray;
 $plyr-tooltip-radius: 0;
 
 // Lists
-$box-shadow: rgba(0, 0, 0, 0.6) 0 6px 16px 4px;
+$default-box-shadow: rgba(0, 0, 0, 0.6) 0 6px 16px 4px;
 $list-max-height: 600px;

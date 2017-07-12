@@ -1,5 +1,5 @@
 .list {
-  box-shadow: $box-shadow;
+  box-shadow: $default-box-shadow;
   background: $body-bg;
   width: 100%;
   color: #FFF;
@@ -9,7 +9,7 @@
   &-item {
 	display: flex;
 	width: 100%;
-	background: $body-bg;
+	background: $list-item-bg;
 	padding: 5px 30px;
 	cursor: pointer;
 
@@ -44,19 +44,19 @@
 	}
 
 	&:hover {
-	  background: lighten($body-bg, 20%);
+	  background: $list-item-bg-hover;
 	  transition: background-color 200ms linear;
 	}
 
 	&--active {
-	  background: lighten($body-bg, 20%);
+	  background: $list-item-bg-hover;
 	}
 
 	&--disabled {
-	  background: darken($body-bg, 5%);
+	  background: $list-item-bg-disabled;
 
 	  &:hover {
-		background: darken($body-bg, 5%);
+		background: $list-item-bg-disabled;
 	  }
 	}
   }

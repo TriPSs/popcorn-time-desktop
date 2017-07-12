@@ -14,7 +14,7 @@ import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import type { Props } from './PlayerTypes'
 import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
-import Buffering from './Buffering'
+import Stats from './Stats'
 
 export class Player extends React.Component {
 
@@ -90,27 +90,19 @@ export class Player extends React.Component {
   }
 
   render() {
-    const { playerProvider, playerStatus } = this.props
-    const { torrentStatus }                = this.state
+    const { playerProvider, playerStatus, item } = this.props
+    const { torrentStatus }                      = this.state
 
     return (
       <div className={classNames({
-        'col-sm-6': playerStatus !== PlayerStatuses.PLAYING,
-        hidden    : this.isHidden(),
+        'col-sm-6': true, // playerStatus !== PlayerStatuses.PLAYING,
+        // hidden    : this.isHidden(),
       }, classes.player)}>
-        {torrentStatus === TorrentStatuses.CONNECTING && (
-          <div className="col-sm-12" style={{ color: 'white' }}>
-            Connecting
-          </div>
+        {torrentStatus !== TorrentStatuses.NONE && (
+          <Stats item={item} torrentStatus={torrentStatus} />
         )}
 
-        {torrentStatus === TorrentStatuses.BUFFERING && (
-          <div className="col-sm-12" style={{ color: 'white' }}>
-            Buffering
-          </div>
-        )}
-
-        {playerProvider !== Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
+        {playerProvider === Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

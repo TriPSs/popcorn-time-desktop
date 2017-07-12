@@ -60,7 +60,7 @@ export class Player implements PlayerProviderInterface {
   }
 
   firePlayerAction = (status, { uri, metadata }) => {
-    log(`Player state changes to: ${status}`)
+    log(`Fire player action ${status}`)
 
     switch (status) {
       case PlayerConstants.PLAYER_ACTION_PLAY:

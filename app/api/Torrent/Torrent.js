@@ -2,7 +2,7 @@
  * Torrents controller, responsible for playing, stoping, etc
  * @flow
  */
-import os from 'os'
+import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
 import debug from 'debug'
 
@@ -33,7 +33,7 @@ export class Torrent {
 
   constructor() {
     this.engine        = new WebTorrent({ maxConns: 20 })
-    this.cacheLocation = os.tmpdir()
+    this.cacheLocation = remote.app.getPath('temp')
   }
 
   start(magnetURI: string, metadata: MetadataType, supportedFormats: Array<string>) {
@@ -96,7 +96,7 @@ export class Torrent {
   }
 
   bufferInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
-    const toBuffer = (1024 * 1024) * 50
+    const toBuffer = (1024 * 1024) * 25
 
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentStatuses.BUFFERED, {
@@ -111,12 +111,11 @@ export class Torrent {
       this.updateStatus(TorrentStatuses.BUFFERING)
 
       Events.emit(TorrentEvents.BUFFERING, {
-        downloaded   : torrent.downloaded,
-        toDownload   : toBuffer,
+        progress     : torrent.downloaded / toBuffer,
+        timeRemaining: ((toBuffer - torrent.downloaded) / torrent.downloadSpeed) * 1000,
         downloadSpeed: torrent.downloadSpeed,
         uploadSpeed  : torrent.uploadSpeed,
         peers        : torrent.numPeers,
-        ratio        : torrent.ratio,
       })
     }
 
@@ -136,12 +135,11 @@ export class Torrent {
       this.updateStatus(TorrentStatuses.DOWNLOADING)
 
       Events.emit(TorrentEvents.DOWNLOADING, {
-        downloaded   : torrent.downloaded,
-        toDownload   : torrent.length,
+        progress     : torrent.progress,
+        timeRemaining: torrent.timeRemaining,
         downloadSpeed: torrent.downloadSpeed,
         uploadSpeed  : torrent.uploadSpeed,
         peers        : torrent.numPeers,
-        ratio        : torrent.ratio,
       })
     }
   }, 1000)
@@ -162,7 +160,7 @@ export class Torrent {
 
   destroy() {
     if (this.inProgress) {
-      console.log('Destroyed Torrent...')
+      log('Destroyed Torrent...')
 
       if (this.server && typeof this.server.close === 'function') {
         this.server.close()

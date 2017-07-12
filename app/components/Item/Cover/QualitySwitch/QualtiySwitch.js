@@ -35,11 +35,11 @@ export class QualitySwitch extends React.Component {
   }
 
   render() {
-    const { magnetTooltipOpen } = this.state
-    const { torrent }           = this.props
+    const { magnetTooltipOpen }     = this.state
+    const { torrent, showPlayInfo } = this.props
 
     return (
-      <div className={classes.container}>
+      <div className={classes.container} style={{ opacity: showPlayInfo ? 1 : 0 }}>
         <div className={classes.quality}>
           720
         </div>
