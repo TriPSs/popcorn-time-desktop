@@ -17,7 +17,9 @@ export class Show extends React.Component {
 
   playEpisode = (torrent) => {
     if (torrent !== null) {
-      this.setTorrent('plyr', torrent)
+      const { play } = this.props
+
+      play('default', torrent)
 
     } else {
       const { item, searchEpisodeTorrents } = this.props

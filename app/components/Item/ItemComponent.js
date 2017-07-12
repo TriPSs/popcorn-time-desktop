@@ -22,13 +22,11 @@ export default class Item extends React.Component {
   props: Props
 
   state: State = {
-    torrent        : null,
-    torrentStatus  : TorrentStatuses.NONE,
+    torrent      : null,
+    torrentStatus: TorrentStatuses.NONE,
   }
 
   componentWillMount() {
-    const { getItem, match: { params: { itemId, activeMode } } } = this.props
-
     this.getAllData()
     // this.initCastingDevices()
     this.stopPlayback()
@@ -147,7 +145,6 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
-
   render() {
     const { match: { params: { itemId, activeMode } } } = this.props
     const { item, isLoading }                           = this.props
@@ -200,7 +197,7 @@ export default class Item extends React.Component {
           </div>
 
           {item.type === 'show' && (
-            <Show />
+            <Show play={this.play} />
           )}
 
         </div>
