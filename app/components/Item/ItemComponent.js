@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import Events from 'api/Events'
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
@@ -36,11 +37,18 @@ export default class Item extends React.Component {
     window.scrollTo(0, 0)
 
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+
+    const { torrent } = this.state
+    const { item }    = this.props
+
+    if (item && item.type === MetadataConstants.TYPE_MOVIE && !torrent) {
+      this.getBestMovieTorrent()
+    }
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { isLoading: wasLoading, item: oldItem, match: { params: { itemId: oldItemId } } } = this.props
-    const { isLoading, item: newItem, match: { params: { itemId: newItemId } } }             = nextProps
+    const { isLoading: wasLoading, match: { params: { itemId: oldItemId } } } = this.props
+    const { isLoading, item, match: { params: { itemId: newItemId } } }       = nextProps
 
     if (newItemId !== oldItemId) {
       this.setState({
@@ -51,7 +59,7 @@ export default class Item extends React.Component {
       this.getAllData()
       window.scrollTo(0, 0)
 
-    } else if (!isLoading && wasLoading && newItem.type === 'movie') {
+    } else if (!isLoading && wasLoading && item.type === MetadataConstants.TYPE_MOVIE) {
       this.getBestMovieTorrent(nextProps)
     }
   }
@@ -148,10 +156,10 @@ export default class Item extends React.Component {
 
   render() {
     const { match: { params: { itemId, activeMode } } } = this.props
-    const { item, isLoading }                           = this.props
+    const { item }                                      = this.props
     const { torrent }                                   = this.state
 
-    if (isLoading || item === null || item.id !== itemId) {
+    if (!item || item.id !== itemId) {
       return <Loader />
     }
 

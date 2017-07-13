@@ -49,10 +49,39 @@ export default webpackMerge(baseConfig, {
         ],
       },
 
-      // Common Image Formats
       {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use : 'url-loader',
+        test: /^((?!\.global).)*\.css$/,
+        use : [
+          {
+            loader: 'style-loader',
+          },
+          cssLoaderConfig(),
+        ],
+      },
+
+      {
+        test   : /\.(gif|png|jpe?g|svg)$/i,
+        loaders: [
+          'file-loader?hash=sha512&digest=hex&name=img/img-[name]-[hash:6].[ext]',
+          {
+            loader: 'image-webpack-loader',
+            query : {
+              progressive  : true,
+              pngquant     : {
+                optimizationLevel: 7,
+                quality          : '65-90',
+                speed            : 4,
+              },
+              bypassOnDebug: true,
+              optipng      : {
+                optimizationLevel: 7,
+              },
+              gifsicle     : {
+                interlaced: false,
+              },
+            },
+          },
+        ],
       },
 
       {

@@ -46,7 +46,7 @@ export class QualitySwitch extends React.Component {
 
         <Switch
           {...{
-            on     : torrent.quality === '1080p',
+            on     : !torrent || torrent.quality === '1080p',
             onClick: this.onQualityChange,
           }} />
 
@@ -61,14 +61,14 @@ export class QualitySwitch extends React.Component {
 
           <div
             className={classes.health__status}
-            style={{ backgroundColor: torrent.health.color }} />
+            style={{ backgroundColor: torrent ? torrent.health.color : 'black' }} />
 
           <Tooltip
             placement={'top'}
             isOpen={magnetTooltipOpen}
             target={'magnetTooltip'}
             toggle={this.toggleMagnetTooltip}>
-            {torrent.seeds} Seeders
+            {torrent ? torrent.seeds : 0} Seeders
           </Tooltip>
         </div>
       </div>

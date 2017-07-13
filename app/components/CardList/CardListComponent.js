@@ -18,8 +18,10 @@ export const CardList = ({ items, isLoading, isFinished, title, limit }: Props) 
       )}
 
       <div className={classes.container}>
-        {(limit ? items.filter((e, i) => i < limit) : items).map(item => (
-          <Card item={item} key={item.id} />
+        {(limit ? items.filter((e, i) => i < limit) : items).map((item, index) => (
+          <Card
+            key={`item-${index}`}
+            item={item} />
         ))}
       </div>
     </div>

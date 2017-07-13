@@ -13,6 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export default merge.smart(baseConfig, {
+
   devtool: 'source-map',
 
   target: 'electron-main',

@@ -6,5 +6,6 @@ export type Props = {
     '1080p': TorrentType,
     '720p': TorrentType,
   },
+  torrent: TorrentType,
   setTorrent: () => void
 }

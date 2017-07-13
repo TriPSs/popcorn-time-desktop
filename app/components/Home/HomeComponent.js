@@ -24,6 +24,12 @@ export default class Home extends Component {
     }
   }
 
+  componentWillMount() {
+    const { bookmarks } = this.props
+
+    bookmarks.getBookmarks()
+  }
+
   componentDidMount() {
     const { activeMode } = this.props
 
@@ -38,7 +44,6 @@ export default class Home extends Component {
     global.pct[`${oldMode}ScrollTop`] = document.body.scrollTop
 
     if (newMode !== oldMode) {
-      console.log(newMode)
       window.scrollTo(0, 0)
       const { clearItems, switchMode, modes } = this.props
 
@@ -84,10 +89,12 @@ export default class Home extends Component {
 
     return (
       <div className={'container-fluid'}>
-        <Header />
 
-        <CardList items={items} isLoading={isLoading} />
-        <VisibilitySensor onChange={this.handleOnVisibilityChange} />
+        <Header />
+        <div className={'container-fluid'}>
+          <CardList items={items} isLoading={isLoading} />
+          <VisibilitySensor onChange={this.handleOnVisibilityChange} />
+        </div>
       </div>
     )
   }

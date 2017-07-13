@@ -14,6 +14,7 @@ export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play,
       onClick={() => showPlayInfo && activeMode === 'movie' ? play() : null}
       className={classes.cover__image}>
       <img
+        className={'animated fadeIn'}
         alt={'presentation'}
         role={'presentation'}
         src={poster} />

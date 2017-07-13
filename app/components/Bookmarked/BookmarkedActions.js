@@ -8,7 +8,7 @@ export function isBookmarked(id, bookmarks) {
 
 export function getBookmarks() {
   return (dispatch) => {
-    return Database.bookmarks.getAll().then((bookmarks) => {
+    Database.bookmarks.getAll().then((bookmarks) => {
       dispatch({
         type   : Constants.FETCHED_BOOKMARKS,
         payload: bookmarks,
@@ -17,22 +17,26 @@ export function getBookmarks() {
   }
 }
 
-export function toggleBookmark(id, type) {
+export function toggleBookmark(item) {
   return (dispatch, getState) => {
+    // TODO:: Add item to shows or movies
+    const { id, type } = item
+
     if (!isBookmarked(id, Selectors.getBookmarkes(getState()))) {
-      return Database.bookmarks.add(id, type).then(() => {
+      Database.bookmarks.add(id, type).then(() => {
         dispatch({
           type   : Constants.ADD_BOOKMARK,
           payload: id,
         })
       })
-    }
 
-    return Database.bookmarks.remove(id, type).then(() => {
-      dispatch({
-        type   : Constants.REMOVE_BOOKMARK,
-        payload: id,
+    } else {
+      Database.bookmarks.remove(id, type).then(() => {
+        dispatch({
+          type   : Constants.REMOVE_BOOKMARK,
+          payload: id,
+        })
       })
-    })
+    }
   }
 }

@@ -6,4 +6,5 @@ export type Props = {
   bookmarks: Array<string>,
   isBookmarked: (id: string, bookmarks: Array<string>) => boolean,
   toggleBookmark: (id: string, type: string) => void,
+  className: string,
 }

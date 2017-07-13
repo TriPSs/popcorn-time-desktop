@@ -10,9 +10,7 @@ import classes from './Card.scss'
 export const Card = ({ item }: Props) => (
   <div className={classes.card}>
 
-    <Link replace to={`/item/${item.type}/${item.id}`}>
-      <Cover item={item} />
-    </Link>
+    <Cover item={item} />
 
     <div className={classes.card__description}>
       <Link className={classes.card__title} replace to={`/item/${item.type}/${item.id}`}>

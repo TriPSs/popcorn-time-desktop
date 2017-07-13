@@ -2,7 +2,13 @@
 import Butter from 'api/Butter'
 import { getBestTorrent } from 'api/Torrents/TorrentsHelpers'
 
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as Constants from './ItemConstants'
+import * as HomeSelectors from '../Home/HomeSelectors'
+
+export function hasItem(itemId, state) {
+  return HomeSelectors.getItems(state).find(item => item.id === itemId)
+}
 
 export function fetchItem() {
   return {
@@ -31,18 +37,19 @@ export function fetchedEpisodeTorrents(item) {
 }
 
 export function getItem(itemId, activeMode) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(fetchItem())
 
-    switch (activeMode) {
-      case 'movie':
-        return Butter.getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
+    const item = hasItem(itemId, getState())
+    if (activeMode === MetadataConstants.TYPE_MOVIE) {
+      if (item) {
+        return dispatch(fetchedItem(item))
+      }
 
-      case 'show':
-        return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
+      return Butter.getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
 
-      default:
-        return null
+    } else if (activeMode === MetadataConstants.TYPE_SHOW) {
+      return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
     }
   }
 }
