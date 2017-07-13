@@ -49,9 +49,9 @@ export const formatRating = (rating: RatingType) => ({
 })
 
 export const formatShowEpisodes = (episodes) => {
-  let seasons = []
+  const seasons = []
 
-  episodes.map((episode) => {
+  episodes.forEach((episode) => {
     if (!seasons[episode.season]) {
       seasons[episode.season] = []
     }

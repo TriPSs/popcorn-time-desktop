@@ -1,6 +1,6 @@
-/**
- * @flow
- */
+// @flow
+import type { ContentType } from 'api/Metadata/MetadataTypes'
+
 export type Props = {
-  image: string,
+  item: ContentType,
 }

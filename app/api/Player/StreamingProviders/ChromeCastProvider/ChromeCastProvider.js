@@ -109,6 +109,10 @@ export class ChromeCastProvider implements StreamingInterface {
   getDevices = (timeout: number = 1000) => new Promise((resolve) => {
     const devices = []
 
+    if (!this.browser) {
+      resolve(devices);
+    }
+
     this.browser.on('serviceUp', (service) => {
       devices.push({
         name    : service.txtRecord.fn,
@@ -146,6 +150,7 @@ export class ChromeCastProvider implements StreamingInterface {
 
   destroy = () => {
     Power.disableSaveMode()
+    this.browser = null
   }
 
   /*play(contentUrl: string, item) {

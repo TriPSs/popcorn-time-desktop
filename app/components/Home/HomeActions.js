@@ -27,15 +27,18 @@ export function getItems(activeMode, page = 1) {
     dispatch(fetchItems())
 
     switch (activeMode) {
-      case 'movies':
+      case Constants.MODE_MOVIES:
         return Butter.getMovies(page).then(movies => dispatch(fetchedItems(movies, activeMode)))
 
-      case 'shows':
+      case Constants.MODE_SHOWS:
         return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
 
-      case 'search':
+      case Constants.MODE_SEARCH:
         // TODO:: Get searchQuery from state
         // return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+
+      case Constants.MODE_FAVORITES:
+        // TODO:: Get bookmarks
 
       default:
         return null

@@ -1,0 +1,30 @@
+@import 'base/variables';
+
+.bookmarked {
+  position: absolute;
+  margin: 50px;
+  font-size: 30px;
+  opacity: 0.4;
+  transition: $transition-opacity-in;
+  z-index: 2000;
+
+  &:hover {
+	opacity: 1;
+  }
+
+  &--yes {
+	@extend .bookmarked;
+
+	color: red;
+  }
+
+  &--no {
+	@extend .bookmarked;
+
+	color: black;
+
+	&:hover {
+	  color: red;
+	}
+  }
+}

@@ -1,20 +1,21 @@
-/**
- * @flow
- */
+// @flow
 import React from 'react'
 import classNames from 'classnames'
 
+import Bookmarked from 'components/Bookmarked'
 import type { Props } from './CoverTypes'
 import classes from './Cover.scss'
 
-export const Cover = ({ image }: Props) => (
+export const Cover = ({ item }: Props) => (
   <div
     className={classNames(classes.cover, 'animated', 'fadeIn')}
     style={{
-      backgroundImage: `url(${image})`,
+      backgroundImage: `url(${item.images.fanart.medium})`,
     }}>
 
-    <div className={classes.cover__overlay} />
+    <div className={classes.cover__overlay}>
+      <Bookmarked item={item} />
+    </div>
   </div>
 )
 

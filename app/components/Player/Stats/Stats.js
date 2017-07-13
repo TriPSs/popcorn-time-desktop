@@ -49,7 +49,7 @@ export class Buffering extends React.Component {
 
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
 
-    return `${(bytes / Math.pow(1024, i).toFixed(2)} ${this.sizes[i]}`
+    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${this.sizes[i]}`
   }
 
   formatMillisToMinutesAndSeconds = (millis) => {

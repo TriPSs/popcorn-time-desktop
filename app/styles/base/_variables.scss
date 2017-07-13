@@ -47,6 +47,10 @@ $navbar-dark-color: #848484;
 $font-family-base: 'Open Sans', sans-serif;
 $headings-font-weight: 400;
 
+// Transitions
+$transition-opacity-in: opacity 0.1s ease-in;
+$transition-opacity-out: opacity 0.1s ease-out;
+
 .row-margin {
   margin: 20px 0;
 }

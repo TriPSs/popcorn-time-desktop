@@ -19,6 +19,7 @@ export type ContentType = {
 export type MovieType = ContentType & {
   certification: string,
   trailer: string,
+  watched: boolean,
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,
@@ -26,6 +27,7 @@ export type MovieType = ContentType & {
 }
 
 export type ShowType = ContentType & {
+  tvdbId: string,
   genres: string,
   seasons: Array<SeasonType>,
 }
@@ -35,6 +37,7 @@ export type SeasonType = {
   summary: string,
   number: number,
   episodes: Array<EpisodeType>,
+  watched: boolean,
 }
 
 export type EpisodeType = {
@@ -43,6 +46,7 @@ export type EpisodeType = {
   number: number,
   summary: string,
   aired: number,
+  watched: boolean,
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,

@@ -126,6 +126,8 @@ export class Player implements PlayerProviderInterface {
 
     if (this.lastPlayer) {
       this.lastPlayer.destroy()
+
+      this.streamingProviders.map(provider => provider.destroy())
     }
   }
 

@@ -1,8 +1,9 @@
 // @flow
 import axios from 'axios'
 
+import * as MetadataConstant from 'api/Metadata/MetadataConstants'
 import * as Helpers from './PctTorrentHelpers'
-import type { TorrentProviderInterface } from '../TorrentProviderInterface'
+import type { TorrentProviderInterface } from '../TorrentsProviderInterface'
 import type { MovieType, ShowType, ShowDetailType } from './PctTorrentTypes'
 
 export default class PctTorrentProvider implements TorrentProviderInterface {
@@ -45,7 +46,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
     genres       : movie.genres,
     rating       : Helpers.formatRating(movie.rating),
     torrents     : Helpers.formatTorrents(movie.torrents.en),
-    type         : 'movie',
+    type         : MetadataConstant.TYPE_MOVIE,
   })
 
   formatShows = (shows: Array<ShowType>) => (shows.map(show => this.formatShow(show)))
@@ -58,7 +59,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
       images     : Helpers.formatImages(show.images),
       rating     : Helpers.formatRating(show.rating),
       num_seasons: show.num_seasons,
-      type       : 'show',
+      type       : MetadataConstant.TYPE_SHOW,
     }
 
     if (isDetail) {
@@ -75,8 +76,6 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
     return formattedShow
   }
 
-  getStatus = () => (
-    this.popcornAPI.get().then(res => res.ok).catch(() => false)
-  )
+  getStatus = () => this.popcornAPI.get().then(res => res.ok).catch(() => false)
 
 }

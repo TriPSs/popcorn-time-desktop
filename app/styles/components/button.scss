@@ -5,7 +5,7 @@
   margin: 20px 0;
   padding: 5px 20px;
   opacity: 0.2;
-  transition: opacity 0.1s ease-in;
+  transition: $transition-opacity-in;
 
   &:hover {
 	opacity: 1;
@@ -38,7 +38,7 @@
   }
 
   &.pct-btn-available {
-	transition: opacity 0.1s ease-out;
+	transition: $transition-opacity-out;
 	opacity: 1;
 
 	&:hover {

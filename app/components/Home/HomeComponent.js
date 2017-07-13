@@ -24,17 +24,6 @@ export default class Home extends Component {
     }
   }
 
-  handleOnVisibilityChange = (isVisible: boolean) => {
-    const { isLoading, activeMode } = this.props
-
-    if (isVisible && !isLoading) {
-      const { getItems } = this.props
-      const { page }     = this.props.modes[activeMode]
-
-      getItems(activeMode, page)
-    }
-  }
-
   componentDidMount() {
     const { activeMode } = this.props
 
@@ -49,6 +38,7 @@ export default class Home extends Component {
     global.pct[`${oldMode}ScrollTop`] = document.body.scrollTop
 
     if (newMode !== oldMode) {
+      console.log(newMode)
       window.scrollTo(0, 0)
       const { clearItems, switchMode, modes } = this.props
 
@@ -76,6 +66,17 @@ export default class Home extends Component {
     const { activeMode } = this.props
 
     global.pct[`${activeMode}ScrollTop`] = document.body.scrollTop
+  }
+
+  handleOnVisibilityChange = (isVisible: boolean) => {
+    const { isLoading, activeMode } = this.props
+
+    if (isVisible && !isLoading) {
+      const { getItems } = this.props
+      const { page }     = this.props.modes[activeMode]
+
+      getItems(activeMode, page)
+    }
   }
 
   render() {

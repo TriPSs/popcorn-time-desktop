@@ -13,7 +13,7 @@ export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selec
   <div className={'col-sm-12'}>
     <div className={classNames('col-sm-2', classes.seasons)}>
       <div className={classNames('list', classes.seasons__list)}>
-        {seasons.map(season =>
+        {seasons.map(season => (
           <a
             className={classNames('list-item', {
               'list-item--active': season.number === selectedSeason.number,
@@ -25,7 +25,7 @@ export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selec
               {season.title}
             </div>
           </a>
-        )}
+        ))}
       </div>
     </div>
 
