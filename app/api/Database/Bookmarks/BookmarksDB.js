@@ -16,9 +16,17 @@ export class BookmarksDB {
     })
   }
 
-  getAll = () => new Promise(resolve => this.db.find({}, (error, docs) => resolve({ error, docs })))
+  getAll = () => new Promise(resolve => this.db.find({}, (error, docs) =>
+    resolve({ error, docs })),
+  )
 
-  add = (imdbId: string, type: string) => this.db.insert({ imdbId, type })
+  add = (imdbId: string, type: string) => new Promise(resolve => this.db.insert({ imdbId, type }, () =>
+    resolve(),
+  ))
+
+  remove = (imdbId: string, type: string) => new Promise(resolve => this.db.remove({ imdbId, type }, () =>
+    resolve(),
+  ))
 
 }
 

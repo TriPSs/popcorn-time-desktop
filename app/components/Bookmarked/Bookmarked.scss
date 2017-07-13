@@ -7,6 +7,7 @@
   opacity: 0.4;
   transition: $transition-opacity-in;
   z-index: 2000;
+  cursor: pointer;
 
   &:hover {
 	opacity: 1;

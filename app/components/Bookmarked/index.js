@@ -1,1 +1,1 @@
-export default from './BookmarkedComponent'
+export default from './BookmarkedContainer'

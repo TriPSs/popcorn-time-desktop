@@ -10,7 +10,7 @@ export const Cover = ({ item }: Props) => (
   <div
     className={classNames(classes.cover, 'animated', 'fadeIn')}
     style={{
-      backgroundImage: `url(${item.images.fanart.medium})`,
+      backgroundImage: `url(${item.images.poster.thumb})`,
     }}>
 
     <div className={classes.cover__overlay}>

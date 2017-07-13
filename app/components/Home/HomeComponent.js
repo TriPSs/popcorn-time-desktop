@@ -84,12 +84,10 @@ export default class Home extends Component {
 
     return (
       <div className={'container-fluid'}>
-
         <Header />
 
         <CardList items={items} isLoading={isLoading} />
         <VisibilitySensor onChange={this.handleOnVisibilityChange} />
-
       </div>
     )
   }

@@ -1,18 +1,16 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import User from 'api/User'
 import Database from 'api/Database'
 import type { Props } from './BookmarkedTypes'
 import classes from './Bookmarked.scss'
 
-export const Bookmarked = ({ item }: Props) => {
-  const handleOnClick = (imdbId, type) => Database.bookmarks.add(imdbId, type)
-  const isBookmarked  = User.isBookmarked(item.id)
+export const Bookmarked = ({ item, bookmarks, toggleBookmark }: Props) => {
+  const isBookmarked  = bookmarks.indexOf(item.id) > -1
 
   return (
     <i
-      onClick={() => handleOnClick(item.id, item.type)}
+      onClick={() => toggleBookmark(item.id, item.type)}
       className={classNames('ion-heart',
         isBookmarked ? classes['bookmarked--yes'] : classes['bookmarked--no'],
       )} />
