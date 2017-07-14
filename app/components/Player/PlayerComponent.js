@@ -95,8 +95,8 @@ export class Player extends React.Component {
 
     return (
       <div className={classNames({
-        'col-sm-6': true, // playerStatus !== PlayerStatuses.PLAYING,
-        // hidden    : this.isHidden(),
+        'col-sm-6': playerStatus !== PlayerStatuses.PLAYING,
+        hidden    : this.isHidden(),
       }, classes.player)}>
         {torrentStatus !== TorrentStatuses.NONE && (
           <Stats item={item} torrentStatus={torrentStatus} />

@@ -22,7 +22,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
     case Constants.REMOVE_BOOKMARK:
       return {
         ...state,
-        bookmarks: state.bookmarks.splice(state.bookmarks.indexOf(action.payload), 1),
+        bookmarks: state.bookmarks.filter(bookmark => bookmark !== action.payload),
       }
 
     default:

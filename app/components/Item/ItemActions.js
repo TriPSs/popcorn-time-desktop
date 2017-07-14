@@ -49,6 +49,10 @@ export function getItem(itemId, activeMode) {
       return Butter.getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
 
     } else if (activeMode === MetadataConstants.TYPE_SHOW) {
+      if (item) {
+        dispatch(fetchedItem(item))
+      }
+
       return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
     }
   }

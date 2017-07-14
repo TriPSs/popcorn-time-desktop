@@ -154,14 +154,17 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
-  render() {
-    const { match: { params: { itemId, activeMode } } } = this.props
-    const { item }                                      = this.props
-    const { torrent }                                   = this.state
+  isReady = () => {
+    const { match: { params: { itemId } } } = this.props
+    const { isLoading, item }               = this.props
 
-    if (!item || item.id !== itemId) {
-      return <Loader />
-    }
+    return !isLoading && item && item.id === itemId
+  }
+
+  render() {
+    const { match: { params: { activeMode } } } = this.props
+    const { item }                              = this.props
+    const { torrent }                           = this.state
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
@@ -177,7 +180,8 @@ export default class Item extends React.Component {
 
         <Background
           {...{
-            backgroundImage: item.images.fanart.high,
+            backgroundImage: item && item.images.fanart.high,
+            isReady        : this.isReady(),
           }} />
 
         <div className={classes[`item__content--${activeMode}`]}>
@@ -185,12 +189,13 @@ export default class Item extends React.Component {
             <Cover {...{
               activeMode,
               torrent,
-              torrents       : item.torrents,
+              torrents       : item && item.torrents,
               setTorrent     : this.setTorrent,
               play           : this.play,
-              backgroundImage: item.images.fanart.high,
-              poster         : item.images.poster.thumb,
+              backgroundImage: item && item.images.fanart.high,
+              poster         : item && item.images.poster.thumb,
               showPlayInfo   : this.showPlayInfo(),
+              isReady        : this.isReady(),
             }} />
 
             {this.showPlayInfo() && (
@@ -198,14 +203,18 @@ export default class Item extends React.Component {
                 {...{
                   item,
                   activeMode,
-                  play: this.play,
+                  play   : this.play,
+                  isReady: this.isReady(),
                 }} />
             )}
 
-            <Player item={item} />
+            {this.isReady() && (
+              <Player item={item} />
+            )}
+
           </div>
 
-          {item.type === 'show' && (
+          {this.isReady() && item.type === 'show' && item.seasons && (
             <Show play={this.play} />
           )}
 

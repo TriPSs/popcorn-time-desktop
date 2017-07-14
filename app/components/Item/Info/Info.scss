@@ -4,8 +4,17 @@
   z-index: 10;
   color: white;
 
+  &__title {
+	margin-top: 0;
+	min-height: 50px;
+  }
+
   &__genres * {
 	text-transform: capitalize;
+  }
+
+  &__basic {
+	min-height: 25px;
   }
 
   .dv-star-rating-star {
@@ -45,6 +54,7 @@
 	font-weight: 100;
 	line-height: 150%;
 	max-width: $item-summary-max-with;
+	min-height: 170px
   }
 
 }

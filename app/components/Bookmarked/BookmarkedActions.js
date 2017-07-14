@@ -1,4 +1,5 @@
 import Database from 'api/Database'
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as Constants from './BookmarkedConstants'
 import * as Selectors from './BookmarkedSelectors'
 
@@ -30,6 +31,9 @@ export function toggleBookmark(item) {
         })
       })
 
+      // Add to database
+      Database[MetadataConstants.PLURALS[type]].add(item)
+
     } else {
       Database.bookmarks.remove(id, type).then(() => {
         dispatch({
@@ -37,6 +41,9 @@ export function toggleBookmark(item) {
           payload: id,
         })
       })
+
+      // Remove from database
+      Database[MetadataConstants.PLURALS[type]].remove(id)
     }
   }
 }

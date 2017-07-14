@@ -1,6 +1,3 @@
-/**
- * Created by tycho on 07/07/2017.
- */
 import React from 'react'
 import { Tooltip } from 'reactstrap'
 import classNames from 'classnames'
@@ -27,25 +24,25 @@ export class Info extends React.Component {
   }
 
   render() {
-    const { item, play }         = this.props
-    const { trailerTooltipOpen } = this.state
+    const { item, play, isReady } = this.props
+    const { trailerTooltipOpen }  = this.state
 
     return (
       <div className={classNames('col-sm-6', classes.info)}>
-        <h1 className={'row-margin'}>
-          {item.title}
+        <h1 className={classNames('row-margin', classes.info__title)}>
+          {isReady && item && item.title}
         </h1>
 
-        <div className={'row'}>
-          {item.runtime && item.runtime.short && (
+        <div className={classNames('row', classes.info__basic)}>
+          {isReady && item.runtime && item.runtime.short && (
             <div className={'col-sm-3'}>
               <h6>
-                {item.runtime.short}
+                {isReady && item && item.runtime.short}
               </h6>
             </div>
           )}
 
-          {item.genres && (
+          {isReady && item.genres && (
             <div className={classNames('col-sm-9', classes.info__genres)}>
               <h6>
                 {item.genres.join(', ')}
@@ -55,11 +52,11 @@ export class Info extends React.Component {
         </div>
 
         <div className={classNames('row-margin', classes.info__summary)}>
-          {item.summary}
+          {isReady && item.summary}
         </div>
 
         <div className={classNames('row-margin row-center', classes.info__details)}>
-          {item.rating && (
+          {isReady && item.rating && (
             <Rating
               emptyStarColor={'rgba(255, 255, 255, 0.2)'}
               starColor={'white'}
@@ -68,16 +65,16 @@ export class Info extends React.Component {
           )}
 
           <div>
-            {item.year}
+            {isReady && item.year}
           </div>
 
-          {item && item.certification && item.certification !== 'n/a' && (
+          {isReady && item.certification && item.certification !== 'n/a' && (
             <div className={classes.info__certification}>
               {item.certification}
             </div>
           )}
 
-          {item.trailer && item.trailer !== 'n/a' && (
+          {isReady && item.trailer && item.trailer !== 'n/a' && (
             <div>
               <i
                 id={'trailerTooltip'}
@@ -94,7 +91,9 @@ export class Info extends React.Component {
             </div>
           )}
 
-          <Devices />
+          {isReady && (
+            <Devices />
+          )}
         </div>
       </div>
     )

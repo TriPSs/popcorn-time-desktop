@@ -11,20 +11,20 @@ export class BookmarksDB {
     })
 
     this.db.ensureIndex({
-      fieldName: 'imdbId',
+      fieldName: 'id',
       unique   : true,
     })
   }
 
   getAll = () => new Promise(resolve => this.db.find({}, (error, docs) =>
-    resolve(docs.map(item => item.imdbId)),
+    resolve(docs.map(item => item.id)),
   ))
 
-  add = (imdbId: string, type: string) => new Promise(resolve => this.db.insert({ imdbId, type }, () =>
+  add = (id: string, type: string) => new Promise(resolve => this.db.insert({ id, type }, () =>
     resolve(),
   ))
 
-  remove = (imdbId: string, type: string) => new Promise(resolve => this.db.remove({ imdbId, type }, () =>
+  remove = (id: string, type: string) => new Promise(resolve => this.db.remove({ id, type }, () =>
     resolve(),
   ))
 

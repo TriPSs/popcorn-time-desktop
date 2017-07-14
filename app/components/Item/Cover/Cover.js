@@ -1,23 +1,22 @@
-/**
- * Created by tycho on 10/07/2017.
- */
 import React from 'react'
 import classNames from 'classnames'
+
+import PosterHolderImage from 'images/posterholder.png'
 
 import type { Props } from './CoverTypes'
 import QualitySwitch from './QualitySwitch'
 import classes from './Cover.scss'
 
-export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
+export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play, showPlayInfo, isReady }: Props) => (
   <div className={classNames('col-sm-6', classes.cover)}>
     <div
       onClick={() => showPlayInfo && activeMode === 'movie' ? play() : null}
       className={classes.cover__image}>
       <img
-        className={'animated fadeIn'}
+        className={classNames({ 'animated fadeIn': isReady })}
         alt={'presentation'}
         role={'presentation'}
-        src={poster} />
+        src={isReady ? poster : PosterHolderImage} />
 
       <div className={classNames(
         classes['cover__image-overlay'],

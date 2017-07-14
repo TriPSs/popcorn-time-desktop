@@ -1,12 +1,12 @@
 import Datastore from 'nedb'
 
-export class MoviesDB {
+export class ShowsDB {
 
   db: Datastore
 
   constructor(dbLocation: string) {
     this.db = new Datastore({
-      filename: `${dbLocation}/data/movies.db`,
+      filename: `${dbLocation}/data/shows.db`,
       autoload: true,
     })
 
@@ -34,4 +34,4 @@ export class MoviesDB {
 
 }
 
-export default MoviesDB
+export default ShowsDB

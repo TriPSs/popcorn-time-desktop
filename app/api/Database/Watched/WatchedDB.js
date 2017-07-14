@@ -13,17 +13,17 @@ export class WatchedDB {
 
   markWatched = data => this.watched.insert({ ...data, date: new Date() })
 
-  markMovieWatched = (imdbId: string) =>
-    this.markWatched({ imdbId, type: 'movie' })
+  markMovieWatched = (id: string) =>
+    this.markWatched({ id, type: 'movie' })
 
   getMoviesWatched = () =>
     this.watched.find({ type: 'movie' })
 
-  markEpisodeWatched = (tvdbId: string, imdbId: string) =>
-    this.markWatched({ tvdbId, imdbId, type: 'episode' })
+  markEpisodeWatched = (tvId: string, id: string) =>
+    this.markWatched({ tvId, id, type: 'episode' })
 
-  getEpisodesWatched = (tvdbId: string) =>
-    this.watched.find({ tvdbId, type: 'episode' })
+  getEpisodesWatched = (tvId: string) =>
+    this.watched.find({ tvId, type: 'episode' })
 
 }
 
