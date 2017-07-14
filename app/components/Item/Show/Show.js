@@ -1,6 +1,9 @@
 import React from 'react'
 import classNames from 'classnames'
 
+import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+
 import type { State, Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
 import classes from './Show.scss'
@@ -32,6 +35,17 @@ export class Show extends React.Component {
     }
   }
 
+  shouldDisableActions = () => {
+    const { torrentStatus, playerStatus } = this.props
+
+    return torrentStatus === TorrentStatuses.BUFFERING
+           || torrentStatus === TorrentStatuses.DOWNLOADING
+           || torrentStatus === TorrentStatuses.CONNECTING
+           || playerStatus === PlayerStatuses.PAUSED
+           || playerStatus === PlayerStatuses.PLAYING
+           || playerStatus === PlayerStatuses.BUFFERING
+  }
+
   selectSeasonAndEpisode = (season, episode) => this.setState({
     selectedSeason : season,
     selectedEpisode: episode,
@@ -41,7 +55,7 @@ export class Show extends React.Component {
     const { item }           = this.props
     const { selectedSeason } = this.state
 
-    if (!item.seasons) {
+    if (!item.seasons || !item.seasons.length) {
       return null
     }
 
@@ -67,13 +81,17 @@ export class Show extends React.Component {
 
     return (
       <div>
-        <div className={classNames(itemClasses['item__row--show'], classes.show__actions)}>
+        <div
+          style={{ opacity: this.shouldDisableActions() ? 0 : 1 }}
+          className={classNames(itemClasses['item__row--show'], classes.show__actions)}>
 
           {torrents && Object.keys(torrents).map(quality => (
             <button
               key={quality}
               style={{ zIndex: 1060 }}
-              onClick={() => !fetchingEpisodeTorrents ? this.playEpisode(torrents[quality]) : null}
+              onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
+                ? this.playEpisode(torrents[quality])
+                : null}
               className={classNames(
                 'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
                 { 'pct-btn-available': torrents[quality] !== null },

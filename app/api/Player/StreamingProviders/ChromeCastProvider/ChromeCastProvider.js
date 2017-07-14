@@ -1,5 +1,5 @@
 // @flow
-import { Client, DefaultMediaReceiver } from 'castv2-client'
+import { Client, PlatformSender, DefaultMediaReceiver } from 'castv2-client'
 import mdns from 'mdns'
 import debug from 'debug'
 import network from 'network-address'
@@ -35,6 +35,8 @@ export class ChromeCastProvider implements StreamingInterface {
     PAUSED   : PlayerStatuses.PAUSED,
   }
 
+  client: PlatformSender = null
+
   constructor() {
     this.browser = mdns.createBrowser(mdns.tcp('googlecast'))
   }
@@ -47,7 +49,7 @@ export class ChromeCastProvider implements StreamingInterface {
       streamingUrl = uri.replace('localhost', network())
     }
 
-    const client = new Client()
+    this.client = new Client()
 
     if (!this.selectedDevice) {
       throw new Error('No device selected')
@@ -57,10 +59,10 @@ export class ChromeCastProvider implements StreamingInterface {
     log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
 
     this.updateStatus(PlayerStatuses.CONNECTING)
-    client.connect(this.selectedDevice.address, () => {
+    this.client.connect(this.selectedDevice.address, () => {
       log(`Connected to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
 
-      client.launch(DefaultMediaReceiver, (error, player) => {
+      this.client.launch(DefaultMediaReceiver, (error, player) => {
         // on close
         player.on('status', (status) => {
           this.updateStatus(this.states[status.playerState])
@@ -87,30 +89,30 @@ export class ChromeCastProvider implements StreamingInterface {
       })
     })
 
-    client.on('error', (error) => {
+    this.client.on('error', (error) => {
       log('Error: %s', error.message)
 
-      client.close()
+      this.client.close()
     })
   }
 
   pause = () => {
-
+    log('Pause...')
   }
 
   stop = () => {
-
+    log('Stop...')
+    this.client.stop()
+    this.destroy()
   }
 
-  isPlaying = () => {
-
-  }
+  isPlaying = () => this.status === this.states.PLAYING
 
   getDevices = (timeout: number = 1000) => new Promise((resolve) => {
     const devices = []
 
     if (!this.browser) {
-      resolve(devices);
+      resolve(devices)
     }
 
     this.browser.on('serviceUp', (service) => {
@@ -138,7 +140,8 @@ export class ChromeCastProvider implements StreamingInterface {
     this.selectedDevice = device
   }
 
-  updateStatus = (newStatus) => {
+  updateStatus = (nStatus) => {
+    const newStatus = nStatus !== 'undefined' ? nStatus : PlayerStatuses.NONE
     log(`Update status to ${newStatus}`)
 
     Events.emit(PlayerEvents.STATUS_CHANGE, {
@@ -149,71 +152,16 @@ export class ChromeCastProvider implements StreamingInterface {
   }
 
   destroy = () => {
+    log('Destroy...')
     Power.disableSaveMode()
     this.browser = null
+
+    if (this.client) {
+      this.client.close()
+      this.client = null
+    }
   }
 
-  /*play(contentUrl: string, item) {
-   const client = new Client()
-
-   if (!this.selectDevice) {
-   throw new Error('No device selected')
-   }
-
-   return new Promise((resolve, reject) => {
-   log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
-
-   client.connect(this.selectedDevice.address, () => {
-   log(`Connected to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
-
-   client.launch(DefaultMediaReceiver, (error, player) => {
-   if (error) {
-   reject(error)
-   }
-
-   // on close
-
-   player.on('status', (status) => {
-   log('Status broadcast playerState=%s', status.playerState)
-   })
-
-   const media = {
-   // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
-   contentId  : contentUrl,
-   contentType: 'video/mp4',
-   streamType : 'BUFFERED', // or LIVE
-
-   // Title and cover displayed while buffering
-   metadata: {
-   type        : 0,
-   metadataType: 0,
-   title       : item.title,
-   images      : [
-   {
-   url: item.images.poster.full || item.images.fanart.full
-   }
-   ]
-   }
-   }
-
-   player.load(media, { autoplay: true }, (error) => {
-   if (error) {
-   reject(error)
-   }
-   resolve()
-   })
-   })
-   })
-
-   client.on('error', (error) => {
-   console.log('Error: %s', error.message)
-
-   client.close()
-
-   reject(error) // Error
-   })
-   })
-   }*/
 }
 
 export default ChromeCastProvider

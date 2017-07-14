@@ -13,7 +13,7 @@ export const Card = ({ item }: Props) => (
     <Cover item={item} />
 
     <div className={classes.card__description}>
-      <Link className={classes.card__title} replace to={`/item/${item.type}/${item.id}`}>
+      <Link className={classes.card__title} replace to={`/${item.type}/${item.id}`}>
         {item.title}
       </Link>
     </div>

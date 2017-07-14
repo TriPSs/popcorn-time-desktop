@@ -5,7 +5,7 @@ export type Props = {
   backgroundImage: string,
   poster: string,
   children: Element,
-  activeMode: string,
+  mode: string,
   setTorrent: () => void,
   showPlayInfo: boolean,
 }

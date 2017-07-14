@@ -7,10 +7,12 @@ import classNames from 'classnames'
 import Events from 'api/Events'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as PlayerConstants from '../PlayerConstants'
 import type { Props, State } from './StatsTypes'
 import classes from './Stats.scss'
 
-export class Buffering extends React.Component {
+export class Stats extends React.Component {
 
   props: Props
 
@@ -25,6 +27,11 @@ export class Buffering extends React.Component {
   componentDidMount() {
     Events.on(TorrentEvents.BUFFERING, this.onBuffering)
     Events.on(TorrentEvents.DOWNLOADING, this.onBuffering)
+  }
+
+  componentWillUnmount() {
+    Events.remove(TorrentEvents.BUFFERING, this.onBuffering)
+    Events.remove(TorrentEvents.DOWNLOADING, this.onBuffering)
   }
 
   onBuffering = (event, data) => {
@@ -59,10 +66,24 @@ export class Buffering extends React.Component {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutes`
   }
 
+  shouldShowControls = () => {
+    const { playerProvider, playerStatus } = this.props
+
+    if (playerProvider !== PlayerConstants.PLAYER_PROVIDER_PLYR) {
+      return false
+    }
+
+    return playerStatus === PlayerStatuses.PLAYING || playerStatus === PlayerStatuses.PAUSED
+  }
+
   render() {
     const { item, torrentStatus } = this.props
 
     const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = this.state
+
+    const style = {
+      opacity: torrentStatus === TorrentStatuses.DOWNLOADED ? 0 : 1,
+    }
 
     return (
       <div className={classNames('col-sm-12', classes.stats)}>
@@ -74,25 +95,27 @@ export class Buffering extends React.Component {
           {this.status[torrentStatus]}
         </h6>
 
-        <div>Download {this.formatKbToString(downloadSpeed)}</div>
-        <div>Upload {this.formatKbToString(uploadSpeed)}</div>
-        <div>Peers {peers}</div>
+        <div style={style}>Download {this.formatKbToString(downloadSpeed)}</div>
+        <div style={style}>Upload {this.formatKbToString(uploadSpeed)}</div>
+        <div style={style}>Peers {peers}</div>
 
-        <div className={classes.progress}>
+        <div style={style} className={classes.progress}>
           <span
             style={{ width: `${parseFloat(progress * 100).toFixed(2)}%` }}>
             {parseFloat(progress * 100).toFixed(2)}%
           </span>
         </div>
-        <div>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
+        <div style={style}>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
 
-        <div>
-          CONTROLS HERE
-        </div>
+        {this.shouldShowControls() && (
+          <div>
+            CONTROLS HERE
+          </div>
+        )}
 
       </div>
     )
   }
 }
 
-export default Buffering
+export default Stats

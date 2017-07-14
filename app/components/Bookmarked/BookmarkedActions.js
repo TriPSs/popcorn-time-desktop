@@ -27,7 +27,10 @@ export function toggleBookmark(item) {
       Database.bookmarks.add(id, type).then(() => {
         dispatch({
           type   : Constants.ADD_BOOKMARK,
-          payload: id,
+          payload: {
+            id,
+            item,
+          },
         })
       })
 

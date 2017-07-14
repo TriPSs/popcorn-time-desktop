@@ -1,17 +1,11 @@
 // @flow
-import React, { Component } from 'react'
+import React from 'react'
+import { withRouter } from 'react-router'
 import classNames from 'classnames'
+
 import { Link } from 'react-router-dom'
-import { history as browserHistory } from 'store/configureStore'
 
-type Props = {
-  setActiveMode: (mode: string, options: ? { searchQuery: string }) => void,
-  activeMode: string
-};
-
-export default class Header extends Component {
-
-  props: Props
+export class Header extends React.Component {
 
   state = {
     searchQuery: '',
@@ -28,13 +22,12 @@ export default class Header extends Component {
         searchQuery,
       })
 
-      browserHistory.replace('/item/search')
+      // browserHistory.replace('/search')
     }
   }
 
   render() {
-    const { activeMode, setActiveMode } = this.props
-    const { searchQuery }               = this.state
+    const { match: { params: { mode } } } = this.props
 
     return (
       <div className="row" style={{ height: 64 }}>
@@ -44,44 +37,53 @@ export default class Header extends Component {
               <div className="col-sm-6">
                 <ul className="nav navbar-nav">
                   <li className={classNames('nav-item', {
-                    active: activeMode === 'movies',
+                    active: mode === 'movies',
                   })}>
                     <Link
-                      to={'/item/movies'}
+                      to={'/movies'}
                       replace
-                      className="nav-link"
-                      onClick={() => setActiveMode('movies')}>
-                      Movies <span className="sr-only">(current)</span>
+                      className="nav-link">
+                      Movies
                     </Link>
                   </li>
                   <li className={classNames('nav-item', {
-                    active: activeMode === 'shows',
+                    active: mode === 'shows',
                   })}>
                     <Link
                       className="nav-link"
-                      to={'/item/shows'}
-                      replace
-                      onClick={() => setActiveMode('shows')}>
+                      to={'/shows'}
+                      replace>
                       TV Shows
+                    </Link>
+                  </li>
+
+                  <li className={classNames('nav-item', {
+                    active: mode === 'bookmarks',
+                  })}>
+                    <Link
+                      className="nav-link"
+                      to={'/bookmarks'}
+                      replace>
+                      Bookmarks
                     </Link>
                   </li>
                 </ul>
               </div>
-             {/* <div className="col-md-offset-3 col-md-3">
-                <div className="input-group pull-right">
-                <span className="input-group-addon" id="basic-addon1">
-                  <i className="ion-ios-search-strong" />
-                </span>
-                  <input
-                    className="form-control"
-                    value={searchQuery}
-                    onKeyPress={this.handleKeyPress}
-                    onChange={this.handleSearchChange}
-                    type="text"
-                    placeholder="Search"
-                  />
-                </div>
-              </div>*/}
+              {/* <div className="col-md-offset-3 col-md-3">
+               <div className="input-group pull-right">
+               <span className="input-group-addon" id="basic-addon1">
+               <i className="ion-ios-search-strong" />
+               </span>
+               <input
+               className="form-control"
+               value={searchQuery}
+               onKeyPress={this.handleKeyPress}
+               onChange={this.handleSearchChange}
+               type="text"
+               placeholder="Search"
+               />
+               </div>
+               </div>*/}
             </div>
           </nav>
         </div>
@@ -89,3 +91,5 @@ export default class Header extends Component {
     )
   }
 }
+
+export default withRouter(Header)

@@ -20,6 +20,8 @@
   }
 
   &.pct-btn-no-hover {
+	cursor: default;
+
 	&:hover {
 	  opacity: 0.2;
 	}

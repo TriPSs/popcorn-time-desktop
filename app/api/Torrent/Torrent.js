@@ -151,7 +151,7 @@ export class Torrent {
       Events.emit(TorrentEvents.STATUS_CHANGE, {
         oldStatus: this.status,
         newStatus,
-        ...data
+        ...data,
       })
 
       this.status = newStatus
@@ -170,6 +170,7 @@ export class Torrent {
       this.clearIntervals()
 
       this.inProgress = false
+      this.updateStatus(TorrentStatuses.NONE)
     }
   }
 }

@@ -4,10 +4,11 @@ import type { ContentType } from 'api/Metadata/MetadataTypes'
 export type Props = {
   item: ContentType,
   torrentStatus: string,
+  playerProvider: string,
 }
 
 export type State = {
-  progress: nunber,
+  progress: number,
   timeRemaining: number,
   downloadSpeed: number,
   uploadSpeed: number,

@@ -25,7 +25,7 @@ export const Cover = ({ item, history }: Props) => (
         <Bookmarked className={classes.overlay__bookmark} item={item} />
 
         <div
-          onClick={() => history.push(`/item/${item.type}/${item.id}`)}
+          onClick={() => history.push(`/${item.type}/${item.id}`)}
           className={classes.overlay__click} />
       </div>
 

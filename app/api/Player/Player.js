@@ -99,8 +99,9 @@ export class Player implements PlayerProviderInterface {
   }
 
   stop = () => {
-    Torrent.destroy()
     this.getRightPlayer().stop()
+    this.getRightPlayer().destroy()
+    this.destroy()
   }
 
   getRightPlayer = (): PlayerProviderInterface => {

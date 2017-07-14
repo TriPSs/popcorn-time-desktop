@@ -66,6 +66,8 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
   stop = () => {
     this.player.stop()
+
+    this.destroy()
   }
 
   isPlaying = () => this.status === PlayerStatuses.PLAYING

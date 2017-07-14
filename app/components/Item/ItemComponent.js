@@ -38,10 +38,8 @@ export default class Item extends React.Component {
 
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
 
-    const { torrent } = this.state
-    const { item }    = this.props
-
-    if (item && item.type === MetadataConstants.TYPE_MOVIE && !torrent) {
+    const { item } = this.props
+    if (item && item.type === MetadataConstants.TYPE_MOVIE) {
       this.getBestMovieTorrent()
     }
   }
@@ -66,6 +64,8 @@ export default class Item extends React.Component {
 
   componentWillUnmount() {
     this.stopPlayback()
+
+    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
   torrentStatusChange = (event, data) => {
@@ -104,9 +104,9 @@ export default class Item extends React.Component {
   }
 
   getAllData() {
-    const { player, getItem, match: { params: { itemId, activeMode } } } = this.props
+    const { player, getItem, match: { params: { itemId, mode } } } = this.props
 
-    getItem(itemId, activeMode)
+    getItem(itemId, mode)
     player.getDevices()
   }
 
@@ -154,21 +154,18 @@ export default class Item extends React.Component {
     return torrentStatus === TorrentStatuses.NONE
   }
 
-  isReady = () => {
-    const { match: { params: { itemId } } } = this.props
-    const { isLoading, item }               = this.props
-
-    return !isLoading && item && item.id === itemId
-  }
-
   render() {
-    const { match: { params: { activeMode } } } = this.props
-    const { item }                              = this.props
-    const { torrent }                           = this.state
+    const { match: { params: { itemId, mode } } } = this.props
+    const { item, isLoading }                     = this.props
+    const { torrent, torrentStatus }              = this.state
+
+    if (isLoading || !item || item.id !== itemId) {
+      return <Loader />
+    }
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
-        <Link to={'/'}>
+        <Link to={`/${mode}s`}>
           <button
             style={{ zIndex: 1060 }}
             className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
@@ -180,42 +177,36 @@ export default class Item extends React.Component {
 
         <Background
           {...{
-            backgroundImage: item && item.images.fanart.high,
-            isReady        : this.isReady(),
+            backgroundImage: item.images.fanart.high,
           }} />
 
-        <div className={classes[`item__content--${activeMode}`]}>
-          <div className={classes[`item__row--${activeMode}`]}>
+        <div className={classes[`item__content--${mode}`]}>
+          <div className={classes[`item__row--${mode}`]}>
             <Cover {...{
-              activeMode,
+              mode,
               torrent,
-              torrents       : item && item.torrents,
+              torrents       : item.torrents,
               setTorrent     : this.setTorrent,
               play           : this.play,
-              backgroundImage: item && item.images.fanart.high,
-              poster         : item && item.images.poster.thumb,
+              backgroundImage: item.images.fanart.high,
+              poster         : item.images.poster.thumb,
               showPlayInfo   : this.showPlayInfo(),
-              isReady        : this.isReady(),
             }} />
 
             {this.showPlayInfo() && (
               <Info
                 {...{
                   item,
-                  activeMode,
-                  play   : this.play,
-                  isReady: this.isReady(),
+                  mode,
+                  play: this.play,
                 }} />
             )}
 
-            {this.isReady() && (
-              <Player item={item} />
-            )}
-
+            <Player item={item} />
           </div>
 
-          {this.isReady() && item.type === 'show' && item.seasons && (
-            <Show play={this.play} />
+          {item.type === 'show' && (
+            <Show torrentStatus={torrentStatus} play={this.play} />
           )}
 
         </div>
@@ -225,6 +216,6 @@ export default class Item extends React.Component {
 }
 
 Item.defaultProps = {
-  itemId    : '',
-  activeMode: 'movies',
+  itemId: '',
+  mode  : 'movie',
 }

@@ -1,35 +1,34 @@
 import React from 'react'
 import classNames from 'classnames'
-
-import PosterHolderImage from 'images/posterholder.png'
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 
 import type { Props } from './CoverTypes'
 import QualitySwitch from './QualitySwitch'
 import classes from './Cover.scss'
 
-export const Cover = ({ poster, activeMode, torrent, torrents, setTorrent, play, showPlayInfo, isReady }: Props) => (
+export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
   <div className={classNames('col-sm-6', classes.cover)}>
     <div
-      onClick={() => showPlayInfo && activeMode === 'movie' ? play() : null}
+      onClick={() => showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null}
       className={classes.cover__image}>
       <img
-        className={classNames({ 'animated fadeIn': isReady })}
+        className={classNames('animated fadeIn')}
         alt={'presentation'}
         role={'presentation'}
-        src={isReady ? poster : PosterHolderImage} />
+        src={poster} />
 
       <div className={classNames(
         classes['cover__image-overlay'],
-        { [classes['cover__image-overlay--with-hover']]: showPlayInfo && activeMode === 'movie' },
+        { [classes['cover__image-overlay--with-hover']]: showPlayInfo && mode === MetadataConstants.TYPE_MOVIE },
       )} />
 
-      {showPlayInfo && activeMode === 'movie' && (
+      {showPlayInfo && mode === MetadataConstants.TYPE_MOVIE && (
         <i className={'ion-ios-play'} />
       )}
 
     </div>
 
-    {activeMode === 'movie' && (
+    {mode === MetadataConstants.TYPE_MOVIE && (
       <QualitySwitch
         showPlayInfo={showPlayInfo}
         setTorrent={setTorrent}

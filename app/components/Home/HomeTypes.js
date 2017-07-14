@@ -10,10 +10,9 @@ export type activeModeOptionsType = {
 export type Props = {
 
   setActiveMode: (mode: string, activeModeOptions: ?activeModeOptionsType) => void,
-  getItems: (activeMode: string, page: ?number) => void,
+  getItems: (mode: string, page: ?number) => void,
 
   clearItems: () => void,
-  activeMode: string,
   activeModeOptions: activeModeOptionsType,
   modes: {
     movies: {

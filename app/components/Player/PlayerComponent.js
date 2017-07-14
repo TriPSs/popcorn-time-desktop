@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 import React from 'react'
 import classNames from 'classnames'
 
@@ -41,6 +39,8 @@ export class Player extends React.Component {
   }
 
   componentWillUnmount() {
+    Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
+    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
   }
 
@@ -59,30 +59,45 @@ export class Player extends React.Component {
     })
   }
 
+  shouldShowPlayer = () => {
+    const { playerStatus, playerAction } = this.props
+
+    return (playerStatus === PlayerStatuses.PLAYING
+            || playerStatus === PlayerStatuses.PAUSED
+            || playerStatus === PlayerStatuses.BUFFERING)
+           && playerAction !== Constants.PLAYER_ACTION_STOP
+  }
+
   isHidden = () => {
     const { torrentStatus } = this.state
-    const { playerStatus }  = this.props
 
-    if (playerStatus === PlayerStatuses.PLAYING) {
+    if (this.shouldShowPlayer()) {
       return false
     }
 
-    return torrentStatus === TorrentStatuses.NONE && playerStatus !== PlayerStatuses.PLAYING
+    return torrentStatus === TorrentStatuses.NONE
   }
 
   renderVideo = () => {
-    const { playerStatus, playerAction, uri, stop } = this.props
+    const { uri, stop } = this.props
 
     return (
       <div
         style={{
-          visibility: playerStatus === PlayerStatuses.PLAYING &&
-                      playerAction !== Constants.PLAYER_ACTION_STOP ? 'inherit' : 'hidden',
+          position  : this.shouldShowPlayer() ? 'fixed' : 'inherit',
+          visibility: this.shouldShowPlayer() ? 'inherit' : 'hidden',
           display   : !!uri ? 'inherit' : 'none',
         }}
         className={classes.plyr}>
 
-        <a role={'button'} onClick={stop}>Close</a>
+        <button
+          className={classNames(
+            classes.player__close,
+            'pct-btn pct-btn-trans pct-btn-outline pct-btn-round')}
+          onClick={stop}>
+          <i className={'ion-ios-arrow-back'} />
+          Close
+        </button>
 
         <video controls />
       </div>
@@ -94,12 +109,18 @@ export class Player extends React.Component {
     const { torrentStatus }                      = this.state
 
     return (
-      <div className={classNames({
-        'col-sm-6': playerStatus !== PlayerStatuses.PLAYING,
-        hidden    : this.isHidden(),
-      }, classes.player)}>
+      <div
+        className={classNames({
+          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PLAYER_PROVIDER_CHROMECAST,
+          hidden    : this.isHidden(),
+        }, classes.player)}>
         {torrentStatus !== TorrentStatuses.NONE && (
-          <Stats item={item} torrentStatus={torrentStatus} />
+          <Stats {...{
+            item,
+            playerProvider,
+            playerStatus,
+            torrentStatus,
+          }} />
         )}
 
         {playerProvider === Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}

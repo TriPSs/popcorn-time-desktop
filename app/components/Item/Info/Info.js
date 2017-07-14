@@ -24,25 +24,25 @@ export class Info extends React.Component {
   }
 
   render() {
-    const { item, play, isReady } = this.props
-    const { trailerTooltipOpen }  = this.state
+    const { item, play }         = this.props
+    const { trailerTooltipOpen } = this.state
 
     return (
       <div className={classNames('col-sm-6', classes.info)}>
         <h1 className={classNames('row-margin', classes.info__title)}>
-          {isReady && item && item.title}
+          {item.title}
         </h1>
 
         <div className={classNames('row', classes.info__basic)}>
-          {isReady && item.runtime && item.runtime.short && (
+          {item.runtime && item.runtime.short && (
             <div className={'col-sm-3'}>
               <h6>
-                {isReady && item && item.runtime.short}
+                {item.runtime.short}
               </h6>
             </div>
           )}
 
-          {isReady && item.genres && (
+          {item.genres && (
             <div className={classNames('col-sm-9', classes.info__genres)}>
               <h6>
                 {item.genres.join(', ')}
@@ -52,11 +52,11 @@ export class Info extends React.Component {
         </div>
 
         <div className={classNames('row-margin', classes.info__summary)}>
-          {isReady && item.summary}
+          {item.summary}
         </div>
 
         <div className={classNames('row-margin row-center', classes.info__details)}>
-          {isReady && item.rating && (
+          {item.rating && (
             <Rating
               emptyStarColor={'rgba(255, 255, 255, 0.2)'}
               starColor={'white'}
@@ -65,16 +65,16 @@ export class Info extends React.Component {
           )}
 
           <div>
-            {isReady && item.year}
+            {item.year}
           </div>
 
-          {isReady && item.certification && item.certification !== 'n/a' && (
+          {item && item.certification && item.certification !== 'n/a' && (
             <div className={classes.info__certification}>
               {item.certification}
             </div>
           )}
 
-          {isReady && item.trailer && item.trailer !== 'n/a' && (
+          {item.trailer && item.trailer !== 'n/a' && (
             <div>
               <i
                 id={'trailerTooltip'}
@@ -91,9 +91,7 @@ export class Info extends React.Component {
             </div>
           )}
 
-          {isReady && (
-            <Devices />
-          )}
+          <Devices />
         </div>
       </div>
     )

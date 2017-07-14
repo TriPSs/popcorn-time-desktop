@@ -6,8 +6,9 @@ import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as Constants from './ItemConstants'
 import * as HomeSelectors from '../Home/HomeSelectors'
 
-export function hasItem(itemId, state) {
-  return HomeSelectors.getItems(state).find(item => item.id === itemId)
+export function hasItem(itemId, mode, state) {
+  const pluralMode = MetadataConstants.PLURALS[mode]
+  return HomeSelectors.getModes(state)[pluralMode].items.find(item => item.id === itemId)
 }
 
 export function fetchItem() {
@@ -36,23 +37,19 @@ export function fetchedEpisodeTorrents(item) {
   }
 }
 
-export function getItem(itemId, activeMode) {
+export function getItem(itemId, mode) {
   return (dispatch, getState) => {
     dispatch(fetchItem())
 
-    const item = hasItem(itemId, getState())
-    if (activeMode === MetadataConstants.TYPE_MOVIE) {
+    if (mode === MetadataConstants.TYPE_MOVIE) {
+      const item = hasItem(itemId, mode, getState())
       if (item) {
         return dispatch(fetchedItem(item))
       }
 
       return Butter.getMovie(itemId).then(movie => dispatch(fetchedItem(movie)))
 
-    } else if (activeMode === MetadataConstants.TYPE_SHOW) {
-      if (item) {
-        dispatch(fetchedItem(item))
-      }
-
+    } else if (mode === MetadataConstants.TYPE_SHOW) {
       return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
     }
   }

@@ -8,12 +8,17 @@ import type { MovieType, ShowType, ShowDetailType } from './PctTorrentTypes'
 
 export default class PctTorrentProvider implements TorrentProviderInterface {
 
+  defaultFilters = {
+    limit: 50,
+    sort : 'trending',
+  }
+
   popcornAPI: axios = axios.create({
     baseURL: 'https://movies-v2.api-fetch.website/',
   })
 
-  getMovies = (page: number = 1, filters = { limit: 50, sort: 'trending' }) => (
-    this.popcornAPI.get(`movies/${page}`, { params: { ...filters } })
+  getMovies = (page: number = 1, filters = {}) => (
+    this.popcornAPI.get(`movies/${page}`, { params: { ...this.defaultFilters, ...filters } })
         .then(response => this.formatMovies(response.data))
   )
 
@@ -22,8 +27,8 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
         .then(response => this.formatMovie(response.data))
   )
 
-  getShows = (page: number = 1, filters = { limit: 50, sort: 'trending' }) => (
-    this.popcornAPI.get(`shows/${page}`, { params: { ...filters } })
+  getShows = (page: number = 1, filters = {}) => (
+    this.popcornAPI.get(`shows/${page}`, { params: { ...this.defaultFilters, ...filters } })
         .then(response => this.formatShows(response.data))
   )
 

@@ -15,7 +15,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
         ...state,
         bookmarks: [
           ...state.bookmarks,
-          action.payload,
+          action.payload.id,
         ],
       }
 

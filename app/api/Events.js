@@ -1,6 +1,3 @@
-/**
- * Created by tycho on 08/07/2017.
- */
 import debug from 'debug'
 
 const log = debug('api:events')
@@ -10,22 +7,26 @@ export class Events {
   listeners = []
 
   on = (event, cb) => {
-    if (!this.listeners[event]) {
-      this.listeners[event] = []
-    }
+    log(`Register on '${event}'...`)
+    this.listeners.push({
+      event,
+      cb,
+    })
+  }
 
-    log(`Register on '${event}...`)
-    this.listeners[event].push(cb)
+  remove = (event, cb) => {
+    this.listeners = this.listeners.filter(listener => listener.event !== event && listener.cb !== cb)
   }
 
   emit = (event, data) => {
-    if (!this.listeners[event]) {
+    const listeners = this.listeners.filter(listener => listener.event === event)
+    if (!listeners) {
       log(`'${event}' has no listeners...`)
       return
     }
 
-    log(`Emit '${event}...`)
-    this.listeners[event].forEach(cb => cb(event, data))
+    log(`Emit '${event} to ${listeners.length} listeners...`)
+    listeners.forEach(({ cb }) => cb(event, data))
   }
 
 }

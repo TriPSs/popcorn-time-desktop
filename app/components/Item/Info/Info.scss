@@ -5,7 +5,6 @@
   color: white;
 
   &__title {
-	margin-top: 0;
 	min-height: 50px;
   }
 
@@ -15,12 +14,6 @@
 
   &__basic {
 	min-height: 25px;
-  }
-
-  .dv-star-rating-star {
-	font-size: 1.3rem;
-	margin: 0 10px 0 0;
-	min-width: 100px;
   }
 
   &__certification {
@@ -35,13 +28,18 @@
 	height: 40px;
 
 	> div {
-	  margin-right: 40px;
+	  margin-right: 35px;
 	}
 
 	:global {
 	  .ion-videocamera {
 		font-size: 30px;
 		cursor: pointer;
+	  }
+
+	  .dv-star-rating {
+		font-size: 1.3rem;
+		min-width: 115px;
 	  }
 	}
   }
