@@ -7,6 +7,12 @@
   opacity: 0.2;
   transition: $transition-opacity-in;
 
+  &--relative {
+	@extend .pct-btn;
+
+	position: relative;
+  }
+
   &:hover {
 	opacity: 1;
   }

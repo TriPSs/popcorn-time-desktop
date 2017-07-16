@@ -98,6 +98,7 @@ export class ChromeCastProvider implements StreamingInterface {
 
   pause = () => {
     log('Pause...')
+    this.selectedDevice.pause
   }
 
   stop = () => {
@@ -109,9 +110,9 @@ export class ChromeCastProvider implements StreamingInterface {
   isPlaying = () => this.status === this.states.PLAYING
 
   getDevices = (timeout: number = 1000) => new Promise((resolve) => {
-    const devices = []
+    const devices = this.devices
 
-    if (!this.browser) {
+    if (!this.browser || devices.length) {
       resolve(devices)
     }
 

@@ -11,19 +11,34 @@ export class WatchedDB {
     })
   }
 
-  markWatched = data => this.watched.insert({ ...data, date: new Date() })
+  markWatched = data => new Promise(resolve => this.db.insert({ ...data, date: new Date() }, () =>
+    resolve(),
+  ))
+
+  unmarkWatched = data => new Promise(resolve => this.db.remove({ ...data }, () =>
+    resolve(),
+  ))
 
   markMovieWatched = (id: string) =>
     this.markWatched({ id, type: 'movie' })
 
-  getMoviesWatched = () =>
-    this.watched.find({ type: 'movie' })
+  getMoviesWatched = () => new Promise(resolve => this.db.find({ type: 'movie' }, (error, docs) =>
+    resolve({ error, docs }),
+  ))
 
-  markEpisodeWatched = (tvId: string, id: string) =>
-    this.markWatched({ tvId, id, type: 'episode' })
+  markEpisodeNotWatched = (showId: string, season: string, episode: string) =>
+    this.unmarkWatched({ showId, season, episode, type: 'episode' })
 
-  getEpisodesWatched = (tvId: string) =>
-    this.watched.find({ tvId, type: 'episode' })
+  markEpisodeWatched = (showId: string, season: string, episode: string) =>
+    this.markWatched({ showId, season, episode, type: 'episode' })
+
+  getEpisodesWatchedOfShow = (showId: string) =>
+    new Promise(resolve => this.db.find(
+      {
+        showId,
+        type: 'episode',
+      }, (error, docs) => resolve({ error, docs }),
+    ))
 
 }
 

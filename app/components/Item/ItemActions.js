@@ -1,5 +1,6 @@
 // @flow
 import Butter from 'api/Butter'
+import Database from 'api/Database'
 import { getBestTorrent } from 'api/Torrents/TorrentsHelpers'
 
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
@@ -103,5 +104,46 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
 
       dispatch(fetchedEpisodeTorrents(nItem))
     })
+  }
+}
+
+export function markedMovieWatched(itemId) {
+  return {
+    type   : Constants.MARKED_MOVIE_WATCHED,
+    payload: itemId,
+  }
+}
+
+export function markedEpisode(itemId, season, episode, watched) {
+  return {
+    type   : Constants.MARKED_EPISODE_WATCHED,
+    payload: {
+      itemId,
+      season,
+      episode,
+      watched,
+    },
+  }
+}
+
+export function toggleWatched(item) {
+  return (dispatch) => {
+    if (item.type === MetadataConstants.TYPE_MOVIE) {
+      Database.watched.markMovieWatched(item.id).then(() => {
+        dispatch(markedMovieWatched(item.id))
+      })
+
+    } else if (item.type === MetadataConstants.TYPE_SHOW_EPISODE) {
+      if (item.watched) {
+        Database.watched.markEpisodeNotWatched(item.showId, item.season, item.number).then(() => {
+          dispatch(markedEpisode(item.showId, item.season, item.number, false))
+        })
+
+      } else {
+        Database.watched.markEpisodeWatched(item.showId, item.season, item.number).then(() => {
+          dispatch(markedEpisode(item.showId, item.season, item.number, true))
+        })
+      }
+    }
   }
 }

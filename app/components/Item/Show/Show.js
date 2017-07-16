@@ -14,8 +14,8 @@ export class Show extends React.Component {
   props: Props
 
   state: State = {
-    selectedSeason : 1,
-    selectedEpisode: 1,
+    selectedSeason : null,
+    selectedEpisode: null,
   }
 
   playEpisode = (torrent) => {
@@ -46,38 +46,79 @@ export class Show extends React.Component {
            || playerStatus === PlayerStatuses.BUFFERING
   }
 
-  selectSeasonAndEpisode = (season, episode) => this.setState({
-    selectedSeason : season,
-    selectedEpisode: episode,
-  })
+  selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
+    let episodeToSelect = selectEpisode
+    if (episodeToSelect === null) {
+      const season                = this.getSeason(selectSeason)
+      const firstUnwatchedEpisode = this.getFirstUnwatchedEpisode(season)
 
-  getSeason = () => {
-    const { item }           = this.props
-    const { selectedSeason } = this.state
+      if (firstUnwatchedEpisode) {
+        episodeToSelect = firstUnwatchedEpisode.number
+      } else {
+        episodeToSelect = 1
+      }
+    }
+
+    this.setState({
+      selectedSeason : selectSeason,
+      selectedEpisode: episodeToSelect,
+    })
+  }
+
+  getSeason = (selectedSeason = this.state.selectedSeason) => {
+    const { item } = this.props
 
     if (!item.seasons || !item.seasons.length) {
       return null
     }
 
-    return item.seasons.find(season => season.number === selectedSeason)
+    if (selectedSeason !== null) {
+      return item.seasons.find(season => season.number === selectedSeason)
+    }
+
+    return item.seasons.find(season => season.episodes.find(episode => !episode.watched))
   }
 
-  getEpisode = () => {
-    const { selectedEpisode } = this.state
-    const season              = this.getSeason()
+  getEpisode = (selectedEpisode = this.state.selectedEpisode) => {
+    const season = this.getSeason()
 
     if (!season || !season.episodes) {
       return null
     }
 
-    return season.episodes.find(episode => episode.number === selectedEpisode)
+    if (selectedEpisode !== null) {
+      return season.episodes.find(episode => episode.number === selectedEpisode)
+    }
+
+    return this.getFirstUnwatchedEpisode()
+  }
+
+  getFirstUnwatchedEpisode = (season = null) => {
+    let searchInSeason = season
+
+    if (searchInSeason === null) {
+      searchInSeason = this.getSeason()
+    }
+
+    const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched)
+    if (firstUnwatchedEpisode) {
+      if (firstUnwatchedEpisode.aired < new Date().getTime()) {
+        return firstUnwatchedEpisode
+
+      } else {
+        return searchInSeason.episodes.find(
+          episode => episode.number === (firstUnwatchedEpisode.number - 1),
+        )
+      }
+    }
   }
 
   render() {
-    const { item, fetchingEpisodeTorrents } = this.props
-    const season                            = this.getSeason()
-    const episode                           = this.getEpisode()
-    const { torrents, searched }            = episode
+    const { item, toggleWatched }     = this.props
+    const { fetchingEpisodeTorrents } = this.props
+    const season                      = this.getSeason()
+    const selectedEpisode             = this.getEpisode()
+    const { torrents, searched }      = selectedEpisode
 
     return (
       <div>
@@ -88,7 +129,6 @@ export class Show extends React.Component {
           {torrents && Object.keys(torrents).map(quality => (
             <button
               key={quality}
-              style={{ zIndex: 1060 }}
               onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
                 ? this.playEpisode(torrents[quality])
                 : null}
@@ -119,8 +159,9 @@ export class Show extends React.Component {
           <Seasons {...{
             seasons               : item.seasons,
             selectedSeason        : season,
-            selectedEpisode       : episode,
+            selectedEpisode,
             selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+            toggleWatched,
           }} />
 
         </div>

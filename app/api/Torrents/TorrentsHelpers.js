@@ -63,18 +63,19 @@ export const formatRuntimeMinutesToObject = (runtimeInMinutes: number) => {
   const minutes = runtimeInMinutes % 60
 
   return {
-    full : hours > 0
+    full     : hours > 0
       ? `${hours} ${hours > 1 ? 'hours' : 'hour'}${minutes > 0
         ? ` ${minutes} minutes`
         : ''}`
       : `${minutes} minutes`,
-    short: hours > 0
+    short    : hours > 0
       ? `${hours} ${hours > 1 ? 'hrs' : 'hr'}${minutes > 0
         ? ` ${minutes} min`
         : ''}`
       : `${minutes} min`,
     hours,
     minutes,
+    inMinutes: parseInt(runtimeInMinutes, 10),
   }
 }
 

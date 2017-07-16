@@ -24,6 +24,7 @@ export class Player extends React.Component {
 
   componentDidMount() {
     Events.on(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
+    Events.on(PlayerEvents.VIDEO_ALMOST_DONE, this.playerAlmostDone)
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
@@ -32,16 +33,27 @@ export class Player extends React.Component {
     const { playerAction: oldPlayerAction } = this.props
 
     if (oldPlayerAction !== newPlayerAction) {
-      const { uri, metadata } = nextProps
+      const { uri, item } = nextProps
 
-      MediaPlayer.firePlayerAction(newPlayerAction, { uri, metadata })
+      MediaPlayer.firePlayerAction(newPlayerAction, {
+        uri,
+        item: {
+          ...item,
+          type: uri.indexOf('youtube') > -1 ? 'youtube' : 'video/mp4',
+        },
+      })
     }
   }
 
   componentWillUnmount() {
     Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
+    Events.remove(PlayerEvents.VIDEO_ALMOST_DONE, this.playerAlmostDone)
     Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
+  }
+
+  playerAlmostDone = () => {
+    const { item } = this.props
   }
 
   playerStatusChanged = (event, data) => {
@@ -106,6 +118,7 @@ export class Player extends React.Component {
 
   render() {
     const { playerProvider, playerStatus, item } = this.props
+    const { stop }                               = this.props
     const { torrentStatus }                      = this.state
 
     return (
@@ -120,6 +133,7 @@ export class Player extends React.Component {
             playerProvider,
             playerStatus,
             torrentStatus,
+            stopPlayer: stop,
           }} />
         )}
 

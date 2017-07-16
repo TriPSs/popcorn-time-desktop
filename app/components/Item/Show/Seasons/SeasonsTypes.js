@@ -6,4 +6,5 @@ export type Props = {
   selectedSeason: number,
   selectedEpisode: number,
   selectSeasonAndEpisode: () => void,
+  toggleWatched: () => void,
 }

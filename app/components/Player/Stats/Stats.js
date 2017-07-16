@@ -77,7 +77,7 @@ export class Stats extends React.Component {
   }
 
   render() {
-    const { item, torrentStatus } = this.props
+    const { item, torrentStatus, stopPlayer } = this.props
 
     const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = this.state
 
@@ -106,6 +106,16 @@ export class Stats extends React.Component {
           </span>
         </div>
         <div style={style}>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
+
+        {!this.shouldShowControls() && (
+          <div>
+            <button
+              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+              onClick={stopPlayer}>
+              Cancel
+            </button>
+          </div>
+        )}
 
         {this.shouldShowControls() && (
           <div>

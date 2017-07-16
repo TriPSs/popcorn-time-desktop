@@ -9,7 +9,7 @@ import Episodes from './Episodes'
 import EpisodeInfo from './EpisodeInfo'
 import classes from './Seasons.scss'
 
-export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selectedEpisode }: Props) => (
+export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selectedEpisode, toggleWatched }: Props) => (
   <div className={'col-sm-12'}>
     <div className={classNames('col-sm-2', classes.seasons)}>
       <div className={classNames('list', classes.seasons__list)}>
@@ -19,7 +19,7 @@ export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selec
               'list-item--active': season.number === selectedSeason.number,
             })}
             key={season.number}
-            onClick={() => selectSeasonAndEpisode(season.number, 1)}
+            onClick={() => selectSeasonAndEpisode(season.number)}
           >
             <div className={'list-item__text'}>
               {season.title}
@@ -42,7 +42,9 @@ export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selec
 
     <div className={classNames('col-sm-6', classes.seasons)}>
 
-      <EpisodeInfo episode={selectedEpisode} />
+      <EpisodeInfo
+        toggleWatched={toggleWatched}
+        episode={selectedEpisode} />
 
     </div>
   </div>

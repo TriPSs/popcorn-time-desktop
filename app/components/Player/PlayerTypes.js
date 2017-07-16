@@ -1,12 +1,9 @@
-/**
- * @flow
- */
-
-import type { MetadataType } from 'api/Player/PlayerTypes'
+// @flow
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 
 export type Props = {
   uri: ?string,
-  metadata: ?MetadataType,
+  item: ?ContentType,
   playerAction: string,
   playerStatus: ?string,
   playerProvider: ?string,

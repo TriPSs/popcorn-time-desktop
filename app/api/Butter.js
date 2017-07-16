@@ -2,7 +2,7 @@
  * The highest level abstraction layer for querying torrents and metadata
  * @flow
  */
-import MetadataAdapter from './Metadata/TraktMetadataProvider'
+import MetadataAdapter from './Metadata/MetadataAdapter'
 import PctTorrentProvider from './Torrents/PctTorrentProvider'
 import TorrentAdapter from './Torrents'
 

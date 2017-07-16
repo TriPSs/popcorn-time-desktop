@@ -1,16 +1,16 @@
 // @flow
 import MediaPlayer from 'api/Player'
-import type { MetadataType } from 'api/Player/PlayerTypes'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { DeviceType } from 'api/Player/StreamingProviders/StreamingTypes'
 import * as Constants from './PlayerConstants'
 import * as Selectors from './PlayerSelectors'
 
-export function play(uri: string, metadata: MetadataType) {
+export function play(uri: string, item: ContentType) {
   return {
     type   : Constants.PLAYER_ACTION_PLAY,
     payload: {
       uri,
-      metadata,
+      item,
     },
   }
 }

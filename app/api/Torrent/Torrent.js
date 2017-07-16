@@ -7,6 +7,7 @@ import WebTorrent from 'webtorrent'
 import debug from 'debug'
 
 import Events from 'api/Events'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as TorrentEvents from './TorrentEvents'
 import * as TorrentStatuses from './TorrentStatuses'
 
@@ -36,7 +37,7 @@ export class Torrent {
     this.cacheLocation = remote.app.getPath('temp')
   }
 
-  start(magnetURI: string, metadata: MetadataType, supportedFormats: Array<string>) {
+  start(magnetURI: string, item: ContentType, supportedFormats: Array<string>) {
     if (this.inProgress) {
       throw new Error('Torrent already in progress')
     }
@@ -81,7 +82,7 @@ export class Torrent {
 
       file.select()
 
-      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, metadata })
+      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, item })
     })
   }
 
@@ -95,17 +96,17 @@ export class Torrent {
     }
   }
 
-  bufferInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
+  bufferInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
     const toBuffer = (1024 * 1024) * 25
 
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentStatuses.BUFFERED, {
-        metadata,
+        item,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
 
       this.clearIntervals()
-      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, metadata })
+      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, item })
 
     } else {
       this.updateStatus(TorrentStatuses.BUFFERING)
@@ -121,12 +122,12 @@ export class Torrent {
 
   }, 1000)
 
-  downloadInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
+  downloadInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
     if (torrent.downloaded >= torrent.length) {
       log('Download complete...')
 
       this.updateStatus(TorrentStatuses.DOWNLOADED, {
-        metadata,
+        item,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
       this.clearIntervals()

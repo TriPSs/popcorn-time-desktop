@@ -59,17 +59,18 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  firePlayerAction = (status, { uri, metadata }) => {
+  firePlayerAction = (status, { uri, item }) => {
     log(`Fire player action ${status}`)
 
     switch (status) {
       case PlayerConstants.PLAYER_ACTION_PLAY:
-        if (!metadata.type) {
-          Torrent.start(uri, metadata, this.supportedFormats)
+        if (item.type !== 'youtube') {
+          Torrent.start(uri, item, this.supportedFormats)
 
         } else {
-          this.play({ uri, metadata })
+          this.play({ uri, item })
         }
+
         break
 
       case PlayerConstants.PLAYER_ACTION_PAUSE:
@@ -84,11 +85,11 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  play = ({ uri, metadata }) => {
+  play = ({ uri, item }) => {
     const player = this.getRightPlayer()
 
     if (player && !player.isPlaying()) {
-      player.play(uri, metadata)
+      player.play(uri, item)
     }
   }
 

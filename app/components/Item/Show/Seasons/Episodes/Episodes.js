@@ -34,11 +34,12 @@ export class Episodes extends React.Component {
 
     return (
       <div className={'list'}>
-        {selectedSeason.episodes.map(episode =>
+        {selectedSeason.episodes.map(episode => (
           <a
             className={classNames('list-item', {
               'list-item--active'  : episode.number === selectedEpisode.number,
               'list-item--disabled': episode.aired > today,
+              'list-item--watched' : episode.watched && episode.number !== selectedEpisode.number,
             })}
             key={episode.number}
             onClick={() => {
@@ -79,7 +80,7 @@ export class Episodes extends React.Component {
               )}
             </div>
           </a>
-        )}
+        ))}
       </div>
     )
   }

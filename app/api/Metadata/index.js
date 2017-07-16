@@ -1,1 +1,1 @@
-export default from './MetadataAdapter'
+export default from './TraktMetadataProvider'

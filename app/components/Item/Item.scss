@@ -22,6 +22,14 @@
 	}
   }
 
+  &__main {
+	&--movie {}
+
+	&--show {
+	  min-height: 450px;
+	}
+  }
+
   &__row {
 	&--movie {
 	  width: 100%;

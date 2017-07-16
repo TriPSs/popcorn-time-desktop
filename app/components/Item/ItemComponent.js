@@ -87,19 +87,12 @@ export default class Item extends React.Component {
           image   : {
             poster: item.images.poster.medium,
           },
-          autoPlay: true,
         })
 
         break
 
       default:
-        player.play(torrent.url, {
-          title   : item.title,
-          image   : {
-            poster: item.images.poster.medium,
-          },
-          autoPlay: true,
-        })
+        player.play(torrent.url, item)
     }
   }
 
@@ -156,7 +149,7 @@ export default class Item extends React.Component {
 
   render() {
     const { match: { params: { itemId, mode } } } = this.props
-    const { item, isLoading }                     = this.props
+    const { item, isLoading, toggleWatched }      = this.props
     const { torrent, torrentStatus }              = this.state
 
     if (isLoading || !item || item.id !== itemId) {
@@ -181,7 +174,7 @@ export default class Item extends React.Component {
           }} />
 
         <div className={classes[`item__content--${mode}`]}>
-          <div className={classes[`item__row--${mode}`]}>
+          <div className={classNames(classes[`item__row--${mode}`], classes[`item__main--${mode}`])}>
             <Cover {...{
               mode,
               torrent,
@@ -206,7 +199,10 @@ export default class Item extends React.Component {
           </div>
 
           {item.type === 'show' && (
-            <Show torrentStatus={torrentStatus} play={this.play} />
+            <Show
+              toggleWatched={toggleWatched}
+              torrentStatus={torrentStatus}
+              play={this.play} />
           )}
 
         </div>

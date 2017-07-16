@@ -9,7 +9,7 @@ export const PLAYER_PROVIDER_CHROMECAST = 'Chromecast'
 
 export const INITIAL_STATE = {
   uri           : null,
-  metadata      : null,
+  item          : null,
   playerAction  : PLAYER_ACTION_STOP,
   playerStatus  : null,
   playerProvider: PLAYER_PROVIDER_PLYR,
