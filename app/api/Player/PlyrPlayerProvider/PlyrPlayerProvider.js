@@ -28,7 +28,6 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
       this.player = plyr.setup({
         volume         : 10,
         autoplay       : true,
-        showPosterOnEnd: true,
       })[0]
 
       if (this.player) {
@@ -61,7 +60,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     if (this.isPlaying()) {
       return
     }
-    
+
     if (uri && item) {
       this.load(uri, item)
     }
@@ -80,8 +79,6 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
     if (this.player) {
       this.player.stop()
     }
-
-    this.destroy()
   }
 
   isPlaying = () => this.status === PlayerStatuses.PLAYING

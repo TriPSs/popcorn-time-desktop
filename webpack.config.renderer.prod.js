@@ -13,11 +13,11 @@ export default webpackMerge(baseConfig, {
 
   devtool: 'source-map',
 
-  entry: ['babel-polyfill', path.join(__dirname, 'app/index')],
+  entry: './app/index.js',
 
   output: {
-    path      : path.join(__dirname, 'app/dist'),
-    publicPath: 'dist/',
+    path: path.join(__dirname, 'app/dist'),
+    publicPath: '../dist/'
   },
 
   plugins: [

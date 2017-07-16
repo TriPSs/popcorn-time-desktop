@@ -8,7 +8,7 @@ import Power from 'api/Power'
 import Events from 'api/Events'
 import * as PlayerEvents from 'api/Player/PlayerEvents'
 import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import type { MetadataType } from 'api/Player/PlayerTypes'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { DeviceType } from '../StreamingTypes'
 import type { BrowserType } from './ChromeCastTypes'
 import { StreamingInterface } from '../StreamingInterface'
@@ -37,12 +37,14 @@ export class ChromeCastProvider implements StreamingInterface {
 
   client: PlatformSender = null
 
+  player = null
+
   constructor() {
     this.browser = mdns.createBrowser(mdns.tcp('googlecast'))
   }
 
-  play = (uri: string, metadata: MetadataType) => {
-    log(`Play ${metadata.title}`)
+  play = (uri: string, item: ContentType) => {
+    log(`Play ${item.title}`)
 
     let streamingUrl = uri
     if (uri.indexOf('localhost')) {
@@ -63,8 +65,9 @@ export class ChromeCastProvider implements StreamingInterface {
       log(`Connected to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
 
       this.client.launch(DefaultMediaReceiver, (error, player) => {
+        this.player = player
         // on close
-        player.on('status', (status) => {
+        this.player.on('status', (status) => {
           this.updateStatus(this.states[status.playerState])
         })
 
@@ -76,14 +79,14 @@ export class ChromeCastProvider implements StreamingInterface {
           metadata: {
             type        : 0,
             metadataType: 0,
-            title       : metadata.title,
+            title       : item.title,
             images      : [{
-              url: metadata.image.poster,
+              url: item.images.poster.medium,
             }],
           },
         }
 
-        player.load(media, { autoplay: true }, (error, status) => {
+        this.player.load(media, { autoplay: true }, (error, status) => {
           this.updateStatus(this.states[status.playerState])
         })
       })
@@ -98,16 +101,17 @@ export class ChromeCastProvider implements StreamingInterface {
 
   pause = () => {
     log('Pause...')
-    this.selectedDevice.pause
+    // this.selectedDevice.pause()
   }
 
   stop = () => {
     log('Stop...')
-    this.client.stop()
-    this.destroy()
+    if (this.player) {
+      this.player.stop()
+    }
   }
 
-  isPlaying = () => this.status === this.states.PLAYING
+  isPlaying = () => this.status === PlayerStatuses.PLAYING
 
   getDevices = (timeout: number = 1000) => new Promise((resolve) => {
     const devices = this.devices
@@ -153,13 +157,18 @@ export class ChromeCastProvider implements StreamingInterface {
   }
 
   destroy = () => {
-    log('Destroy...')
-    Power.disableSaveMode()
-    this.browser = null
+    if (this.status !== PlayerStatuses.NONE) {
+      log('Destroy...')
+      Power.disableSaveMode()
+      this.browser = null
 
-    if (this.client) {
-      this.client.close()
-      this.client = null
+      if (this.client) {
+        this.client.close()
+        this.client = null
+        this.player = null
+      }
+
+      this.updateStatus(PlayerStatuses.NONE)
     }
   }
 

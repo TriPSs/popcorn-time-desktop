@@ -42,6 +42,7 @@ export class Show extends React.Component {
            || torrentStatus === TorrentStatuses.DOWNLOADING
            || torrentStatus === TorrentStatuses.CONNECTING
            || playerStatus === PlayerStatuses.PAUSED
+           || playerStatus === PlayerStatuses.CONNECTING
            || playerStatus === PlayerStatuses.PLAYING
            || playerStatus === PlayerStatuses.BUFFERING
   }

@@ -20,8 +20,6 @@ export class Torrent {
 
   cacheLocation: string
 
-  inProgress: boolean = false
-
   checkBufferInterval: number
   checkDownloadInterval: number
 
@@ -32,17 +30,22 @@ export class Torrent {
     listen: (port: number) => void
   }
 
+  loadedItem: ContentType
+
+  loadedMagnet: string
+
   constructor() {
     this.engine        = new WebTorrent({ maxConns: 20 })
     this.cacheLocation = remote.app.getPath('temp')
   }
 
   start(magnetURI: string, item: ContentType, supportedFormats: Array<string>) {
-    if (this.inProgress) {
+    if (this.status !== TorrentStatuses.NONE) {
       throw new Error('Torrent already in progress')
     }
 
-    this.inProgress = true
+    this.loadedItem   = item
+    this.loadedMagnet = magnetURI
 
     this.updateStatus(TorrentStatuses.CONNECTING)
 
@@ -62,15 +65,15 @@ export class Torrent {
           if (formatIsSupported) {
             if (previous !== 'undefined' && current.length > previous.file.length) {
               previous.file.deselect()
-            }
 
-            return {
-              file        : current,
-              torrentIndex: index,
+              return {
+                file        : current,
+                torrentIndex: index,
+              }
             }
-          } else {
-            return previous
           }
+
+          return previous
         },
         { file: files[0], torrentIndex: 0 },
       )
@@ -160,17 +163,22 @@ export class Torrent {
   }
 
   destroy() {
-    if (this.inProgress) {
+    if (this.status !== TorrentStatuses.NONE) {
       log('Destroyed Torrent...')
 
       if (this.server && typeof this.server.close === 'function') {
+        if (this.engine) {
+          this.engine.remove(this.loadedMagnet)
+        }
+
         this.server.close()
-        this.server = {}
+        this.server       = {}
+        this.loadedMagnet = null
+        this.loadedItem   = null
       }
 
       this.clearIntervals()
 
-      this.inProgress = false
       this.updateStatus(TorrentStatuses.NONE)
     }
   }

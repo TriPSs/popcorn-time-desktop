@@ -2,17 +2,17 @@
  * Webpack config for production electron main process
  */
 
-import webpack from 'webpack';
-import merge from 'webpack-merge';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import BabiliPlugin from 'babili-webpack-plugin';
-import baseConfig from './webpack.config.base';
+import webpack from 'webpack'
+import webpackMerge from 'webpack-merge'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import BabiliPlugin from 'babili-webpack-plugin'
+import baseConfig from './webpack.config.base'
 
 if (process.env.NODE_ENV !== 'production') {
-  throw new Error('Production builds must have NODE_ENV=production');
+  throw new Error('Production builds must have NODE_ENV=production')
 }
 
-export default merge.smart(baseConfig, {
+export default webpackMerge(baseConfig, {
 
   devtool: 'source-map',
 
@@ -22,8 +22,8 @@ export default merge.smart(baseConfig, {
 
   // 'main.js' in root
   output: {
-    path: __dirname,
-    filename: './app/main.prod.js'
+    path    : __dirname,
+    filename: './app/main.prod.js',
   },
 
   plugins: [
@@ -33,9 +33,8 @@ export default merge.smart(baseConfig, {
     new BabiliPlugin(),
 
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-      openAnalyzer: process.env.OPEN_ANALYZER === 'true'
+      analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
+      openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
 
     /**
@@ -48,11 +47,11 @@ export default merge.smart(baseConfig, {
      * development checks
      */
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(
-        process.env.NODE_ENV || 'production'
+      'process.env.NODE_ENV'  : JSON.stringify(
+        process.env.NODE_ENV || 'production',
       ),
       'process.env.DEBUG_PROD': JSON.stringify(
-        process.env.DEBUG_PROD || 'false'
+        process.env.DEBUG_PROD || 'false',
       )
     })
   ],
@@ -63,7 +62,7 @@ export default merge.smart(baseConfig, {
    * https://github.com/webpack/webpack/issues/2010
    */
   node: {
-    __dirname: false,
-    __filename: false
+    __dirname : false,
+    __filename: false,
   }
-});
+})

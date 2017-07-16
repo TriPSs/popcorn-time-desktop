@@ -86,6 +86,7 @@ export class Player implements PlayerProviderInterface {
   }
 
   play = ({ uri, item }) => {
+    log(`Fire play in ${this.providerSelected}`)
     const player = this.getRightPlayer()
 
     if (player && !player.isPlaying()) {
