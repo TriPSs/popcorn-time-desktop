@@ -84,8 +84,9 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
                   return {
                     ...episode,
                     torrents: {
-                      ...episode.torrents,
-                      ...bestTorrents,
+                      '480p' : getBestTorrent(episode.torrents['480p'], bestTorrents['480p']),
+                      '720p' : getBestTorrent(episode.torrents['720p'], bestTorrents['720p']),
+                      '1080p': getBestTorrent(episode.torrents['1080p'], bestTorrents['1080p']),
                     },
                     searched: true,
                   }

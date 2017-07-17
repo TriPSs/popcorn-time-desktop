@@ -55,10 +55,6 @@ $transition-opacity-out: opacity 0.1s ease-out;
   margin: 20px 0;
 }
 
-#summary {
-  line-height: 2rem;
-}
-
 ::selection {
   background: black;
   color: white;
@@ -94,10 +90,6 @@ $list-item-bg-disabled: darken($body-bg, 5%);
 // Item
 $item-background-height: 100%;
 $item-summary-max-with: 600px;
-
-// Notie
-$notie-font-size-big: 18px;
-$notie-font-size-small: 18px;
 
 // Plyr
 $plyr-color-main: gray;

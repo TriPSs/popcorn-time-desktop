@@ -1,17 +1,10 @@
-import path from 'path'
 import webpack from 'webpack'
-import fs from 'fs'
-import dotenv from 'dotenv'
-import { dependencies as externals } from './app/package.json'
+import { dependencies as externals } from '../app/package.json'
 
-import config from './config'
-
-// Get all the possible flags
-const data   = fs.readFileSync('.env.example', { encoding: 'utf8' })
-const buffer = new Buffer(data)
-const flags  = Object.keys(dotenv.parse(buffer))
+import config from '../config'
 
 export default {
+
   externals: Object.keys(externals || {}),
 
   module: {
@@ -30,7 +23,7 @@ export default {
   },
 
   output: {
-    path         : path.join(__dirname, 'app'),
+    path         : config.utils_paths.src(),
     filename     : 'bundle.js',
     libraryTarget: 'commonjs2',
   },
@@ -38,12 +31,9 @@ export default {
   resolve: {
     extensions: ['.js', '.jsx', '.json'],
     modules   : [
-      path.join(__dirname, 'app'),
+      config.utils_paths.src(),
       'node_modules',
     ],
-    // alias: {
-    //   castv2: 'castv2-webpack'
-    // }
   },
 
   plugins: [
@@ -52,7 +42,6 @@ export default {
       ...config.custom_globals,
     }),
 
-    new webpack.EnvironmentPlugin(['NODE_ENV', 'DEBUG_PROD', ...flags]),
     new webpack.NamedModulesPlugin(),
 
     new webpack.LoaderOptionsPlugin({

@@ -126,7 +126,13 @@ export const hasNonEnglishLanguage = (metadata: string): boolean => {
 }
 
 export const getBestTorrent = (torrentOne, torrentTwo) => {
-  if (torrentOne.health.ratio > torrentTwo.health.ratio) {
+  if (torrentOne && !torrentTwo) {
+    return torrentOne
+
+  } else if (!torrentOne && torrentTwo) {
+    return torrentTwo
+
+  } else if (torrentOne.health.ratio > torrentTwo.health.ratio) {
     return torrentOne
   }
 

@@ -1,32 +1,11 @@
 // @flow
 import os from 'os'
 import path from 'path'
-import fs from 'fs'
-import mkdirp from 'mkdirp'
 import extract from 'extract-zip'
+import debug from 'debug'
 
-const version = process.env.PREBUILT_FFMPEG_RELEASE || '0.23.5'
+const log     = debug('app:postinstall')
 const baseDir = path.join(__dirname, 'node_modules', 'electron', 'dist')
-
-function copy(filepath: string, dest: string) {
-  fs.writeFileSync(
-    path.join(__dirname, dest),
-    fs.readFileSync(path.join(__dirname, filepath))
-  )
-}
-
-function addEnvFileIfNotExist(): boolean {
-  // Check if it exists
-  try {
-    fs.accessSync(path.join(__dirname, '.env'))
-    console.log('--> Using existing .env file...')
-    return true
-  } catch (e) {
-    console.log('--> Creating ".env" file...')
-    copy('.env.example', '.env')
-    return true
-  }
-}
 
 function getUrl(): { platform: string, dest: string } {
   switch (os.type()) {
@@ -65,17 +44,16 @@ function setupFfmpeg() {
   const zipLocation        = path.join(
     __dirname,
     'ffmpeg',
-    `${version}-${platform}-${os.arch()}.zip`
+    `0.23.5-${platform}-${os.arch()}.zip`,
   )
 
-  console.log('--> Replacing ffmpeg...')
+  log('--> Replacing ffmpeg...')
 
-  extract(zipLocation, { dir: dest }, error => {
+  extract(zipLocation, { dir: dest }, (error) => {
     if (error) {
-      console.log(error)
+      log(error)
     }
   })
 }
 
 setupFfmpeg()
-addEnvFileIfNotExist()

@@ -77,7 +77,14 @@ export class Show extends React.Component {
       return item.seasons.find(season => season.number === selectedSeason)
     }
 
-    return item.seasons.find(season => season.episodes.find(episode => !episode.watched))
+    let firstUnwatchedSeason = item.seasons.find(season => season.number !== 0
+                                                           && season.episodes.find(episode => !episode.watched))
+
+    if (!firstUnwatchedSeason) {
+      firstUnwatchedSeason = item.seasons.find(season => season.number === item.seasons.length - 1)
+    }
+
+    return firstUnwatchedSeason
   }
 
   getEpisode = (selectedEpisode = this.state.selectedEpisode) => {
@@ -112,6 +119,10 @@ export class Show extends React.Component {
         )
       }
     }
+
+    return searchInSeason.episodes.find(
+      episode => episode.number === searchInSeason.episodes.length,
+    )
   }
 
   render() {
@@ -136,23 +147,36 @@ export class Show extends React.Component {
               className={classNames(
                 'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
                 { 'pct-btn-available': torrents[quality] !== null },
-                { 'pct-btn-no-hover': fetchingEpisodeTorrents },
                 { 'pct-btn-no-hover': torrents[quality] === null && searched },
+                { 'pct-btn-no-hover': !searched },
               )}>
 
-              {torrents[quality] !== null && !fetchingEpisodeTorrents && (
-                <div>Play in {quality}</div>
-              )}
+              <div>Play in {quality}</div>
 
-              {torrents[quality] === null && !fetchingEpisodeTorrents && (
-                <div>{(searched ? 'Did not found ' : 'Search for ') + quality}</div>
-              )}
-
-              {fetchingEpisodeTorrents && (
-                <div>Searching for {quality}...</div>
-              )}
             </button>
           ))}
+
+          <button
+            onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
+              ? this.playEpisode(null)
+              : null}
+            className={classNames(
+              'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
+              { 'pct-btn-no-hover': searched || fetchingEpisodeTorrents },
+            )}>
+
+            {!fetchingEpisodeTorrents && !searched && (
+              <div>Search</div>
+            )}
+
+            {fetchingEpisodeTorrents && (
+              <div>Searching...</div>
+            )}
+
+            {!fetchingEpisodeTorrents && searched && (
+              <div>Searched</div>
+            )}
+          </button>
 
         </div>
 

@@ -1,8 +1,9 @@
-import path from 'path'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import webpackMerge from 'webpack-merge'
-import baseConfig from './webpack.config.renderer.base'
+
+import config from '../config'
+import baseConfig  from './webpack.config.renderer.base'
 
 export default webpackMerge(baseConfig, {
 
@@ -10,19 +11,19 @@ export default webpackMerge(baseConfig, {
 
   target: 'electron-renderer',
 
-  entry: './app/index.js',
+  entry: config.utils_paths.src('index.js'),
 
   output: {
-    path      : path.join(__dirname, 'app/dist'),
-    publicPath: path.join(__dirname, 'app/dist/'),
+    path      : config.utils_paths.dist(),
+    publicPath: config.utils_paths.dist('/'),
   },
 
   plugins: [
     new ExtractTextPlugin('style.css'),
 
     new BundleAnalyzerPlugin({
-      analyzerMode: process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-      openAnalyzer: process.env.OPEN_ANALYZER === 'true',
+      analyzerMode: config.open_analyzer ? 'server' : 'disabled',
+      openAnalyzer: config.open_analyzer,
     }),
   ],
 })

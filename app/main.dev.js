@@ -69,7 +69,7 @@ app.on('ready', async () => {
       'web-preferences'     : { 'web-security': false },
       scrollBounce          : true,
       overlayFullscreenVideo: false,
-    }
+    },
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)

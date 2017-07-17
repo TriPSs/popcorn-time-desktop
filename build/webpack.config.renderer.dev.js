@@ -1,24 +1,20 @@
-import path from 'path'
 import fs from 'fs'
 import webpack from 'webpack'
-import chalk from 'chalk'
 import webpackMerge from 'webpack-merge'
 import { spawn, execSync } from 'child_process'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import baseConfig from './webpack.config.renderer.base'
+import debug from 'debug'
 
-const port       = process.env.PORT || 1212
-const publicPath = `http://localhost:${port}/dist`
-const dll        = path.resolve(process.cwd(), 'dll')
-const manifest   = path.resolve(dll, 'vendor.json')
+import baseConfig from './webpack.config.renderer.base'
+import config from '../config'
+
+const log = debug('app:build:webpack:renderer:dev')
 
 /**
  * Warn if the DLL is not built
  */
-if (!(fs.existsSync(dll) && fs.existsSync(manifest))) {
-  console.log(chalk.black.bgYellow.bold(
-    'The DLL files are missing. Sit back while we build them for you with "npm run build-dll"'
-  ))
+if (!(fs.existsSync(config.utils_paths.dll()) && fs.existsSync(config.utils_paths.dll('vendor.json')))) {
+  log('The DLL files are missing. Sit back while we build them for you with "npm run build-dll"')
 
   execSync('npm run build-dll')
 }
@@ -29,19 +25,19 @@ export default webpackMerge(baseConfig, {
 
   entry: [
     'react-hot-loader/patch',
-    `webpack-dev-server/client?http://localhost:${port}/`,
+    `webpack-dev-server/client?http://localhost:${config.dev_port}/`,
     'webpack/hot/only-dev-server',
-    path.join(__dirname, 'app/index'),
+    config.utils_paths.src('index'),
   ],
 
   output: {
-    publicPath: `http://localhost:${port}/dist/`,
+    publicPath: `http://localhost:${config.dev_port}/dist/`,
   },
 
   plugins: [
     new webpack.DllReferencePlugin({
-      context   : process.cwd(),
-      manifest  : require(manifest),
+      context   : config.utils_paths.base(),
+      manifest  : require(config.utils_paths.dll('vendor.json')),
       sourceType: 'var',
     }),
 
@@ -54,13 +50,13 @@ export default webpackMerge(baseConfig, {
     }),
 
     new ExtractTextPlugin({
-      filename: '[name].css',
+      disable: true,
     }),
   ],
 
   devServer: {
-    port,
-    publicPath,
+    port              : config.dev_port,
+    publicPath        : `http://localhost:${config.dev_port}/dist/`,
     compress          : true,
     noInfo            : true,
     stats             : 'errors-only',
@@ -68,7 +64,7 @@ export default webpackMerge(baseConfig, {
     lazy              : false,
     hot               : true,
     headers           : { 'Access-Control-Allow-Origin': '*' },
-    contentBase       : path.join(__dirname, 'dist'),
+    contentBase       : config.utils_paths.dist(),
     watchOptions      : {
       aggregateTimeout: 300,
       poll            : 100,
@@ -79,14 +75,13 @@ export default webpackMerge(baseConfig, {
       disableDotRule: false,
     },
     setup() {
-      if (process.env.START_HOT) {
+      if (config.start_hot) {
         spawn('npm', ['run', 'start-main-dev'], {
           shell: true,
           env  : process.env,
           stdio: 'inherit',
         }).on('close', code => process.exit(code))
-          .on('error', spawnError => console.error(spawnError))
-
+          .on('error', spawnError => log(spawnError))
       }
     },
   },

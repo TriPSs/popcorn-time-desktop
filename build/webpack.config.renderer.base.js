@@ -1,7 +1,7 @@
-import path from 'path'
 import webpackMerge from 'webpack-merge'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 
+import config from '../config'
 import baseConfig from './webpack.config.base'
 
 export const sassLoaderConfig = {
@@ -9,18 +9,19 @@ export const sassLoaderConfig = {
   options: {
     sourceMap   : true,
     outputStyle : 'expanded',
-    includePaths: [path.join(__dirname, 'app/styles')],
+    includePaths: [config.utils_paths.src('styles')],
   },
 }
 
 export const cssLoaderConfig = (identName = '[name]__[local]___[hash:base64:3]') => ({
   loader : 'css-loader',
   options: {
-    sourceMap     : true,
-    minimize      : true,
-    modules       : true,
-    importLoaders : true,
-    localIdentName: identName,
+    sourceMap      : true,
+    minimize       : true,
+    modules        : true,
+    importLoaders  : true,
+    localIdentName : identName,
+    discardComments: { removeAll: true },
   },
 })
 
@@ -31,10 +32,20 @@ export default webpackMerge(baseConfig, {
   module: {
     rules: [
       {
+        test: /\.global\.scss$/,
+        use : ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use     : [
+            cssLoaderConfig('[local]'),
+            sassLoaderConfig,
+          ],
+        }),
+      },
+      {
         test: /^((?!\.global).)*\.scss$/,
         use : ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [
+          use     : [
             cssLoaderConfig(),
             sassLoaderConfig,
           ],
@@ -44,21 +55,12 @@ export default webpackMerge(baseConfig, {
         test: /^((?!\.global).)*\.css$/,
         use : ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [
+          use     : [
             cssLoaderConfig(),
           ],
         }),
       },
-      {
-        test: /\.global\.scss$/,
-        use : ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            cssLoaderConfig('[local]'),
-            sassLoaderConfig,
-          ],
-        }),
-      },
+
       {
         test   : /\.(gif|png|jpe?g|svg)$/i,
         loaders: [
@@ -85,10 +87,9 @@ export default webpackMerge(baseConfig, {
       },
 
       {
-        test   : /\.(woff|woff2|otf|eot|ttf|svg)$/i,
+        test   : /\.(woff|woff2|otf|eot|ttf)$/i,
         loaders: ['file-loader?hash=sha512&digest=hex&name=fonts/font-[name]-[hash:6].[ext]'],
       },
-
     ],
   },
 })
