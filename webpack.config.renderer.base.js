@@ -1,5 +1,7 @@
 import path from 'path'
 import webpackMerge from 'webpack-merge'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+
 import baseConfig from './webpack.config.base'
 
 export const sassLoaderConfig = {
@@ -29,36 +31,34 @@ export default webpackMerge(baseConfig, {
   module: {
     rules: [
       {
-        test: /\.global\.scss$/,
-        use : [
-          {
-            loader: 'style-loader',
-          },
-          cssLoaderConfig('[local]'),
-          sassLoaderConfig,
-        ],
-      },
-      {
         test: /^((?!\.global).)*\.scss$/,
-        use : [
-          {
-            loader: 'style-loader',
-          },
-          cssLoaderConfig(),
-          sassLoaderConfig,
-        ],
+        use : ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            cssLoaderConfig(),
+            sassLoaderConfig,
+          ],
+        }),
       },
-
       {
         test: /^((?!\.global).)*\.css$/,
-        use : [
-          {
-            loader: 'style-loader',
-          },
-          cssLoaderConfig(),
-        ],
+        use : ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            cssLoaderConfig(),
+          ],
+        }),
       },
-
+      {
+        test: /\.global\.scss$/,
+        use : ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            cssLoaderConfig('[local]'),
+            sassLoaderConfig,
+          ],
+        }),
+      },
       {
         test   : /\.(gif|png|jpe?g|svg)$/i,
         loaders: [

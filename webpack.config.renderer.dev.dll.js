@@ -1,12 +1,14 @@
 import webpack from 'webpack'
 import path from 'path'
-import merge from 'webpack-merge'
+import webpackMerge from 'webpack-merge'
+import ExtractTextPlugin from 'extract-text-webpack-plugin'
+
 import baseConfig from './webpack.config.renderer.base'
 import { dependencies } from './package.json'
 
 const dist = path.resolve(process.cwd(), 'dll')
 
-export default merge.smart(baseConfig, {
+export default webpackMerge(baseConfig, {
 
   context: process.cwd(),
 
@@ -34,6 +36,10 @@ export default merge.smart(baseConfig, {
   },
 
   plugins: [
+    new ExtractTextPlugin({
+      disable: true,
+    }),
+
     new webpack.DllPlugin({
       path: path.join(dist, '[name].json'),
       name: '[name]',
