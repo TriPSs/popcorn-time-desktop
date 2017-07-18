@@ -62,7 +62,7 @@ export class Devices extends React.Component {
 
             {devices.map(castingDevice => (
               <DropdownItem
-                key={castingDevice.id}
+                key={castingDevice.name}
                 onClick={() => player.selectDevice(castingDevice)}>
                 {castingDevice.name}
               </DropdownItem>

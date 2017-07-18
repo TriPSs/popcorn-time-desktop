@@ -82,9 +82,9 @@ export default class Item extends React.Component {
     switch (playerProvider) {
       case 'youtube':
         player.play(item.trailer, {
-          title   : item.title,
-          type    : 'youtube',
-          image   : {
+          title: item.title,
+          type : 'youtube',
+          image: {
             poster: item.images.poster.medium,
           },
         })
@@ -96,7 +96,7 @@ export default class Item extends React.Component {
     }
   }
 
-  getAllData() {
+  getAllData = () => {
     const { player, getItem, match: { params: { itemId, mode } } } = this.props
 
     getItem(itemId, mode)

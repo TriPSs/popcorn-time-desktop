@@ -126,10 +126,14 @@ export const hasNonEnglishLanguage = (metadata: string): boolean => {
 }
 
 export const getBestTorrent = (torrentOne, torrentTwo) => {
-  if (torrentOne && !torrentTwo) {
+  if ((!torrentOne || typeof torrentOne === 'undefined' ) && (!torrentTwo || typeof torrentTwo === 'undefined')) {
+    return null
+  }
+
+  if (torrentOne && (!torrentTwo || typeof torrentTwo === 'undefined')) {
     return torrentOne
 
-  } else if (!torrentOne && torrentTwo) {
+  } else if ((!torrentOne || typeof torrentOne === 'undefined') && torrentTwo) {
     return torrentTwo
 
   } else if (torrentOne.health.ratio > torrentTwo.health.ratio) {

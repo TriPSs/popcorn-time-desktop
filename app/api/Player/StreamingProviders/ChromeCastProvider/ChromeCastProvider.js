@@ -1,6 +1,5 @@
 // @flow
-import { Client, PlatformSender, DefaultMediaReceiver } from 'castv2-client'
-import mdns from 'mdns'
+import chromecastAPI from 'chromecasts'
 import debug from 'debug'
 import network from 'network-address'
 
@@ -10,8 +9,8 @@ import * as PlayerEvents from 'api/Player/PlayerEvents'
 import * as PlayerStatuses from 'api/Player/PlayerStatuses'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { DeviceType } from '../StreamingTypes'
-import type { BrowserType } from './ChromeCastTypes'
 import { StreamingInterface } from '../StreamingInterface'
+import type { ChromeCastApiType, ChromeCastType } from './ChromeCastTypes'
 
 const log = debug('api:players:chromecast')
 
@@ -21,13 +20,15 @@ export class ChromeCastProvider implements StreamingInterface {
 
   supportsSubtitles: boolean = true
 
-  selectedDevice: DeviceType
+  selectedDevice: ChromeCastType
 
-  devices: Array<DeviceType> = []
+  devices: Array<ChromeCastType> = []
 
-  browser: BrowserType
+  chromecasts: ChromeCastApiType
 
   status: string = PlayerStatuses.NONE
+
+  checkProgressInterval: number
 
   states = {
     PLAYING  : PlayerStatuses.PLAYING,
@@ -35,12 +36,29 @@ export class ChromeCastProvider implements StreamingInterface {
     PAUSED   : PlayerStatuses.PAUSED,
   }
 
-  client: PlatformSender = null
-
-  player = null
-
   constructor() {
-    this.browser = mdns.createBrowser(mdns.tcp('googlecast'))
+    this.chromecasts = chromecastAPI()
+    this.chromecasts.on('update', this.onChromecastsUpdate)
+  }
+
+  onChromecastsUpdate = (player) => this.devices.push(player)
+
+  getDevices = (timeout: number = 1000) => new Promise((resolve) => {
+    this.chromecasts.update()
+
+    setTimeout(() => {
+      resolve(this.devices.map(device => ({
+        name    : device.name,
+        host    : device.host,
+        provider: this.provider,
+      })))
+    }, timeout)
+  })
+
+  selectDevice = (device: DeviceType) => {
+    log(`Selecting device ${device.name}`)
+
+    this.selectedDevice = this.devices.find(chromecast => chromecast.host === device.host)
   }
 
   play = (uri: string, item: ContentType) => {
@@ -51,127 +69,110 @@ export class ChromeCastProvider implements StreamingInterface {
       streamingUrl = uri.replace('localhost', network())
     }
 
-    this.client = new Client()
-
     if (!this.selectedDevice) {
       throw new Error('No device selected')
     }
 
     Power.enableSaveMode()
-    log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
+    log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.host})`)
 
     this.updateStatus(PlayerStatuses.CONNECTING)
-    this.client.connect(this.selectedDevice.address, () => {
-      log(`Connected to: ${this.selectedDevice.name} (${this.selectedDevice.address})`)
+    this.loadedItem = item
+    const media     = {
+      type: 'video/mp4',
+      // tracks: <-- For subtitles
 
-      this.client.launch(DefaultMediaReceiver, (error, player) => {
-        this.player = player
-        // on close
-        this.player.on('status', (status) => {
-          this.updateStatus(this.states[status.playerState])
-        })
+      autoSubtitles: false,
+      metadata     : {
+        type        : 0,
+        metadataType: 0,
+        title       : item.title,
+        images      : [{
+          url: item.images.poster.medium,
+        }],
+      },
+    }
 
-        const media = {
-          contentId  : streamingUrl,
-          contentType: 'video/mp4',
-          streamType : 'BUFFERED',
-
-          metadata: {
-            type        : 0,
-            metadataType: 0,
-            title       : item.title,
-            images      : [{
-              url: item.images.poster.medium,
-            }],
-          },
-        }
-
-        this.player.load(media, { autoplay: true }, (error, status) => {
-          this.updateStatus(this.states[status.playerState])
-        })
-      })
-    })
-
-    this.client.on('error', (error) => {
-      log('Error: %s', error.message)
-
-      this.client.close()
-    })
+    this.selectedDevice.play(streamingUrl, media, (error, status) => this.updateStatus(this.states[status.playerState]))
+    this.selectedDevice.on('status', status => this.updateStatus(this.states[status.playerState]))
   }
 
   pause = () => {
     log('Pause...')
-    // this.selectedDevice.pause()
+    if (this.selectedDevice && this.status !== PlayerStatuses.NONE) {
+      this.selectedDevice.pause()
+    }
   }
 
   stop = () => {
     log('Stop...')
-    if (this.player) {
-      this.player.stop()
+    if (this.selectedDevice && this.status !== PlayerStatuses.NONE) {
+      this.selectedDevice.stop()
     }
   }
 
   isPlaying = () => this.status === PlayerStatuses.PLAYING
 
-  getDevices = (timeout: number = 1000) => new Promise((resolve) => {
-    const devices = this.devices
-
-    if (!this.browser || devices.length) {
-      resolve(devices)
-    }
-
-    this.browser.on('serviceUp', (service) => {
-      devices.push({
-        name    : service.txtRecord.fn,
-        id      : service.fullname,
-        address : service.addresses[0],
-        port    : service.port,
-        provider: this.provider,
-      })
-    })
-
-    this.browser.start()
-
-    setTimeout(() => {
-      this.browser.stop()
-      resolve(devices)
-      this.devices = devices
-    }, timeout)
-  })
-
-  selectDevice = (device: DeviceType) => {
-    log(`Selecting device ${device.name}`)
-
-    this.selectedDevice = device
-  }
-
   updateStatus = (nStatus) => {
     const newStatus = nStatus !== 'undefined' ? nStatus : PlayerStatuses.NONE
-    log(`Update status to ${newStatus}`)
 
-    Events.emit(PlayerEvents.STATUS_CHANGE, {
-      oldState: this.status,
-      newStatus,
-    })
-    this.status = newStatus
+    if (newStatus !== this.status) {
+      log(`Update status to ${newStatus}`)
+
+      Events.emit(PlayerEvents.STATUS_CHANGE, {
+        oldState: this.status,
+        newStatus,
+      })
+      this.status = newStatus
+      this.clearIntervals()
+
+      if (newStatus === PlayerStatuses.PLAYING) {
+        this.checkProgressInterval = this.progressInterval()
+      }
+    }
   }
 
   destroy = () => {
     if (this.status !== PlayerStatuses.NONE) {
       log('Destroy...')
       Power.disableSaveMode()
-      this.browser = null
 
-      if (this.client) {
-        this.client.close()
-        this.client = null
-        this.player = null
+      if (this.selectedDevice) {
+        this.selectedDevice.stop()
+      }
+
+      if (this.chromecasts) {
+        this.chromecasts.destroy()
       }
 
       this.updateStatus(PlayerStatuses.NONE)
     }
   }
 
+  progressInterval = () => setInterval(() => {
+    if (this.selectedDevice) {
+      this.selectedDevice.status((err, data) => {
+        if (typeof data !== 'undefined') {
+          const percentageComplete = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
+
+          if (percentageComplete > 90) {
+            this.clearIntervals()
+            Events.emit(PlayerEvents.VIDEO_ALMOST_DONE)
+          }
+
+        } else {
+          this.clearIntervals()
+          this.destroy()
+        }
+      })
+    }
+  }, 500)
+
+  clearIntervals = () => {
+    if (this.checkProgressInterval) {
+      clearInterval(this.checkProgressInterval)
+    }
+  }
 }
 
 export default ChromeCastProvider

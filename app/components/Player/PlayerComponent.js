@@ -24,7 +24,6 @@ export class Player extends React.Component {
 
   componentDidMount() {
     Events.on(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.on(PlayerEvents.VIDEO_ALMOST_DONE, this.playerAlmostDone)
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
@@ -47,13 +46,8 @@ export class Player extends React.Component {
 
   componentWillUnmount() {
     Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.remove(PlayerEvents.VIDEO_ALMOST_DONE, this.playerAlmostDone)
     Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
-  }
-
-  playerAlmostDone = () => {
-    const { item } = this.props
   }
 
   playerStatusChanged = (event, data) => {

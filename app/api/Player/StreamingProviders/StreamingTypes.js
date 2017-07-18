@@ -1,8 +1,6 @@
 // @flow
 export type DeviceType = {
-  id: string,
   name: string,
-  address: string,
-  port: number
+  host: string,
   provider: string,
 }

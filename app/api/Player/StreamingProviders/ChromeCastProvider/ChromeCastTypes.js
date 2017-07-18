@@ -1,15 +1,28 @@
 // @flow
-export type Castv2DeviceType = {
-  fullname: string,
-  addresses: Array<string>,
-  port: number,
-  txtRecord: {
-    fn: string
-  }
+import type { DeviceType } from '../StreamingTypes'
+
+export type ChromeCastType = DeviceType & {
+
+  play: (url: string, opts: Object, cb: () => void) => void,
+
+  pause: (cb: () => void) => void,
+
+  resume: (cb: () => void) => void,
+
+  stop: (cb: () => void) => void,
+
+  seek: (cb: () => void) => void,
+
+  status: (cb: () => void) => void,
+
+  on: (event: string, cb: () => void) => void,
+
 }
 
-export type BrowserType = {
-  on: (event: string, cb: (device: Castv2DeviceType) => void) => void,
-  start: () => void,
-  stop: () => void
+export type ChromeCastApiType = {
+
+  update: () => void,
+
+  on: (event: string, player: (player: ChromeCastType) => void) => void,
+
 }
