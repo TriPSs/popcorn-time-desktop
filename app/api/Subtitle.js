@@ -28,7 +28,7 @@ export function startServer(): express {
   server.listen(port)
 
   console.info(
-    `Subtitle server serving on http://localhost:${port}, serving ${basePath}`
+    `Subtitle server serving on http://localhost:${port}, serving ${basePath}`,
   )
 
   return server
@@ -53,7 +53,7 @@ export function convertFromBuffer(srtBuffer: Buffer): Promise<subtitleType> {
           basePath,
           port,
           fullPath,
-          buffer: vttBuffer
+          buffer: vttBuffer,
         })
       })
     })

@@ -17,7 +17,7 @@ export default function CheckUpdate(): Promise<boolean> {
       res =>
         !!res.filter(
           each =>
-          each.prerelease === false && isNewerSemvar(each.name, currentSemvar)
+          each.prerelease === false && isNewerSemvar(each.name, currentSemvar),
         ).length,
     )
 }

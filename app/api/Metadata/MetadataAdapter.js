@@ -8,7 +8,7 @@ export class MetadataAdapter implements MetadataProviderInterface {
     new TraktMetadataProvider(),
   ]
 
-  getSeasons = (itemId: string, pctSeasons) => new Promise((resolve) =>
+  getSeasons = (itemId: string, pctSeasons) => new Promise(resolve =>
     Database.watched.getEpisodesWatchedOfShow(itemId).then(({ docs }) => Promise.all(
       this.providers.map(provider => provider.getSeasons(itemId, pctSeasons, docs)),
       ).then((response) => {

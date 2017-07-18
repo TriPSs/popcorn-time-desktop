@@ -7,7 +7,7 @@ import * as Selectors from './HomeSelectors'
 
 import Home from './HomeComponent'
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(Actions, dispatch),
   bookmarks: bindActionCreators(BookmarkActions, dispatch),
 })

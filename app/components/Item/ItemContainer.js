@@ -9,7 +9,7 @@ import * as Selectors from './ItemSelectors'
 
 import Item from './ItemComponent'
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(Actions, dispatch),
   player: bindActionCreators(PlayerActions, dispatch),
 })

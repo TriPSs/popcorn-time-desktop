@@ -35,7 +35,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
         ...state,
         item: {
           ...state.item,
-          watched: true
+          watched: true,
         },
       }
 
@@ -53,18 +53,18 @@ export default (state = Constants.INITIAL_STATE, action) => {
                     ...episode,
                     watched: action.payload.watched,
                   }
-                } else {
-                  return episode
-                }
+                } 
+                return episode
+                
               })
               return {
                 ...season,
                 episodes,
                 watched: (episodes.filter(episode => !!episode.watched).length / episodes.length) * 100,
               }
-            } else {
-              return season
-            }
+            } 
+            return season
+            
           }),
         },
       }

@@ -6,7 +6,7 @@ import * as PlayerSelectors from 'components/Player/PlayerSelectors'
 
 import Devices from './Devices'
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = dispatch => ({
   player: bindActionCreators(PlayerActions, dispatch),
 })
 

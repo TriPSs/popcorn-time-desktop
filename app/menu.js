@@ -37,7 +37,7 @@ export default class MenuBuilder {
           label: 'Inspect element',
           click: () => {
             this.mainWindow.inspectElement(x, y)
-          }
+          },
         }])
         .popup(this.mainWindow)
     })
@@ -55,7 +55,7 @@ export default class MenuBuilder {
         { label: 'Hide Others', accelerator: 'Command+Shift+H', selector: 'hideOtherApplications:' },
         { label: 'Show All', selector: 'unhideAllApplications:' },
         { type: 'separator' },
-        { label: 'Quit', accelerator: 'Command+Q', click: () => { app.quit() } }
+        { label: 'Quit', accelerator: 'Command+Q', click: () => { app.quit() } },
       ],
     }
     const subMenuEdit     = {
@@ -67,7 +67,7 @@ export default class MenuBuilder {
         { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
         { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
         { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' }
+        { label: 'Select All', accelerator: 'Command+A', selector: 'selectAll:' },
       ],
     }
     const subMenuViewDev  = {
@@ -77,12 +77,12 @@ export default class MenuBuilder {
         {
           label      : 'Toggle Full Screen',
           accelerator: 'Ctrl+Command+F',
-          click      : () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()) }
+          click      : () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()) },
         },
         {
           label      : 'Toggle Developer Tools',
           accelerator: 'Alt+Command+I',
-          click      : () => { this.mainWindow.toggleDevTools() }
+          click      : () => { this.mainWindow.toggleDevTools() },
         },
       ],
     }
@@ -93,7 +93,7 @@ export default class MenuBuilder {
         {
           label      : 'Toggle Full Screen',
           accelerator: 'Ctrl+Command+F',
-          click      : () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()) }
+          click      : () => { this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen()) },
         },
       ],
     }
@@ -104,7 +104,7 @@ export default class MenuBuilder {
         { label: 'Minimize', accelerator: 'Command+M', selector: 'performMiniaturize:' },
         { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
         { type: 'separator' },
-        { label: 'Bring All to Front', selector: 'arrangeInFront:' }
+        { label: 'Bring All to Front', selector: 'arrangeInFront:' },
       ],
     }
 
@@ -114,9 +114,9 @@ export default class MenuBuilder {
         { label: 'Learn More', click() { shell.openExternal('https://github.com/tripss/popcorn-time-desktop') } },
         {
           label: 'Search Issues',
-          click() { shell.openExternal('https://github.com/tripss/popcorn-time-desktop/issues') }
-        }
-      ]
+          click() { shell.openExternal('https://github.com/tripss/popcorn-time-desktop/issues') },
+        },
+      ],
     }
 
     const subMenuView = process.env.NODE_ENV === 'development'
@@ -128,7 +128,7 @@ export default class MenuBuilder {
       subMenuEdit,
       subMenuView,
       subMenuWindow,
-      subMenuHelp
+      subMenuHelp,
     ]
   }
 
@@ -137,14 +137,14 @@ export default class MenuBuilder {
       label  : '&File',
       submenu: [{
         label      : '&Open',
-        accelerator: 'Ctrl+O'
+        accelerator: 'Ctrl+O',
       }, {
         label      : '&Close',
         accelerator: 'Ctrl+W',
         click      : () => {
           this.mainWindow.close()
-        }
-      }]
+        },
+      }],
     }, {
       label  : '&View',
       submenu: (process.env.NODE_ENV === 'development') ? [{
@@ -152,39 +152,39 @@ export default class MenuBuilder {
         accelerator: 'Ctrl+R',
         click      : () => {
           this.mainWindow.webContents.reload()
-        }
+        },
       }, {
         label      : 'Toggle &Full Screen',
         accelerator: 'F11',
         click      : () => {
           this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen())
-        }
+        },
       }, {
         label      : 'Toggle &Developer Tools',
         accelerator: 'Alt+Ctrl+I',
         click      : () => {
           this.mainWindow.toggleDevTools()
-        }
+        },
       }] : [{
         label      : 'Toggle &Full Screen',
         accelerator: 'F11',
         click      : () => {
           this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen())
-        }
-      }]
+        },
+      }],
     }, {
       label  : 'Help',
       submenu: [{
         label: 'Learn More',
         click() {
           shell.openExternal('https://github.com/tripss/popcorn-time-desktop')
-        }
+        },
       }, {
         label: 'Search Issues',
         click() {
           shell.openExternal('https://github.com/tripss/popcorn-time-desktop/issues')
-        }
-      }]
+        },
+      }],
     }]
   }
 }

@@ -63,7 +63,7 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
     Butter.searchEpisode(item, inSeason, forEpisode).then((response) => {
       const bestTorrents = {}
 
-      response.forEach((torrents) => Object.keys(torrents).forEach((quality) => {
+      response.forEach(torrents => Object.keys(torrents).forEach((quality) => {
         const torrent = torrents[quality]
         if (!bestTorrents[torrent.quality] || getBestTorrent(bestTorrents[torrent.quality], torrent)) {
           bestTorrents[torrent.quality] = torrent
@@ -91,15 +91,15 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
                     searched: true,
                   }
 
-                } else {
-                  return episode
-                }
+                } 
+                return episode
+                
               }),
             }
 
-          } else {
-            return season
-          }
+          } 
+          return season
+          
         }),
       }
 

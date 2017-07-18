@@ -70,6 +70,6 @@ export default class TraktMetadataAdapter implements MetadataProviderInterface {
 
   isEpisodeWatched = (episode, watchedEpisodes) => !!watchedEpisodes.find(watchedEpisode =>
     watchedEpisode.episode === episode.number
-    && watchedEpisode.season === episode.season
+    && watchedEpisode.season === episode.season,
   )
 }

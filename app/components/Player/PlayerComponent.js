@@ -92,7 +92,7 @@ export class Player extends React.Component {
         style={{
           position  : this.shouldShowPlayer() ? 'fixed' : 'inherit',
           visibility: this.shouldShowPlayer() ? 'inherit' : 'hidden',
-          display   : !!uri ? 'inherit' : 'none',
+          display   : uri ? 'inherit' : 'none',
         }}
         className={classes.plyr}>
 

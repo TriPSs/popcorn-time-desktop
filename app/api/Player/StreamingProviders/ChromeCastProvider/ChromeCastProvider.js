@@ -41,7 +41,7 @@ export class ChromeCastProvider implements StreamingInterface {
     this.chromecasts.on('update', this.onChromecastsUpdate)
   }
 
-  onChromecastsUpdate = (player) => this.devices.push(player)
+  onChromecastsUpdate = player => this.devices.push(player)
 
   getDevices = (timeout: number = 1000) => new Promise((resolve) => {
     this.chromecasts.update()

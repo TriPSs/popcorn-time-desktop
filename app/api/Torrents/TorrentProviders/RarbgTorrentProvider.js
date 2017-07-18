@@ -40,9 +40,9 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
         if (!retry) {
           return resolve(this.searchEpisode(item, season, episode, true))
 
-        } else {
-          return resolve([])
-        }
+        } 
+        return resolve([])
+        
       })
     })
 
@@ -54,16 +54,16 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
         category,
         sort    : 'seeders',
         verified: false,
-      }).then((results) => results.map(torrent => this.formatTorrent(torrent)))
+      }).then(results => results.map(torrent => this.formatTorrent(torrent)))
          .catch((error) => {
            log(`Failed search ${error}`)
 
            if (!retry) {
              return resolve(this.search(query, category, true))
 
-           } else {
-             return resolve([])
-           }
+           } 
+           return resolve([])
+           
          })
     })
 

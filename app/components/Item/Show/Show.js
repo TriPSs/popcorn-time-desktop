@@ -113,11 +113,11 @@ export class Show extends React.Component {
       if (firstUnwatchedEpisode.aired < new Date().getTime()) {
         return firstUnwatchedEpisode
 
-      } else {
-        return searchInSeason.episodes.find(
+      } 
+      return searchInSeason.episodes.find(
           episode => episode.number === (firstUnwatchedEpisode.number - 1),
         )
-      }
+      
     }
 
     return searchInSeason.episodes.find(

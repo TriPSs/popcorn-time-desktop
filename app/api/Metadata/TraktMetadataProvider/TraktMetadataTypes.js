@@ -1,6 +1,4 @@
-/**
- * Created by tycho on 10/07/2017.
- */
+// @flow
 
 export type EpisodeType = {
   available_translations: Array,
@@ -11,7 +9,7 @@ export type EpisodeType = {
     trakt: number,
     tvdb: number,
     tvrage: number,
-  }
+  },
   number: number,
   number_abs: number,
   overview: string,

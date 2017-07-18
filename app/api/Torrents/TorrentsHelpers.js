@@ -1,18 +1,14 @@
 // @flow
-/* eslint prefer-template: 0 */
-import cache from 'lru-cache'
-import url from 'url'
-
 export const formatShowToSearchQuery = (title, season, episode) => {
-  let searchTitle = title.toLowerCase()
+  const searchTitle = title.toLowerCase()
                          .replace(' ', '.')
 
   return `${searchTitle}.${formatSeasonEpisodeToString(season, episode)}`
 }
 
 export const formatSeasonEpisodeToString = (season, episode) => (
-  's' + (String(season).length === 1 ? '0' + String(season) : String(season)) +
-  'e' + (String(episode).length === 1 ? '0' + String(episode) : String(episode))
+  `s${String(season).length === 1 ? `0${String(season)}` : String(season) 
+  }e${String(episode).length === 1 ? `0${String(episode)}` : String(episode)}`
 )
 
 export const getHealth = (seeds, peers) => {
@@ -20,9 +16,9 @@ export const getHealth = (seeds, peers) => {
 
   // Normalize the data. Convert each to a percentage
   // Ratio: Anything above a ratio of 5 is good
-  const normalizedRatio = Math.min(ratio / 5 * 100, 100)
+  const normalizedRatio = Math.min((ratio / 5) * 100, 100)
   // Seeds: Anything above 30 seeds is good
-  const normalizedSeeds = Math.min(seeds / 30 * 100, 100)
+  const normalizedSeeds = Math.min((seeds / 30) * 100, 100)
 
   // Weight the above metrics differently
   // Ratio is weighted 60% whilst seeders is 40%
@@ -126,7 +122,7 @@ export const hasNonEnglishLanguage = (metadata: string): boolean => {
 }
 
 export const getBestTorrent = (torrentOne, torrentTwo) => {
-  if ((!torrentOne || typeof torrentOne === 'undefined' ) && (!torrentTwo || typeof torrentTwo === 'undefined')) {
+  if ((!torrentOne || typeof torrentOne === 'undefined') && (!torrentTwo || typeof torrentTwo === 'undefined')) {
     return null
   }
 

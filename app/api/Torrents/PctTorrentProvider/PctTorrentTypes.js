@@ -29,9 +29,9 @@ export type MovieType = {
       '720p': TorrentType,
     }
   },
-  genres: Array<string>
+  genres: Array<string>,
   images: ImageType,
-  rating: RatingType
+  rating: RatingType,
 }
 
 export type ShowType = {
@@ -56,8 +56,8 @@ export type ShowDetailType = ShowType & {
   status: string,
   last_updated: number,
   __v: number,
-  episodes: [],
-  genres: Array<string>
+  episodes: Array,
+  genres: Array<string>,
 }
 
 export type TorrentType = {

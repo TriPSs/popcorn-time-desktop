@@ -59,14 +59,14 @@ export function selectDevice(device: DeviceType) {
         payload: device,
       })
 
-    } else {
-      dispatch(updateProvider(device))
+    } 
+    dispatch(updateProvider(device))
 
-      return dispatch({
-        type   : Constants.SELECT_DEVICE,
-        payload: null,
-      })
-    }
+    return dispatch({
+      type   : Constants.SELECT_DEVICE,
+      payload: null,
+    })
+    
   }
 }
 
