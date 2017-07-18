@@ -78,7 +78,7 @@ export class Info extends React.Component {
             <div>
               <i
                 id={'trailerTooltip'}
-                className={'ion-videocamera'}
+                className={'ion-social-youtube-outline'}
                 onClick={() => play('youtube')}
               />
               <Tooltip

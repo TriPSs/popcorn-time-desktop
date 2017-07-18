@@ -15,7 +15,7 @@ export default webpackMerge(baseConfig, {
 
   output: {
     path      : config.utils_paths.dist(),
-    publicPath: config.utils_paths.dist('/'),
+    publicPath: './dist/',
   },
 
   plugins: [

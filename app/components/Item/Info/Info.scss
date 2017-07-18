@@ -32,9 +32,13 @@
 	}
 
 	:global {
-	  .ion-videocamera {
+	  .ion-social-youtube-outline {
 		font-size: 30px;
 		cursor: pointer;
+
+		&:hover {
+		  color: red;
+		}
 	  }
 
 	  .dv-star-rating {

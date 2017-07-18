@@ -34,13 +34,15 @@
 
 **Faster Torrents**: New API optimized for fast torrents by querying the from multiple endpoints
 
+**Auto Torrents Search**: Search automatically for missing torrents on shows
+
 **Modern Stack**: Electron, React, Redux, Webpack, ES7, Flow, and others
 
 ## Requirements:
 
-* [Node >= 6](https://nodejs.org)
+* [Node >= 8](https://nodejs.org)
 * Mac, Linux, Windows
-* For packaging, see [packaging requirements](https://github.com/tripss/popcorn-time-desktop/wiki/Packaging-Requirements)
+* For packaging, see [packaging requirements](https://github.com/amilajack/popcorn-time-desktop/wiki/Packaging-Requirements)
 
 ## Getting started:
 - **I am a tester:** Download the latest build from the [releases](https://github.com/tripss/popcorn-time-desktop/releases) section.
@@ -55,14 +57,10 @@ cd popcorn-time-desktop
 # Install dependencies
 # Have a cup of coffee ☕️ this might take a while
 # Run `npm run electron-rebuild` if get a 'module version mismatch' error
-yarn
-
-# Customize Build
-# Feel free to enable flags and configs in the `.env` file
-vi .env
+npm install
 
 # Developement build
-npm run dev
+npm run start:dev
 
 # Production build
 npm run package
@@ -77,7 +75,10 @@ See the [roadmap](https://github.com/tripss/popcorn-time-desktop/wiki/Road-Map-a
 ## Screenshots
 
 ### Home Page:
-![Home Page]()
+![Home Page](https://github.com/tripss/popcorn-time-desktop/raw/master/home.jpg)
 
 ### Movie Page:
-![Movie page]()
+![Movie page](https://github.com/tripss/popcorn-time-desktop/raw/master/movie.jpg)
+
+### Show page:
+![Show page](https://github.com/tripss/popcorn-time-desktop/raw/master/show.jpg)

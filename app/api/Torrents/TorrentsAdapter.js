@@ -1,5 +1,4 @@
 import debug from 'debug'
-import TorrentCollection from 'TorrentCollection'
 
 import type { ShowType } from 'api/Metadata/MetadataTypes'
 import { TorrentProviderInterface } from './TorrentsProviderInterface'

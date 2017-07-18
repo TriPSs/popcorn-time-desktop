@@ -88,7 +88,9 @@ export default webpackMerge(baseConfig, {
 
       {
         test   : /\.(woff|woff2|otf|eot|ttf)$/i,
-        loaders: ['file-loader?hash=sha512&digest=hex&name=fonts/font-[name]-[hash:6].[ext]'],
+        loaders: [
+          'file-loader?hash=sha512&digest=hex&name=fonts/font-[name]-[hash:6].[ext]'
+        ],
       },
     ],
   },

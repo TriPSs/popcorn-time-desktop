@@ -199,7 +199,6 @@
     "gm": "1.23.0",
     "image-diff": "1.6.3",
     "immutable": "3.8.1",
-    "ionicons-temp": "2.0.0",
     "jest-cli": "^20.0.4",
     "jsdom": "11.0.0",
     "json-loader": "0.5.4",
@@ -229,7 +228,6 @@
     "why-did-you-update": "0.0.8"
   },
   "dependencies": {
-    "TorrentCollection": "0.0.2",
     "animate.css": "^3.5.2",
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
