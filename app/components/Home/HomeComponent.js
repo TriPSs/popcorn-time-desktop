@@ -1,13 +1,15 @@
 // @flow
-import React, { Component } from 'react'
+import React from 'react'
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import VisibilitySensor from 'react-visibility-sensor'
 
 import Header from '../Header'
 import CardList from '../CardList'
 
+import * as Constants from './HomeConstants'
 import type { Props } from './HomeTypes'
 
-export default class Home extends Component {
+export class Home extends React.Component {
 
   props: Props
 
@@ -24,47 +26,36 @@ export default class Home extends Component {
     }
   }
 
-  handleOnVisibilityChange = (isVisible: boolean) => {
-    const { isLoading, activeMode } = this.props
+  componentWillMount() {
+    const { bookmarks } = this.props
 
-    if (isVisible && !isLoading) {
-      const { getItems } = this.props
-      const { page }     = this.props.modes[activeMode]
-
-      getItems(activeMode, page)
-    }
+    bookmarks.getBookmarks()
   }
 
   componentDidMount() {
-    const { activeMode } = this.props
+    const { match: { params: { mode } } } = this.props
 
-    window.scrollTo(0, global.pct[`${activeMode}ScrollTop`])
+    window.scrollTo(0, global.pct[`${mode}ScrollTop`])
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { activeMode: newMode } = nextProps
-    const { activeMode: oldMode } = this.props
+    const { match: { params: { mode: newMode } } } = nextProps
+    const { match: { params: { mode: oldMode } } } = this.props
 
     // Save the scroll position
     global.pct[`${oldMode}ScrollTop`] = document.body.scrollTop
 
     if (newMode !== oldMode) {
       window.scrollTo(0, 0)
-      const { clearItems, switchMode, modes } = this.props
-
-      clearItems()
-
-      const { page } = modes[newMode]
-      switchMode(newMode, page)
     }
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { activeMode } = this.props
-    const { oldMode }    = prevProps
+    const { match: { params: { mode: newMode } } } = this.props
+    const { match: { params: { mode: oldMode } } } = prevProps
 
-    if (oldMode !== activeMode) {
-      window.scrollTo(0, global.pct[`${activeMode}ScrollTop`])
+    if (oldMode !== newMode) {
+      window.scrollTo(0, global.pct[`${newMode}ScrollTop`])
     }
   }
 
@@ -78,18 +69,36 @@ export default class Home extends Component {
     global.pct[`${activeMode}ScrollTop`] = document.body.scrollTop
   }
 
+  handleGetMoreItems = (isVisible: boolean = true) => {
+    const { match: { params: { mode } } } = this.props
+    const { isLoading, modes, getItems }  = this.props
+
+    const { page } = modes[mode]
+    if (mode === Constants.MODE_BOOKMARKS && page > 1) {
+      return
+    }
+
+    if (isVisible && !isLoading) {
+      getItems(mode, page)
+    }
+  }
+
   render() {
-    const { items, isLoading } = this.props
+    const { match: { params: { mode } } } = this.props
+    const { modes, isLoading }            = this.props
 
     return (
       <div className={'container-fluid'}>
 
         <Header />
+        <div className={'container-fluid'}>
+          <CardList items={modes[mode].items} isLoading={isLoading} />
 
-        <CardList items={items} isLoading={isLoading} />
-        <VisibilitySensor onChange={this.handleOnVisibilityChange} />
-
+          <VisibilitySensor onChange={this.handleGetMoreItems} />
+        </div>
       </div>
     )
   }
 }
+
+export default Home

@@ -1,4 +1,49 @@
 .item {
   position: relative;
   height: 100%;
+
+  &__content {
+	display: flex;
+	width: 100%;
+	height: 100%;
+
+	&--movie {
+	  @extend .item__content;
+
+	  justify-content: center;
+	  align-items: center;
+	}
+
+	&--show {
+	  @extend .item__content;
+
+	  flex-flow: column;
+	  justify-content: space-between;
+	}
+  }
+
+  &__main {
+	&--movie {}
+
+	&--show {
+	  min-height: 450px;
+	}
+  }
+
+  &__row {
+	&--movie {
+	  width: 100%;
+	}
+
+	&--show {
+	  width: 100%;
+	  margin-top: 100px;
+
+	  &:last-of-type {
+		display: flex;
+		margin-bottom: 100px;
+	  }
+	}
+  }
 }
+

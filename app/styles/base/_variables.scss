@@ -47,12 +47,12 @@ $navbar-dark-color: #848484;
 $font-family-base: 'Open Sans', sans-serif;
 $headings-font-weight: 400;
 
+// Transitions
+$transition-opacity-in: opacity 0.1s ease-in;
+$transition-opacity-out: opacity 0.1s ease-out;
+
 .row-margin {
   margin: 20px 0;
-}
-
-#summary {
-  line-height: 2rem;
 }
 
 ::selection {
@@ -72,7 +72,7 @@ $headings-font-weight: 400;
 //
 
 // Card list
-$card-list-color: #848484;
+$card-list-color: $navbar-dark-color;
 
 // Card
 $card-max-with: 140px;
@@ -82,13 +82,19 @@ $card-min-height: 210px;
 $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 
+// List
+$list-item-bg: $body-bg;
+$list-item-bg-hover: lighten($body-bg, 20%);
+$list-item-bg-disabled: darken($body-bg, 5%);
+
 // Item
 $item-background-height: 100%;
-
-// Notie
-$notie-font-size-big: 18px;
-$notie-font-size-small: 18px;
+$item-summary-max-with: 600px;
 
 // Plyr
 $plyr-color-main: gray;
 $plyr-tooltip-radius: 0;
+
+// Lists
+$default-box-shadow: rgba(0, 0, 0, 0.6) 0 6px 16px 4px;
+$list-max-height: 600px;

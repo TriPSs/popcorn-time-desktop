@@ -25,6 +25,18 @@ export default (state = Constants.INITIAL_STATE, action) => {
         ...action.payload,
       }
 
+    case Constants.FOUND_DEVICES:
+      return {
+        ...state,
+        devices: action.payload,
+      }
+
+    case Constants.SELECT_DEVICE:
+      return {
+        ...state,
+        selectedDevice: action.payload,
+      }
+
     default:
       return state
 

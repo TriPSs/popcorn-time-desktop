@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 import React from 'react'
 import classNames from 'classnames'
 
@@ -14,7 +12,7 @@ import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import type { Props } from './PlayerTypes'
 import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
-import Buffering from './Buffering'
+import Stats from './Stats'
 
 export class Player extends React.Component {
 
@@ -30,26 +28,30 @@ export class Player extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { playerAction: newPlayerAction, playerType: newPlayerType } = nextProps
-    const { playerAction: oldPlayerAction, playerType: oldPlayerType } = this.props
-
-    if (oldPlayerType !== newPlayerType) {
-      MediaPlayer.updatePlayerType(newPlayerType)
-    }
+    const { playerAction: newPlayerAction } = nextProps
+    const { playerAction: oldPlayerAction } = this.props
 
     if (oldPlayerAction !== newPlayerAction) {
-      const { uri, metadata } = nextProps
+      const { uri, item } = nextProps
 
-      MediaPlayer.firePlayerAction(newPlayerAction, { uri, metadata })
+      MediaPlayer.firePlayerAction(newPlayerAction, {
+        uri,
+        item: {
+          ...item,
+          type: uri.indexOf('youtube') > -1 ? 'youtube' : 'video/mp4',
+        },
+      })
     }
   }
 
   componentWillUnmount() {
+    Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
+    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
   }
 
   playerStatusChanged = (event, data) => {
-    const { newStatus }     = data
+    const { newStatus }    = data
     const { updateStatus } = this.props
 
     updateStatus(newStatus)
@@ -63,30 +65,45 @@ export class Player extends React.Component {
     })
   }
 
+  shouldShowPlayer = () => {
+    const { playerStatus, playerAction } = this.props
+
+    return (playerStatus === PlayerStatuses.PLAYING
+            || playerStatus === PlayerStatuses.PAUSED
+            || playerStatus === PlayerStatuses.BUFFERING)
+           && playerAction !== Constants.PLAYER_ACTION_STOP
+  }
+
   isHidden = () => {
     const { torrentStatus } = this.state
-    const { playerStatus }  = this.props
 
-    if (playerStatus === PlayerStatuses.PLAYING) {
+    if (this.shouldShowPlayer()) {
       return false
     }
 
-    return torrentStatus === TorrentStatuses.NONE && playerStatus !== PlayerStatuses.PLAYING
+    return torrentStatus === TorrentStatuses.NONE
   }
 
   renderVideo = () => {
-    const { playerStatus, playerAction, uri, stop } = this.props
+    const { uri, stop } = this.props
 
     return (
       <div
         style={{
-          visibility: playerStatus === PlayerStatuses.PLAYING &&
-                      playerAction !== Constants.PLAYER_ACTION_STOP ? 'inherit' : 'hidden',
-          display   : !!uri ? 'inherit' : 'none',
+          position  : this.shouldShowPlayer() ? 'fixed' : 'inherit',
+          visibility: this.shouldShowPlayer() ? 'inherit' : 'hidden',
+          display   : uri ? 'inherit' : 'none',
         }}
         className={classes.plyr}>
 
-        <a role={'button'} onClick={stop}>Close</a>
+        <button
+          className={classNames(
+            classes.player__close,
+            'pct-btn pct-btn-trans pct-btn-outline pct-btn-round')}
+          onClick={stop}>
+          <i className={'ion-ios-arrow-back'} />
+          Close
+        </button>
 
         <video controls />
       </div>
@@ -94,32 +111,27 @@ export class Player extends React.Component {
   }
 
   render() {
-    const { playerType, playerStatus, item } = this.props
-
-    if (playerType !== Constants.PLAYER_TYPE_PLYR) {
-      return null
-    }
-
-    const { torrentStatus } = this.state
+    const { playerProvider, playerStatus, item } = this.props
+    const { stop }                               = this.props
+    const { torrentStatus }                      = this.state
 
     return (
-      <div className={classNames({
-        'col-sm-6': playerStatus !== PlayerStatuses.PLAYING,
-        hidden    : this.isHidden(),
-      }, classes.player)}>
-        {torrentStatus === TorrentStatuses.CONNECTING && (
-          <div className="col-sm-12" style={{ color: 'white' }}>
-            Connecting
-          </div>
+      <div
+        className={classNames({
+          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PLAYER_PROVIDER_CHROMECAST,
+          hidden    : this.isHidden(),
+        }, classes.player)}>
+        {torrentStatus !== TorrentStatuses.NONE && (
+          <Stats {...{
+            item,
+            playerProvider,
+            playerStatus,
+            torrentStatus,
+            stopPlayer: stop,
+          }} />
         )}
 
-        {torrentStatus === TorrentStatuses.BUFFERING && (
-          <div className="col-sm-12" style={{ color: 'white' }}>
-            Buffering
-          </div>
-        )}
-
-        {this.renderVideo()}
+        {playerProvider === Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

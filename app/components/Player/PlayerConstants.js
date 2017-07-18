@@ -4,18 +4,21 @@ export const PLAYER_ACTION_PLAY  = `${REDUCER_NAME}.play`
 export const PLAYER_ACTION_PAUSE = `${REDUCER_NAME}.pause`
 export const PLAYER_ACTION_STOP  = `${REDUCER_NAME}.stop`
 
-export const UPDATE_PLAYER_STATUS = `${REDUCER_NAME}.status.update`
-
-export const PLAYER_TYPE_PLYR       = 'plyr'
-export const PLAYER_TYPE_CHROMECAST = 'chromecast'
+export const PLAYER_PROVIDER_PLYR       = 'Plyr'
+export const PLAYER_PROVIDER_CHROMECAST = 'Chromecast'
 
 export const INITIAL_STATE = {
-  uri          : null,
-  metadata     : null,
-  playerAction : PLAYER_ACTION_STOP,
-  playerStatus : null,
-  playerType   : PLAYER_TYPE_PLYR,
-  torrentStatus: null,
+  uri           : null,
+  item          : null,
+  playerAction  : PLAYER_ACTION_STOP,
+  playerStatus  : null,
+  playerProvider: PLAYER_PROVIDER_PLYR,
+  torrentStatus : null,
+  devices       : [],
+  selectedDevice: null,
 }
 
-export const UPDATE_PLAYER_TYPE = `${REDUCER_NAME}.player.type.update`
+export const UPDATE_PLAYER_TYPE   = `${REDUCER_NAME}.player.type.update`
+export const UPDATE_PLAYER_STATUS = `${REDUCER_NAME}.status.update`
+export const FOUND_DEVICES        = `${REDUCER_NAME}.devices.found`
+export const SELECT_DEVICE        = `${REDUCER_NAME}.devices.select`

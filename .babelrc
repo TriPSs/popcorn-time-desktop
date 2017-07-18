@@ -14,16 +14,12 @@
   "env": {
     "production": {
       "presets": ["react-optimize"],
-      "plugins": ["babel-plugin-dev-expression"]
+      "plugins": []
     },
     "development": {
       "plugins": [
         "transform-class-properties",
         "transform-es2015-classes"
-        // ["flow-runtime", {
-        //   "assert": true,
-        //   "annotate": true
-        // }]
       ]
     }
   }

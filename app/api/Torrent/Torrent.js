@@ -2,11 +2,12 @@
  * Torrents controller, responsible for playing, stoping, etc
  * @flow
  */
-import os from 'os'
+import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
 import debug from 'debug'
 
 import Events from 'api/Events'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as TorrentEvents from './TorrentEvents'
 import * as TorrentStatuses from './TorrentStatuses'
 
@@ -19,8 +20,6 @@ export class Torrent {
 
   cacheLocation: string
 
-  inProgress: boolean = false
-
   checkBufferInterval: number
   checkDownloadInterval: number
 
@@ -31,17 +30,22 @@ export class Torrent {
     listen: (port: number) => void
   }
 
+  loadedItem: ContentType
+
+  loadedMagnet: string
+
   constructor() {
     this.engine        = new WebTorrent({ maxConns: 20 })
-    this.cacheLocation = os.tmpdir()
+    this.cacheLocation = remote.app.getPath('temp')
   }
 
-  start(magnetURI: string, metadata: MetadataType, supportedFormats: Array<string>) {
-    if (this.inProgress) {
+  start(magnetURI: string, item: ContentType, supportedFormats: Array<string>) {
+    if (this.status !== TorrentStatuses.NONE) {
       throw new Error('Torrent already in progress')
     }
 
-    this.inProgress = true
+    this.loadedItem   = item
+    this.loadedMagnet = magnetURI
 
     this.updateStatus(TorrentStatuses.CONNECTING)
 
@@ -56,21 +60,21 @@ export class Torrent {
       const { files } = torrent
 
       const { file, torrentIndex } = files.reduce((previous, current, index) => {
-          const formatIsSupported = !!supportedFormats.find(format => current.name.includes(format))
+        const formatIsSupported = !!supportedFormats.find(format => current.name.includes(format))
 
-          if (formatIsSupported) {
-            if (previous !== 'undefined' && current.length > previous.file.length) {
-              previous.file.deselect()
-            }
+        if (formatIsSupported) {
+          if (previous !== 'undefined' && current.length > previous.file.length) {
+            previous.file.deselect()
 
             return {
               file        : current,
               torrentIndex: index,
             }
-          } else {
-            return previous
           }
-        },
+        }
+
+        return previous
+      },
         { file: files[0], torrentIndex: 0 },
       )
 
@@ -81,7 +85,7 @@ export class Torrent {
 
       file.select()
 
-      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, metadata })
+      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, item })
     })
   }
 
@@ -95,39 +99,38 @@ export class Torrent {
     }
   }
 
-  bufferInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
-    const toBuffer = (1024 * 1024) * 50
+  bufferInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
+    const toBuffer = (1024 * 1024) * 25
 
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentStatuses.BUFFERED, {
-        metadata,
+        item,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
 
       this.clearIntervals()
-      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, metadata })
+      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, item })
 
     } else {
       this.updateStatus(TorrentStatuses.BUFFERING)
 
       Events.emit(TorrentEvents.BUFFERING, {
-        downloaded   : torrent.downloaded,
-        toDownload   : toBuffer,
+        progress     : torrent.downloaded / toBuffer,
+        timeRemaining: ((toBuffer - torrent.downloaded) / torrent.downloadSpeed) * 1000,
         downloadSpeed: torrent.downloadSpeed,
         uploadSpeed  : torrent.uploadSpeed,
         peers        : torrent.numPeers,
-        ratio        : torrent.ratio,
       })
     }
 
   }, 1000)
 
-  downloadInterval = ({ torrent, torrentIndex, metadata }) => setInterval(() => {
+  downloadInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
     if (torrent.downloaded >= torrent.length) {
       log('Download complete...')
 
       this.updateStatus(TorrentStatuses.DOWNLOADED, {
-        metadata,
+        item,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
       this.clearIntervals()
@@ -136,12 +139,11 @@ export class Torrent {
       this.updateStatus(TorrentStatuses.DOWNLOADING)
 
       Events.emit(TorrentEvents.DOWNLOADING, {
-        downloaded   : torrent.downloaded,
-        toDownload   : torrent.length,
+        progress     : torrent.progress,
+        timeRemaining: torrent.timeRemaining,
         downloadSpeed: torrent.downloadSpeed,
         uploadSpeed  : torrent.uploadSpeed,
         peers        : torrent.numPeers,
-        ratio        : torrent.ratio,
       })
     }
   }, 1000)
@@ -153,7 +155,7 @@ export class Torrent {
       Events.emit(TorrentEvents.STATUS_CHANGE, {
         oldStatus: this.status,
         newStatus,
-        ...data
+        ...data,
       })
 
       this.status = newStatus
@@ -161,17 +163,23 @@ export class Torrent {
   }
 
   destroy() {
-    if (this.inProgress) {
-      console.log('Destroyed Torrent...')
+    if (this.status !== TorrentStatuses.NONE) {
+      log('Destroyed Torrent...')
 
       if (this.server && typeof this.server.close === 'function') {
+        if (this.engine) {
+          this.engine.remove(this.loadedMagnet)
+        }
+
         this.server.close()
-        this.server = {}
+        this.server       = {}
+        this.loadedMagnet = null
+        this.loadedItem   = null
       }
 
       this.clearIntervals()
 
-      this.inProgress = false
+      this.updateStatus(TorrentStatuses.NONE)
     }
   }
 }

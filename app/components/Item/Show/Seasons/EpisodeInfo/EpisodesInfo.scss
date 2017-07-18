@@ -1,0 +1,22 @@
+@import 'base/variables';
+
+.episode {
+  background: $body-bg;
+  width: 100%;
+  box-shadow: $default-box-shadow;
+  color: white;
+  padding: 5px 40px;
+  max-height: $list-max-height;
+  overflow-x: auto;
+
+  &__title {
+	height: 60px;
+	font-size: 20px;
+	line-height: 60px;
+  }
+
+  p {
+   font-size: 14px;
+	padding-bottom: 10px;
+  }
+}

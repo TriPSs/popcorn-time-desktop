@@ -1,0 +1,57 @@
+.pct-btn {
+  position: absolute;
+  z-index: 100;
+  color: white;
+  margin: 20px 0;
+  padding: 5px 20px;
+  opacity: 0.2;
+  transition: $transition-opacity-in;
+
+  &--relative {
+	@extend .pct-btn;
+
+	position: relative;
+  }
+
+  &:hover {
+	opacity: 1;
+  }
+
+  &:focus {
+	outline: none;
+  }
+
+  i {
+	margin-right: 5px;
+  }
+
+  &.pct-btn-no-hover {
+	cursor: default;
+
+	&:hover {
+	  opacity: 0.2;
+	}
+  }
+
+  &.pct-btn-trans {
+	background: transparent;
+  }
+
+  &.pct-btn-outline {
+	border: 2px solid white;
+  }
+
+  &.pct-btn-round {
+	border-radius: 30px;
+  }
+
+  &.pct-btn-available {
+	transition: $transition-opacity-out;
+	opacity: 1;
+
+	&:hover {
+	  opacity: 0.8;
+	}
+  }
+
+}

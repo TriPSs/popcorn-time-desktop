@@ -1,0 +1,37 @@
+@import 'base/variables';
+
+.stats {
+  z-index: 10;
+  color: white;
+
+  &__text {
+	height: 20px;
+	margin-bottom: 20px;
+  }
+}
+
+.progress {
+  $progress-height: 20px;
+
+  position: relative;
+  height: $progress-height;
+  background: $body-bg;
+  border-radius: 5px;
+  padding: 10px;
+  max-width: $item-summary-max-with;
+  width: 100%;
+  margin: 30px 0 15px;
+  box-shadow: $default-box-shadow;
+  overflow: hidden;
+
+  > span {
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	text-align: center;
+	height: $progress-height;
+	line-height: $progress-height;
+	background-color: $list-item-bg-hover;
+  }
+}

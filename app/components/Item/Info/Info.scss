@@ -4,13 +4,16 @@
   z-index: 10;
   color: white;
 
+  &__title {
+	min-height: 50px;
+  }
+
   &__genres * {
 	text-transform: capitalize;
   }
 
-  .dv-star-rating-star {
-	font-size: 1.3rem;
-	margin: 0 10px 0 0;
+  &__basic {
+	min-height: 25px;
   }
 
   &__certification {
@@ -22,16 +25,25 @@
   }
 
   &__details {
-	height: 30px;
+	height: 40px;
 
 	> div {
-	  margin-right: 50px;
+	  margin-right: 35px;
 	}
 
 	:global {
-	  .ion-videocamera {
+	  .ion-social-youtube-outline {
 		font-size: 30px;
 		cursor: pointer;
+
+		&:hover {
+		  color: red;
+		}
+	  }
+
+	  .dv-star-rating {
+		font-size: 1.3rem;
+		min-width: 115px;
 	  }
 	}
   }
@@ -43,7 +55,8 @@
   &__summary {
 	font-weight: 100;
 	line-height: 150%;
-	max-width: 600px;
+	max-width: $item-summary-max-with;
+	min-height: 170px
   }
 
 }

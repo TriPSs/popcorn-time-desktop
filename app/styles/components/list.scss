@@ -1,0 +1,76 @@
+.list {
+  box-shadow: $default-box-shadow;
+  background: $body-bg;
+  width: 100%;
+  color: #FFF;
+  max-height: $list-max-height;
+  overflow-x: auto;
+
+  &-item {
+	position: relative;
+	display: flex;
+	width: 100%;
+	background: $list-item-bg;
+	padding: 5px 30px;
+	cursor: pointer;
+
+	&__text {
+	  height: 60px;
+	  line-height: 60px;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	  white-space: nowrap;
+	  z-index: 2;
+	}
+
+	&__health {
+	  margin-left: auto;
+	  display: flex;
+	  align-items: center;
+
+	  i {
+		font-size: 22px;
+		color: rgba(255, 255, 255, 0.6);
+	  }
+
+	  &-status {
+		margin-left: 5px;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		transition: background-color 500ms linear;
+
+		&:first-of-type {
+		  margin-left: 20px;
+		}
+	  }
+	}
+
+	&:hover {
+	  background: $list-item-bg-hover;
+	  transition: background-color 200ms linear;
+	}
+
+	&--active {
+	  background: $list-item-bg-hover;
+	}
+
+	&--disabled {
+	  background: $list-item-bg-disabled;
+
+	  &:hover {
+		background: $list-item-bg-disabled;
+	  }
+	}
+
+	&--watched {
+	  opacity: 0.4;
+	  background: darken($body-bg, 2%);
+
+	  &:hover {
+		opacity: 1;
+	  }
+	}
+  }
+
+}

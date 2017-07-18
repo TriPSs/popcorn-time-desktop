@@ -1,10 +1,9 @@
 // @flow
 import Butter from 'api/Butter'
+import Database from 'api/Database'
 
 import * as Constants from './HomeConstants'
 import * as Selectors from './HomeSelectors'
-
-import type { activeModeOptionsType } from './HomeTypes'
 
 export function fetchItems() {
   return {
@@ -12,62 +11,42 @@ export function fetchItems() {
   }
 }
 
-export function fetchedItems(items, type) {
+export function fetchedItems(items, mode) {
   return {
     type   : Constants.FETCHED_ITEMS,
     payload: {
       items,
-      type,
+      mode,
     },
   }
 }
 
-export function getItems(activeMode, page = 1) {
-  return (dispatch) => {
+export function getItems(mode, page = 1) {
+  return (dispatch, getState) => {
     dispatch(fetchItems())
 
-    switch (activeMode) {
-      case 'movies':
-        return Butter.getMovies(page).then(movies => dispatch(fetchedItems(movies, activeMode)))
+    const { filters } = Selectors.getModes(getState())[mode]
 
-      case 'shows':
-        return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+    switch (mode) {
+      case Constants.MODE_MOVIES:
+        return Butter.getMovies(page, filters).then(movies => dispatch(fetchedItems(movies, mode)))
 
-      case 'search':
-        // TODO:: Get searchQuery from state
-        // return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+      case Constants.MODE_SHOWS:
+        return Butter.getShows(page, filters).then(shows => dispatch(fetchedItems(shows, mode)))
+
+      case Constants.MODE_BOOKMARKS:
+        return Database.movies.getAll().then(({ docs }) => {
+          dispatch(fetchedItems(docs, mode))
+
+          return Database.shows.getAll().then(({ docs }) => dispatch(fetchedItems(docs, mode)))
+        })
+
+      case Constants.MODE_SEARCH:
+      // TODO:: Get searchQuery from state
+      // return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
 
       default:
         return null
-    }
-  }
-}
-
-export function setActiveMode(activeMode: string, activeModeOptions?: activeModeOptionsType = {}) {
-  return {
-    type   : Constants.SET_ACTIVE_MODE,
-    payload: {
-      activeMode,
-      activeModeOptions,
-    },
-  }
-}
-
-export function clearItems() {
-  return {
-    type: Constants.CLEAR_ITEMS,
-  }
-}
-
-export function switchMode(newMode, page) {
-  return (dispatch, getState) => {
-    const items = Selectors.getModes(getState())[newMode].items
-
-    if (items.length > 0) {
-      dispatch(fetchedItems([], newMode))
-
-    } else {
-      dispatch(getItems(newMode, page))
     }
   }
 }

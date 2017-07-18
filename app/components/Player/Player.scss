@@ -1,14 +1,17 @@
 @import 'base/variables';
 
 .player {
-  z-index: 10;
+  &__close {
+	z-index: 3001;
+	margin-left: 15px;
+  }
 }
 
 .plyr {
   min-height: $item-background-height;
   padding: 0;
   width: 100%;
-  z-index: 1055;
+  z-index: 3000;
   position: absolute;
   top: 0;
   left: 0;

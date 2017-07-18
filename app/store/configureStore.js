@@ -8,7 +8,6 @@ import reducers from './reducers'
 export const history = createHashHistory()
 
 export const configureStore = (initialState) => {
-  // Redux Configuration
   const middleware = [
     thunk,
     routerMiddleware(history),
@@ -25,7 +24,7 @@ export const configureStore = (initialState) => {
     }))
 
     if (window !== 'undefined' && window) {
-      const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      const devToolsExtension = window.devToolsExtension
 
       if (typeof devToolsExtension === 'function') {
         enhancers.push(devToolsExtension())

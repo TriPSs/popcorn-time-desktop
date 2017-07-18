@@ -32,7 +32,7 @@ const installExtensions = async () => {
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS
   const extensions    = [
     'REACT_DEVELOPER_TOOLS',
-    'REDUX_DEVTOOLS'
+    'REDUX_DEVTOOLS',
   ]
 
   return Promise
@@ -69,7 +69,7 @@ app.on('ready', async () => {
       'web-preferences'     : { 'web-security': false },
       scrollBounce          : true,
       overlayFullscreenVideo: false,
-    }
+    },
   })
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
@@ -80,6 +80,7 @@ app.on('ready', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined')
     }
+
     mainWindow.show()
     mainWindow.focus()
   })

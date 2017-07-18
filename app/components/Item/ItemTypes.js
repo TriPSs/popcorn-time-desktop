@@ -1,14 +1,20 @@
-import type { ContentType, TorrentType } from 'api/metadata/MetadataTypes'
-import { PlayerProviderInterface } from 'api/players/PlayerProviderInterface'
+import type { DeviceType } from 'api/Player/StreamingProviders/StreamingTypes'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
+import type { TorrentType } from 'api/Torrents/TorrentsTypes'
+import { PlayerProviderInterface } from 'api/Player/PlayerInterface'
 
 export type Props = {
   item: ContentType,
   isLoading: boolean,
+  fetchingEpisodeTorrents: boolean,
 
   player: PlayerProviderInterface,
   playerStatus: string,
+  devices: Array<DeviceType>,
+  toggleWatched: () => void,
 }
 
 export type State = {
   torrent: TorrentType,
+  torrentStatus: string,
 }

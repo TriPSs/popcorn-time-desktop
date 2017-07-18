@@ -1,4 +1,5 @@
 // @flow
+import * as BookmarkedConstants from 'components/Bookmarked/BookmarkedConstants'
 import * as Constants from './HomeConstants'
 
 export default (state = Constants.INITIAL_STATE, action) => {
@@ -11,86 +12,49 @@ export default (state = Constants.INITIAL_STATE, action) => {
       }
 
     case Constants.FETCHED_ITEMS:
+      const { items, mode } = action.payload
+
       return {
         ...state,
         isLoading: false,
-        items    : [...state.modes[state.activeMode].items, ...action.payload.items],
         modes    : {
           ...state.modes,
-          [state.activeMode]: {
-            page : state.modes[state.activeMode].page + 1,
-            limit: state.modes[state.activeMode].limit,
-            items: [...state.modes[state.activeMode].items, ...action.payload.items],
+          [mode]: {
+            page : state.modes[mode].page + 1,
+            limit: state.modes[mode].limit,
+            items: [...state.modes[mode].items, ...items],
           },
         },
       }
 
-    case Constants.CLEAR_ITEMS:
+    case BookmarkedConstants.REMOVE_BOOKMARK:
       return {
         ...state,
-        items: [],
+        modes    : {
+          ...state.modes,
+          [Constants.MODE_BOOKMARKS]: {
+            ...state.modes[Constants.MODE_BOOKMARKS],
+            items: state.modes[Constants.MODE_BOOKMARKS].items.filter(item => item.id !== action.payload),
+          },
+        },
       }
 
-    case Constants.SET_ACTIVE_MODE:
+    case BookmarkedConstants.ADD_BOOKMARK:
       return {
         ...state,
-        ...action.payload,
-        isLoading: true,
+        modes    : {
+          ...state.modes,
+          [Constants.MODE_BOOKMARKS]: {
+            ...state.modes[Constants.MODE_BOOKMARKS],
+            items: [
+              ...state.modes[Constants.MODE_BOOKMARKS].items,
+              action.payload.item,
+            ],
+          },
+        },
       }
 
     default:
       return state
   }
 }
-
-/*
-
- case Constants.PAGINATE:
- return {
- ...state,
-
- items: [...state.modes[state.activeMode].items, ...action.items],
- modes: {
- ...state.modes,
- [state.activeMode]: {
- items: [...state.modes[state.activeMode].items, ...action.items],
- page : state.modes[state.activeMode].page + 1,
- limit: 50,
- },
- },
- }
-
- case Constants.SET_ACTIVE_MODE:
- return {
- ...state,
- items            : state.modes[action.activeMode].items,
- activeMode       : action.activeMode,
- activeModeOptions: action.activeModeOptions,
- }
-
- case Constants.CLEAR_ITEMS:
- return {
- ...state,
- items: [],
- }
-
- case Constants.CLEAR_ALL_ITEMS:
- return {
- ...state,
- items: [],
- modes: {
- ...state.modes,
- [state.activeMode]: {
- items: [],
- page : 0,
- limit: 50,
- },
- },
- }
-
- case Constants.SET_LOADING:
- return {
- ...state,
- isLoading: action.isLoading,
- }
- */

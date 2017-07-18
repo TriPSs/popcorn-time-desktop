@@ -1,30 +1,41 @@
 // @flow
 import debug from 'debug'
 
-import * as PlayerConstants from 'components/Player/PlayerConstants'
-import { PlayerProviderInterface } from 'api/players/PlayerProviderInterface'
-import PlyrPlayerProvider from 'api/players/PlyrPlayerProvider'
-import PlayerAdapter from 'api/players/PlayerAdapter'
+import { PlayerProviderInterface } from 'api/Player/PlayerInterface'
+import PlyrPlayerProvider from 'api/Player/PlyrPlayerProvider'
 import Torrent from 'api/Torrent'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import Events from 'api/Events'
+import * as PlayerConstants from 'components/Player/PlayerConstants'
+import { StreamingInterface } from './StreamingProviders/StreamingInterface'
+import type { DeviceType } from './StreamingProviders/StreamingTypes'
+import streamingProviders from './StreamingProviders'
 
 const log = debug('api:player')
 
 export class Player implements PlayerProviderInterface {
 
-  playerSelected = 'plyr'
-
-  playerAdapter: PlayerAdapter
+  providerSelected = 'Plyr'
 
   plyrAdapter: PlyrPlayerProvider
 
+  streamingProviders: Array<StreamingInterface> = streamingProviders()
+
   lastPlayer = null
 
+  supportedFormats = [
+    'mp4',
+    'ogg',
+    'mov',
+    'webmv',
+    'mkv',
+    'wmv',
+    'avi',
+  ]
+
   constructor() {
-    this.playerAdapter = new PlayerAdapter()
-    this.plyrAdapter   = new PlyrPlayerProvider()
+    this.plyrAdapter = new PlyrPlayerProvider()
 
     Events.on(TorrentEvents.STATUS_CHANGE, this.handleTorrentStatusChange)
   }
@@ -37,21 +48,29 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  updatePlayerType = (player: string) => {
-    log(`Change player from ${this.playerSelected} to ${player}`)
-    this.playerSelected = player
+  updatePlayerProvider = (provider: string) => {
+    log(`Change provider from ${this.providerSelected} to ${provider}`)
+    this.providerSelected = provider
   }
 
-  firePlayerAction = (status, { uri, metadata }) => {
-    log(`Player state changes to: ${status}`)
+  selectDevice = (device: DeviceType) => {
+    if (this.providerSelected !== this.plyrAdapter.provider) {
+      this.getRightPlayer().selectDevice(device)
+    }
+  }
+
+  firePlayerAction = (status, { uri, item }) => {
+    log(`Fire player action ${status}`)
+
     switch (status) {
       case PlayerConstants.PLAYER_ACTION_PLAY:
-        if (!metadata.type) {
-          Torrent.start(uri, metadata, this.getRightPlayer().supportedFormats)
+        if (item.type !== 'youtube') {
+          Torrent.start(uri, item, this.supportedFormats)
 
         } else {
-          this.play({ uri, metadata })
+          this.play({ uri, item })
         }
+
         break
 
       case PlayerConstants.PLAYER_ACTION_PAUSE:
@@ -66,50 +85,56 @@ export class Player implements PlayerProviderInterface {
     }
   }
 
-  play = ({ uri, metadata }) => {
+  play = ({ uri, item }) => {
+    log(`Fire play in ${this.providerSelected}`)
     const player = this.getRightPlayer()
 
     if (player && !player.isPlaying()) {
-      log(`Load ${uri} into player...`)
-
-      player.load(uri, metadata)
-      player.play()
+      player.play(uri, item)
     }
   }
 
-  pause = () => {}
+  pause = () => {
+    if (this.getRightPlayer().isPlaying()) {
+      this.getRightPlayer().pause()
+    }
+  }
 
   stop = () => {
-    Torrent.destroy()
     this.getRightPlayer().stop()
+    this.getRightPlayer().destroy()
+    this.destroy()
   }
 
-  getRightPlayer = () => {
-    switch (this.playerSelected) {
-      case 'chromecast':
-        return null
-
-      default:
-        return this.lastPlayer = this.plyrAdapter
+  getRightPlayer = (): PlayerProviderInterface => {
+    if (this.lastPlayer && this.lastPlayer.provider === this.providerSelected) {
+      return this.lastPlayer
     }
+
+    if (this.providerSelected !== this.plyrAdapter.provider) {
+      return this.lastPlayer = this.streamingProviders.find(provider => provider.provider === this.providerSelected)
+    }
+
+    return this.lastPlayer = this.plyrAdapter
   }
 
-  getStatus = () => this.getRightPlayer().getStatus()
+  getDevices = () => Promise.all(
+    this.streamingProviders.map(provider => provider.getDevices()),
+  )
 
-  destroy() {
+  // getStatus = () => this.getRightPlayer().getStatus()
+
+  destroy = () => {
     Torrent.destroy()
 
     if (this.lastPlayer) {
       this.lastPlayer.destroy()
-    }
-  }
 
-  restart() {
-    this.getRightPlayer().restart()
+      this.streamingProviders.map(provider => provider.destroy())
+    }
   }
 
 }
 
 export const MediaPlayer = new Player()
-
 export default MediaPlayer

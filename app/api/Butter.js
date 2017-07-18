@@ -2,87 +2,41 @@
  * The highest level abstraction layer for querying torrents and metadata
  * @flow
  */
-import TorrentAdapter from './torrents/TorrentAdapter'
-import MetadataAdapter from './metadata/MetadataAdapter'
-import PctMetadataProvider from './metadata/PctMetadataProvider'
-import TraktMetadataProvider from './metadata/TraktMetadataProvider'
+import MetadataAdapter from './Metadata/MetadataAdapter'
+import PctTorrentProvider from './Torrents/PctTorrentProvider'
+import TorrentAdapter from './Torrents'
 
 export class Butter {
 
-  metadata: MetadataAdapter
+  metadataAdapter: MetadataAdapter
 
-  trakt: TraktMetadataProvider
-  pctAdapter: PctMetadataProvider
+  pctAdapter: PctTorrentProvider
+
+  torrentAdapter: TorrentAdapter
 
   constructor() {
-    this.metadata   = MetadataAdapter
-    this.pctAdapter = new PctMetadataProvider()
-    this.trakt      = new TraktMetadataProvider()
+    this.pctAdapter      = new PctTorrentProvider()
+    this.metadataAdapter = new MetadataAdapter()
+    this.torrentAdapter  = new TorrentAdapter()
   }
 
-  getMovies = (page: number = 1, limit: number = 50) => this.pctAdapter.getMovies(page, limit)
+  getMovies = (page: number = 1, filters = {}) => this.pctAdapter.getMovies(page, filters)
 
   getMovie = (itemId: string) => this.pctAdapter.getMovie(itemId)
 
-  getShows = (page: number = 1, limit: number = 50) => this.pctAdapter.getShows(page, limit)
+  getShows = (page: number = 1, filters = {}) => this.pctAdapter.getShows(page, filters)
 
-  getShow = (itemId: string) => {
-    return this.pctAdapter.getShow(itemId).then(pctShow => {
+  getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
+                                    .then(pctShow => this.metadataAdapter
+                                                         .getSeasons(pctShow.id, pctShow.seasons)
+                                                         .then(seasons => ({
+                                                           ...pctShow,
+                                                           seasons,
+                                                         })))
 
-      // Deze wordt leidend! Episode info van pctShow hier in mergen
-      this.trakt.getSeasons(pctShow.id).then(show => {
-        console.log('trakt', show)
-      })
+  searchEpisode = (...args) => this.torrentAdapter.searchEpisode(...args)
 
-      return pctShow
-    })
-  }
-
-  searchTorrent = (itemId: string, type: string) => {
-    return TorrentAdapter(itemId, type, {}, false)
-  }
-
-  /* getSeasons(itemId: string) {
-   return MetadataAdapter.getSeasons(itemId);
-   }
-
-   getSeason(itemId: string, season: number) {
-   return MetadataAdapter.getSeason(itemId, season);
-   }
-
-   getEpisode(itemId: string, season: number, episode: number) {
-   return MetadataAdapter.getEpisode(itemId, season, episode);
-   }
-
-   getSimilar(type: string = 'movies', itemId: string) {
-   return MetadataAdapter.getSimilar(type, itemId, 5);
-   }*/
-
-  /**
-   * @param {string}  itemId
-   * @param {string}  type            | Type of torrent: movie or show
-   * @param {object}  extendedDetails | Additional details provided for heuristics
-   * @param {boolean} returnAll
-   */
-  getTorrent(itemId: string, type: string, extendedDetails: { [option: string]: string | number } = {}, returnAll: boolean = false) {
-    return TorrentAdapter(itemId, type, extendedDetails, returnAll)
-  }
-
-  /*  getSubtitles(itemId: string, filename: string, length: number, metadata: Object) {
-   return MetadataAdapter.getSubtitles(itemId, filename, length, metadata);
-   }*/
-
-  /*  favorites(method: string, metadata: Object) {
-   return MetadataAdapter.favorites(method, metadata);
-   }
-
-   recentlyWatched(method: string, metadata: Object) {
-   return MetadataAdapter.recentlyWatched(method, metadata);
-   }
-
-   watchList(method: string, metadata: Object) {
-   return MetadataAdapter.watchList(method, metadata);
-   }*/
+  search = (...args) => this.torrentAdapter.search(...args)
 
 }
 

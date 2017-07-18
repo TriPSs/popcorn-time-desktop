@@ -3,14 +3,18 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import Events from 'api/Events'
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as TorrentEvents from 'api/Torrent/TorrentEvents'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
 
+import Loader from 'components/Loader'
 import Player from 'components/Player'
 import type { Props, State } from './ItemTypes'
 import Background from './Background'
 import Info from './Info'
+import Cover from './Cover'
+import Show from './Show'
 import classes from './Item.scss'
 
 export default class Item extends React.Component {
@@ -24,41 +28,25 @@ export default class Item extends React.Component {
     torrentStatus: TorrentStatuses.NONE,
   }
 
-  constructor(props: Props) {
-    super(props)
-
-    // this.torrent = new Torrent()
-
-//    this.playerProvider = new ChromecastPlayerProvider()
-
-    // this.subtitleServer = startSubtitleServer()
+  componentWillMount() {
+    this.getAllData()
+    this.stopPlayback()
   }
 
   componentDidMount() {
     window.scrollTo(0, 0)
 
-    this.getAllData()
-    // this.initCastingDevices()
-    this.stopPlayback()
-
     Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
-  }
 
-  torrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    this.setState({
-      torrentStatus: newStatus,
-    })
-  }
-
-  componentWillUnmount() {
-    this.stopPlayback()
+    const { item } = this.props
+    if (item && item.type === MetadataConstants.TYPE_MOVIE) {
+      this.getBestMovieTorrent()
+    }
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const { isLoading: wasLoading, item: oldItem, match: { params: { itemId: oldItemId } } } = this.props
-    const { isLoading, item: newItem, match: { params: { itemId: newItemId } } }             = nextProps
+    const { isLoading: wasLoading, match: { params: { itemId: oldItemId } } } = this.props
+    const { isLoading, item, match: { params: { itemId: newItemId } } }       = nextProps
 
     if (newItemId !== oldItemId) {
       this.setState({
@@ -69,47 +57,53 @@ export default class Item extends React.Component {
       this.getAllData()
       window.scrollTo(0, 0)
 
-    } else if (!isLoading && wasLoading && newItem.type === 'movie') {
-      this.getBestTorrent(nextProps)
+    } else if (!isLoading && wasLoading && item.type === MetadataConstants.TYPE_MOVIE) {
+      this.getBestMovieTorrent(nextProps)
     }
   }
 
-  play = (playerType) => {
+  componentWillUnmount() {
+    this.stopPlayback()
+
+    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+  }
+
+  torrentStatusChange = (event, data) => {
+    const { newStatus } = data
+
+    this.setState({
+      torrentStatus: newStatus,
+    })
+  }
+
+  play = (playerProvider, torrent = this.state.torrent) => {
     const { item, player } = this.props
 
-    switch (playerType) {
+    switch (playerProvider) {
       case 'youtube':
         player.play(item.trailer, {
-          title   : item.title,
-          type    : 'youtube',
-          image   : {
+          title: item.title,
+          type : 'youtube',
+          image: {
             poster: item.images.poster.medium,
           },
-          autoPlay: true,
         })
 
         break
 
       default:
-        const { torrent } = this.state
-
-        player.play(torrent.url, {
-          title   : item.title,
-          image   : {
-            poster: item.images.poster.medium,
-          },
-          autoPlay: true,
-        })
+        player.play(torrent.url, item)
     }
   }
 
-  getAllData() {
-    const { getItem, match: { params: { itemId, activeMode } } } = this.props
+  getAllData = () => {
+    const { player, getItem, match: { params: { itemId, mode } } } = this.props
 
-    getItem(itemId, activeMode)
+    getItem(itemId, mode)
+    player.getDevices()
   }
 
-  getBestTorrent = (props = this.props) => {
+  getBestMovieTorrent = (props = this.props) => {
     const { torrent } = this.state
 
     if (torrent) {
@@ -120,7 +114,7 @@ export default class Item extends React.Component {
 
     let bestQuality = null
     Object.keys(torrents).map((quality) => {
-      if (bestQuality === null || parseInt(bestQuality) < parseInt(quality)) {
+      if (bestQuality === null || parseInt(bestQuality, 10) < parseInt(quality, 10)) {
         bestQuality = quality
       }
     })
@@ -142,7 +136,7 @@ export default class Item extends React.Component {
     player.stop()
   }
 
-  showInfo = () => {
+  showPlayInfo = () => {
     const { torrentStatus } = this.state
     const { playerStatus }  = this.props
 
@@ -154,57 +148,70 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const { match: { params: { activeMode } } } = this.props
-    const { item, isLoading }                   = this.props
-    const { torrent }                           = this.state
+    const { match: { params: { itemId, mode } } } = this.props
+    const { item, isLoading, toggleWatched }      = this.props
+    const { torrent, torrentStatus }              = this.state
 
-    if (isLoading || item === null) {
-      return null
+    if (isLoading || !item || item.id !== itemId) {
+      return <Loader />
     }
-
-    console.log(item)
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
-        <Link to={'/'}>
+        <Link to={`/${mode}s`}>
           <button
             style={{ zIndex: 1060 }}
-            className={'btn btn-back'} onClick={this.stopPlayback}>
+            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+            onClick={this.stopPlayback}>
+            <i className={'ion-ios-arrow-back'} />
             Back
           </button>
         </Link>
 
         <Background
           {...{
-            activeMode,
-            torrent,
-            torrents       : item.torrents,
-            setTorrent     : this.setTorrent,
-            play           : this.play,
-            backgroundImage: item.images.fanart.full,
-            poster         : item.images.poster.thumb,
-            showPlayInfo   : this.showInfo(),
-          }}>
+            backgroundImage: item.images.fanart.high,
+          }} />
 
-          {this.showInfo() && (
-            <Info
-              {...{
-                item,
-                activeMode,
-                play: this.play,
-              }} />
+        <div className={classes[`item__content--${mode}`]}>
+          <div className={classNames(classes[`item__row--${mode}`], classes[`item__main--${mode}`])}>
+            <Cover {...{
+              mode,
+              torrent,
+              torrents       : item.torrents,
+              setTorrent     : this.setTorrent,
+              play           : this.play,
+              backgroundImage: item.images.fanart.high,
+              poster         : item.images.poster.thumb,
+              showPlayInfo   : this.showPlayInfo(),
+            }} />
+
+            {this.showPlayInfo() && (
+              <Info
+                {...{
+                  item,
+                  mode,
+                  play: this.play,
+                }} />
+            )}
+
+            <Player item={item} />
+          </div>
+
+          {item.type === 'show' && (
+            <Show
+              toggleWatched={toggleWatched}
+              torrentStatus={torrentStatus}
+              play={this.play} />
           )}
 
-          <Player item={item} />
-
-        </Background>
-
+        </div>
       </div>
     )
   }
 }
 
 Item.defaultProps = {
-  itemId    : '',
-  activeMode: 'movies',
+  itemId: '',
+  mode  : 'movie',
 }

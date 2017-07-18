@@ -5,16 +5,19 @@
 @import 'base/fonts';
 @import 'base/variables';
 
-@import '~bootstrap/scss/bootstrap.scss';
+//
+// Dependencies
+//
+@import '~bootstrap/scss/bootstrap';
 @import '~animate.css';
-@import '~ionicons-temp/scss/ionicons.scss';
-@import '~plyr/src/scss/plyr.scss';
-@import '~notie/src/notie.scss';
+@import '~plyr/src/scss/plyr';
 
 //
 // Components
 //
 
+@import './components/button';
+@import './components/list';
 @import './components/stars';
 
 //
@@ -23,7 +26,9 @@
 
 @import './utilities/container';
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
