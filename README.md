@@ -75,10 +75,10 @@ See the [roadmap](https://github.com/tripss/popcorn-time-desktop/wiki/Road-Map-a
 ## Screenshots
 
 ### Home Page:
-![Home Page](https://github.com/tripss/popcorn-time-desktop/raw/master/home.png)
+![Home Page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/home.png)
 
 ### Movie Page:
-![Movie page](https://github.com/tripss/popcorn-time-desktop/raw/master/movie.png)
+![Movie page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/movie.png)
 
 ### Show page:
-![Show page](https://github.com/tripss/popcorn-time-desktop/raw/master/show.png)
+![Show page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/show.png)
