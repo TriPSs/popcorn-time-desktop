@@ -49,7 +49,7 @@ export class Episodes extends React.Component {
             }}
           >
             <div className={'list-item__text'}>
-              {episode.number}. {episode.title}
+              {episode.number}. {episode.title ? episode.title : 'No title know...'}
             </div>
 
             <div
