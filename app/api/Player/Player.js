@@ -64,11 +64,11 @@ export class Player implements PlayerProviderInterface {
 
     switch (status) {
       case PlayerConstants.PLAYER_ACTION_PLAY:
-        if (item.type !== 'youtube') {
-          Torrent.start(uri, item, this.supportedFormats)
+        if (item.type === 'youtube') {
+          this.plyrAdapter.play(uri, item)
 
         } else {
-          this.play({ uri, item })
+          Torrent.start(uri, item, this.supportedFormats)
         }
 
         break

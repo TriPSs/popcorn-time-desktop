@@ -22,6 +22,9 @@ export class WatchedDB {
   markMovieWatched = (id: string) =>
     this.markWatched({ id, type: 'movie' })
 
+  markMovieUnWatched = (id: string) =>
+    this.markWatched({ id, type: 'movie' })
+
   getMoviesWatched = () => new Promise(resolve => this.db.find({ type: 'movie' }, (error, docs) =>
     resolve({ error, docs }),
   ))

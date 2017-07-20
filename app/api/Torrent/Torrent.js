@@ -85,7 +85,7 @@ export class Torrent {
 
       file.select()
 
-      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, item })
+      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex })
     })
   }
 
@@ -99,17 +99,17 @@ export class Torrent {
     }
   }
 
-  bufferInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
+  bufferInterval = ({ torrent, torrentIndex }) => setInterval(() => {
     const toBuffer = (1024 * 1024) * 25
 
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentStatuses.BUFFERED, {
-        item,
+        item: this.loadedItem,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
 
       this.clearIntervals()
-      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, item })
+      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex })
 
     } else {
       this.updateStatus(TorrentStatuses.BUFFERING)
@@ -125,12 +125,12 @@ export class Torrent {
 
   }, 1000)
 
-  downloadInterval = ({ torrent, torrentIndex, item }) => setInterval(() => {
+  downloadInterval = ({ torrent, torrentIndex }) => setInterval(() => {
     if (torrent.downloaded >= torrent.length) {
       log('Download complete...')
 
       this.updateStatus(TorrentStatuses.DOWNLOADED, {
-        item,
+        item: this.loadedItem,
         uri: `http://localhost:${port}/${torrentIndex}`,
       })
       this.clearIntervals()

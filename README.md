@@ -7,8 +7,8 @@
 <h3 align="center">A Modern and Experimental Popcorn Time Client</h3>
 
 <div align="center">
-  <a target="_blank" href="https://travis-ci.org/tripss/popcorn-time-desktop/">
-    <img src="https://img.shields.io/travis/tripss/popcorn-time-desktop/master.svg?maxAge=86400" alt="Travis Build branch" />
+  <a target="_blank" href="https://travis-ci.org/TriPSs/popcorn-time-desktop/">
+    <img src="https://img.shields.io/travis/TriPSs/popcorn-time-desktop/master.svg?maxAge=86400" alt="Travis Build branch" />
   </a>
   <a target="_blank" href="https://ci.appveyor.com/project/tripss/popcorn-time-desktop/branch/master">
     <img src="https://ci.appveyor.com/api/projects/status/071qeglg94au8wr2/branch/master?svg=true&maxAge=86400" alt="AppVeyor Build status" />

@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
+import type { SeasonType, EpisodeType } from 'api/Metadata/MetadataTypes'
 import * as PlayerStatuses from 'api/Player/PlayerStatuses'
 import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
 
@@ -66,7 +67,7 @@ export class Show extends React.Component {
     })
   }
 
-  getSeason = (selectedSeason = this.state.selectedSeason) => {
+  getSeason = (selectedSeason = this.state.selectedSeason): SeasonType => {
     const { item } = this.props
 
     if (!item.seasons || !item.seasons.length) {
@@ -87,7 +88,7 @@ export class Show extends React.Component {
     return firstUnwatchedSeason
   }
 
-  getEpisode = (selectedEpisode = this.state.selectedEpisode) => {
+  getEpisode = (selectedEpisode = this.state.selectedEpisode): EpisodeType => {
     const season = this.getSeason()
 
     if (!season || !season.episodes) {
@@ -101,7 +102,7 @@ export class Show extends React.Component {
     return this.getFirstUnwatchedEpisode()
   }
 
-  getFirstUnwatchedEpisode = (season = null) => {
+  getFirstUnwatchedEpisode = (season = null): EpisodeType => {
     let searchInSeason = season
 
     if (searchInSeason === null) {
@@ -112,12 +113,11 @@ export class Show extends React.Component {
     if (firstUnwatchedEpisode) {
       if (firstUnwatchedEpisode.aired < new Date().getTime()) {
         return firstUnwatchedEpisode
+      }
 
-      } 
       return searchInSeason.episodes.find(
-          episode => episode.number === (firstUnwatchedEpisode.number - 1),
-        )
-      
+        episode => episode.number === (firstUnwatchedEpisode.number - 1),
+      )
     }
 
     return searchInSeason.episodes.find(

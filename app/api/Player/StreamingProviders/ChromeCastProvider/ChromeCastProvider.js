@@ -128,24 +128,10 @@ export class ChromeCastProvider implements StreamingInterface {
 
       if (newStatus === PlayerStatuses.PLAYING) {
         this.checkProgressInterval = this.progressInterval()
+
+      } else if (newStatus === PlayerStatuses.NONE) {
+        this.destroyPlayer()
       }
-    }
-  }
-
-  destroy = () => {
-    if (this.status !== PlayerStatuses.NONE) {
-      log('Destroy...')
-      Power.disableSaveMode()
-
-      if (this.selectedDevice) {
-        this.selectedDevice.stop()
-      }
-
-      if (this.chromecasts) {
-        this.chromecasts.destroy()
-      }
-
-      this.updateStatus(PlayerStatuses.NONE)
     }
   }
 
@@ -171,6 +157,26 @@ export class ChromeCastProvider implements StreamingInterface {
   clearIntervals = () => {
     if (this.checkProgressInterval) {
       clearInterval(this.checkProgressInterval)
+    }
+  }
+
+  destroy = () => {
+    if (this.status !== PlayerStatuses.NONE) {
+      log('Destroy...')
+      this.destroyPlayer()
+      this.updateStatus(PlayerStatuses.NONE)
+    }
+  }
+
+  destroyPlayer = () => {
+    Power.disableSaveMode()
+
+    if (this.selectedDevice) {
+      this.selectedDevice.stop()
+    }
+
+    if (this.chromecasts) {
+      this.chromecasts.destroy()
     }
   }
 }

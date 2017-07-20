@@ -35,6 +35,6 @@ before_script:
 
 script:
   - npm run lint:check
-#  - npm run test
+  # - npm run test
   - npm run package
-#  - npm run test-e2e
+  # - npm run test-e2e

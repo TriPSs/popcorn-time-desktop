@@ -1,7 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import Database from 'api/Database'
 import type { Props } from './BookmarkedTypes'
 import classes from './Bookmarked.scss'
 
