@@ -1,14 +1,10 @@
-/**
- * Created by tycho on 07/07/2017.
- */
+// @flow
 import React from 'react'
 import classNames from 'classnames'
 
 import Events from 'api/Events'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as PlayerConstants from '../PlayerConstants'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
 import type { Props, State } from './StatsTypes'
 import classes from './Stats.scss'
 
@@ -25,13 +21,13 @@ export class Stats extends React.Component {
   }
 
   componentDidMount() {
-    Events.on(TorrentEvents.BUFFERING, this.onBuffering)
-    Events.on(TorrentEvents.DOWNLOADING, this.onBuffering)
+    // Events.on(TorrentEvents.BUFFERING, this.onBuffering)
+    // Events.on(TorrentEvents.DOWNLOADING, this.onBuffering)
   }
 
   componentWillUnmount() {
-    Events.remove(TorrentEvents.BUFFERING, this.onBuffering)
-    Events.remove(TorrentEvents.DOWNLOADING, this.onBuffering)
+    // Events.remove(TorrentEvents.BUFFERING, this.onBuffering)
+    // Events.remove(TorrentEvents.DOWNLOADING, this.onBuffering)
   }
 
   onBuffering = (event, data) => {
@@ -41,10 +37,10 @@ export class Stats extends React.Component {
   }
 
   status = {
-    [TorrentStatuses.CONNECTING] : 'Connecting...',
-    [TorrentStatuses.DOWNLOADING]: 'Downloading...',
-    [TorrentStatuses.BUFFERING]  : 'Buffering...',
-    [TorrentStatuses.DOWNLOADED] : 'Complete',
+    [TorrentConstants.STATUS_CONNECTING] : 'Connecting...',
+    [TorrentConstants.STATUS_DOWNLOADING]: 'Downloading...',
+    [TorrentConstants.STATUS_BUFFERING]  : 'Buffering...',
+    [TorrentConstants.STATUS_DOWNLOADED] : 'Complete',
   }
 
   sizes = ['Bytes/s', 'KB/s', 'MB/s']
@@ -73,7 +69,7 @@ export class Stats extends React.Component {
       return false
     }
 
-    return playerStatus === PlayerStatuses.PLAYING || playerStatus === PlayerStatuses.PAUSED
+    return playerStatus === PlayerConstants.STATUS_PLAYING|| playerStatus === PlayerConstants.STATUS_PAUSED
   }
 
   render() {
@@ -82,7 +78,7 @@ export class Stats extends React.Component {
     const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = this.state
 
     const style = {
-      opacity: torrentStatus === TorrentStatuses.DOWNLOADED ? 0 : 1,
+      opacity: torrentStatus === TorrentConstants.STATUS_DOWNLOADED? 0 : 1,
     }
 
     return (

@@ -14,9 +14,9 @@ const log = debug('app:build:webpack:renderer:dev')
  * Warn if the DLL is not built
  */
 if (!(fs.existsSync(config.utils_paths.dll()) && fs.existsSync(config.utils_paths.dll('vendor.json')))) {
-  log('The DLL files are missing. Sit back while we build them for you with "npm run build-dll"')
+  log('The DLL files are missing. Sit back while we build them for you with "npm run build:dll"')
 
-  execSync('npm run build-dll')
+  execSync('npm run build:dll')
 }
 
 export default webpackMerge(baseConfig, {

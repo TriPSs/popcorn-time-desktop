@@ -2,15 +2,12 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import Events from 'api/Events'
 import MediaPlayer from 'api/Player'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import * as Constants from 'api/Player/PlayerConstants'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
 import type { Props } from './PlayerTypes'
-import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
 import Stats from './Stats'
 
@@ -19,15 +16,14 @@ export class Player extends React.Component {
   props: Props
 
   state = {
-    torrentStatus: TorrentStatuses.NONE,
+    torrentStatus: TorrentConstants.STATUS_NONE,
   }
 
   componentDidMount() {
-    Events.on(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+    // Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
-  componentWillReceiveProps(nextProps) {
+ /* componentWillReceiveProps(nextProps) {
     const { playerAction: newPlayerAction } = nextProps
     const { playerAction: oldPlayerAction } = this.props
 
@@ -42,19 +38,11 @@ export class Player extends React.Component {
         },
       })
     }
-  }
+  }*/
 
   componentWillUnmount() {
-    Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+    // Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
-  }
-
-  playerStatusChanged = (event, data) => {
-    const { newStatus }    = data
-    const { updateStatus } = this.props
-
-    updateStatus(newStatus)
   }
 
   torrentStatusChange = (event, data) => {
@@ -68,10 +56,10 @@ export class Player extends React.Component {
   shouldShowPlayer = () => {
     const { playerStatus, playerAction } = this.props
 
-    return (playerStatus === PlayerStatuses.PLAYING
-            || playerStatus === PlayerStatuses.PAUSED
-            || playerStatus === PlayerStatuses.BUFFERING)
-           && playerAction !== Constants.PLAYER_ACTION_STOP
+    return (playerStatus === PlayerConstants.STATUS_PLAYING
+            || playerStatus === PlayerConstants.STATUS_PAUSED
+            || playerStatus === PlayerConstants.STATUS_BUFFERING)
+           && playerAction !== Constants.ACTION_STOP
   }
 
   isHidden = () => {
@@ -81,7 +69,7 @@ export class Player extends React.Component {
       return false
     }
 
-    return torrentStatus === TorrentStatuses.NONE
+    return torrentStatus === TorrentConstants.STATUS_NONE
   }
 
   renderVideo = () => {
@@ -118,10 +106,10 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
-          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PLAYER_PROVIDER_CHROMECAST,
+          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PROVIDER_CHROMECAST,
           hidden    : this.isHidden(),
         }, classes.player)}>
-        {torrentStatus !== TorrentStatuses.NONE && (
+        {torrentStatus !== TorrentConstants.STATUS_NONE && (
           <Stats {...{
             item,
             playerProvider,
@@ -131,7 +119,7 @@ export class Player extends React.Component {
           }} />
         )}
 
-        {playerProvider === Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
+        {playerProvider === Constants.PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

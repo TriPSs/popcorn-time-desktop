@@ -7,7 +7,7 @@ import * as Selectors from './PlayerSelectors'
 
 export function play(uri: string, item: ContentType) {
   return {
-    type   : Constants.PLAYER_ACTION_PLAY,
+    type   : Constants.ACTION_PLAY,
     payload: {
       uri,
       item,
@@ -17,13 +17,13 @@ export function play(uri: string, item: ContentType) {
 
 export function pause() {
   return {
-    type: Constants.PLAYER_ACTION_PAUSE,
+    type: Constants.ACTION_PAUSE,
   }
 }
 
 export function stop() {
   return {
-    type: Constants.PLAYER_ACTION_STOP,
+    type: Constants.ACTION_STOP,
   }
 }
 
@@ -47,8 +47,8 @@ export function getDevices() {
 
 export function selectDevice(device: DeviceType) {
   return (dispatch, getState) => {
-    if (device !== Constants.PLAYER_PROVIDER_PLYR) {
-      if (Selectors.getPlayerProvider(getState()) !== device.provider) {
+    if (device !== Constants.PROVIDER_PLYR) {
+      if (Selectors.getProvider(getState()) !== device.provider) {
         dispatch(updateProvider(device.provider))
       }
 
@@ -58,34 +58,28 @@ export function selectDevice(device: DeviceType) {
         type   : Constants.SELECT_DEVICE,
         payload: device,
       })
+    }
 
-    } 
     dispatch(updateProvider(device))
 
     return dispatch({
       type   : Constants.SELECT_DEVICE,
       payload: null,
     })
-    
+
   }
 }
 
 export function updateStatus(newStatus) {
   return {
-    type   : Constants.UPDATE_PLAYER_STATUS,
+    type   : Constants.UPDATE_STATUS,
     payload: newStatus,
   }
 }
 
 export function updateProvider(provider: string) {
-  return (dispatch) => {
-    MediaPlayer.updatePlayerProvider(provider)
-
-    return dispatch({
-      type   : Constants.UPDATE_PLAYER_TYPE,
-      payload: {
-        playerProvider: provider,
-      },
-    })
+  return {
+    type   : Constants.UPDATE_PROVIDER,
+    payload: provider,
   }
 }

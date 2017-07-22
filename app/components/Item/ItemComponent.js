@@ -4,9 +4,8 @@ import classNames from 'classnames'
 
 import Events from 'api/Events'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
-import * as PlayerStatuses  from 'api/Player/PlayerStatuses'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
+import * as PlayerConstants  from 'api/Player/PlayerConstants'
 
 import Loader from 'components/Loader'
 import Player from 'components/Player'
@@ -25,7 +24,7 @@ export default class Item extends React.Component {
 
   state: State = {
     torrent      : null,
-    torrentStatus: TorrentStatuses.NONE,
+    torrentStatus: TorrentConstants.STATUS_NONE,
   }
 
   componentWillMount() {
@@ -36,7 +35,7 @@ export default class Item extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0)
 
-    Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+    // Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
 
     const { item } = this.props
     if (item && item.type === MetadataConstants.TYPE_MOVIE) {
@@ -65,7 +64,7 @@ export default class Item extends React.Component {
   componentWillUnmount() {
     this.stopPlayback()
 
-    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
+   // Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
   }
 
   torrentStatusChange = (event, data) => {
@@ -140,11 +139,11 @@ export default class Item extends React.Component {
     const { torrentStatus } = this.state
     const { playerStatus }  = this.props
 
-    if (playerStatus === PlayerStatuses.PLAYING) {
+    if (playerStatus === PlayerConstants.STATUS_PLAYING) {
       return false
     }
 
-    return torrentStatus === TorrentStatuses.NONE
+    return torrentStatus === TorrentConstants.STATUS_NONE
   }
 
   render() {

@@ -26,7 +26,7 @@ export class WatchedDB {
     this.markWatched({ id, type: 'movie' })
 
   getMoviesWatched = () => new Promise(resolve => this.db.find({ type: 'movie' }, (error, docs) =>
-    resolve({ error, docs }),
+    resolve(docs.map(item => item.id)),
   ))
 
   markEpisodeNotWatched = (showId: string, season: string, episode: string) =>

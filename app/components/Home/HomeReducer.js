@@ -1,5 +1,6 @@
 // @flow
 import * as BookmarkedConstants from 'components/Bookmarked/BookmarkedConstants'
+import * as ItemConstants from 'components/Item/ItemConstants'
 import * as Constants from './HomeConstants'
 
 export default (state = Constants.INITIAL_STATE, action) => {
@@ -30,7 +31,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
     case BookmarkedConstants.REMOVE_BOOKMARK:
       return {
         ...state,
-        modes    : {
+        modes: {
           ...state.modes,
           [Constants.MODE_BOOKMARKS]: {
             ...state.modes[Constants.MODE_BOOKMARKS],
@@ -42,7 +43,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
     case BookmarkedConstants.ADD_BOOKMARK:
       return {
         ...state,
-        modes    : {
+        modes: {
           ...state.modes,
           [Constants.MODE_BOOKMARKS]: {
             ...state.modes[Constants.MODE_BOOKMARKS],
@@ -50,6 +51,27 @@ export default (state = Constants.INITIAL_STATE, action) => {
               ...state.modes[Constants.MODE_BOOKMARKS].items,
               action.payload.item,
             ],
+          },
+        },
+      }
+
+    case ItemConstants.MARKED_MOVIE:
+      return {
+        ...state,
+        modes: {
+          ...state.modes,
+          [Constants.MODE_BOOKMARKS]: {
+            ...state.modes[Constants.MODE_BOOKMARKS],
+            items: state.modes[Constants.MODE_BOOKMARKS].items.map((item) => {
+              if (item.id === action.payload.itemId) {
+                return {
+                  ...item,
+                  watched: action.payload.watched,
+                }
+              }
+
+              return item
+            }),
           },
         },
       }

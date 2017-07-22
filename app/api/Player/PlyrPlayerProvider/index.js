@@ -1,4 +1,6 @@
-/**
- * Created by tycho on 07/07/2017.
- */
-export default from './PlyrPlayerProvider'
+import { connect } from 'redux-clazz'
+import Player from './PlyrPlayerProvider'
+
+import { updateStatus } from '../PlayerActions'
+
+export default connect(null, { updateStatus })(Player)

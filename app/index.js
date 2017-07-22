@@ -2,10 +2,9 @@ import React from 'react'
 import { render as renderDOM } from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 
+import { store, history } from './store'
 import Root from './containers/Root'
-import { configureStore, history } from './store/configureStore'
 
-const store  = configureStore()
 const render = (Container = AppContainer) => renderDOM(
   <Container>
     <Root store={store} history={history} />

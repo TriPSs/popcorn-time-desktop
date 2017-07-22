@@ -26,12 +26,6 @@ export class Home extends React.Component {
     }
   }
 
-  componentWillMount() {
-    const { bookmarks } = this.props
-
-    bookmarks.getBookmarks()
-  }
-
   componentDidMount() {
     const { match: { params: { mode } } } = this.props
 

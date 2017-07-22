@@ -91,15 +91,15 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
                     searched: true,
                   }
 
-                } 
+                }
                 return episode
-                
+
               }),
             }
 
-          } 
+          }
           return season
-          
+
         }),
       }
 
@@ -108,16 +108,19 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
   }
 }
 
-export function markedMovieWatched(itemId) {
+export function markedMovie(itemId, watched) {
   return {
-    type   : Constants.MARKED_MOVIE_WATCHED,
-    payload: itemId,
+    type   : Constants.MARKED_MOVIE,
+    payload: {
+      itemId,
+      watched,
+    },
   }
 }
 
 export function markedEpisode(itemId, season, episode, watched) {
   return {
-    type   : Constants.MARKED_EPISODE_WATCHED,
+    type   : Constants.MARKED_EPISODE,
     payload: {
       itemId,
       season,
@@ -130,9 +133,16 @@ export function markedEpisode(itemId, season, episode, watched) {
 export function toggleWatched(item) {
   return (dispatch) => {
     if (item.type === MetadataConstants.TYPE_MOVIE) {
-      Database.watched.markMovieWatched(item.id).then(() => {
-        dispatch(markedMovieWatched(item.id))
-      })
+      if (item.watched) {
+        Database.watched.markMovieWatched(item.id).then(() => {
+          dispatch(markedMovie(item.showId, false))
+        })
+
+      } else {
+        Database.watched.markMovieUnWatched(item.id).then(() => {
+          dispatch(markedMovie(item.showId, true))
+        })
+      }
 
     } else if (item.type === MetadataConstants.TYPE_SHOW_EPISODE) {
       if (item.watched) {

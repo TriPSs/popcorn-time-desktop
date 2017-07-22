@@ -30,7 +30,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
         item                   : action.payload,
       }
 
-    case Constants.MARKED_MOVIE_WATCHED:
+    case Constants.MARKED_MOVIE:
       return {
         ...state,
         item: {
@@ -39,8 +39,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
         },
       }
 
-    case Constants.MARKED_EPISODE_UNWATCHED:
-    case Constants.MARKED_EPISODE_WATCHED:
+    case Constants.MARKED_EPISODE:
       return {
         ...state,
         item: {
@@ -53,18 +52,19 @@ export default (state = Constants.INITIAL_STATE, action) => {
                     ...episode,
                     watched: action.payload.watched,
                   }
-                } 
+                }
                 return episode
-                
+
               })
+
               return {
                 ...season,
                 episodes,
                 watched: (episodes.filter(episode => !!episode.watched).length / episodes.length) * 100,
               }
-            } 
+            }
+
             return season
-            
           }),
         },
       }

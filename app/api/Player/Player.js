@@ -1,28 +1,26 @@
 // @flow
+import ReduxClazz from 'redux-clazz'
 import debug from 'debug'
-
 import { PlayerProviderInterface } from 'api/Player/PlayerInterface'
 import PlyrPlayerProvider from 'api/Player/PlyrPlayerProvider'
 import Torrent from 'api/Torrent'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
-import Events from 'api/Events'
-import * as PlayerConstants from 'components/Player/PlayerConstants'
-import { StreamingInterface } from './StreamingProviders/StreamingInterface'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
+import * as PlayerConstants from './PlayerConstants'
+import { streamingProviders, StreamingInterface } from './StreamingProviders'
 import type { DeviceType } from './StreamingProviders/StreamingTypes'
-import streamingProviders from './StreamingProviders'
+import type { Props } from './PlayerTypes'
 
 const log = debug('api:player')
 
-export class Player implements PlayerProviderInterface {
-
-  providerSelected = 'Plyr'
+export class Player extends ReduxClazz implements PlayerProviderInterface {
 
   plyrAdapter: PlyrPlayerProvider
 
   streamingProviders: Array<StreamingInterface> = streamingProviders()
 
   lastPlayer = null
+
+  props: Props
 
   supportedFormats = [
     'mp4',
@@ -34,38 +32,57 @@ export class Player implements PlayerProviderInterface {
     'avi',
   ]
 
-  constructor() {
-    this.plyrAdapter = new PlyrPlayerProvider()
+  constructor(...props) {
+    super(...props)
 
-    Events.on(TorrentEvents.STATUS_CHANGE, this.handleTorrentStatusChange)
+    this.plyrAdapter = PlyrPlayerProvider
+    /*Events.on(TorrentEvents.STATUS_CHANGE, this.handleTorrentStatusChange)*/
   }
 
   handleTorrentStatusChange = (event, data) => {
     const { newStatus } = data
 
-    if (newStatus === TorrentStatuses.BUFFERED || newStatus === TorrentStatuses.DOWNLOADED) {
+    if (newStatus === TorrentConstants.STATUS_BUFFERED || newStatus === TorrentConstants.STATUS_DOWNLOADED) {
       this.play(data)
     }
   }
 
-  updatePlayerProvider = (provider: string) => {
-    log(`Change provider from ${this.providerSelected} to ${provider}`)
-    this.providerSelected = provider
+  clazzWillReceiveProps = (nextProps) => {
+    const { action: oldAction, torrentStatus: oldTorrentStatus } = this.props
+    const { action: newAction, torrentStatus: newTorrentStatus } = nextProps
+
+    if (oldAction !== newAction) {
+      const { uri, item } = nextProps
+
+      this.handleActionChange(
+        newAction, { uri, item },
+      )
+    }
+
+    if (newTorrentStatus !== oldTorrentStatus
+        && (newTorrentStatus === TorrentConstants.STATUS_BUFFERED|| newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
+    ) {
+      const { uri, item } = nextProps
+
+      this.play({ uri, item })
+    }
   }
 
   selectDevice = (device: DeviceType) => {
-    if (this.providerSelected !== this.plyrAdapter.provider) {
+    const { provider } = this.props
+
+    if (provider !== this.plyrAdapter.provider) {
       this.getRightPlayer().selectDevice(device)
     }
   }
 
-  firePlayerAction = (status, { uri, item }) => {
-    log(`Fire player action ${status}`)
+  handleActionChange = (action, { uri, item }) => {
+    log(`Fire player action ${action}`)
 
-    switch (status) {
-      case PlayerConstants.PLAYER_ACTION_PLAY:
-        if (item.type === 'youtube') {
-          this.plyrAdapter.play(uri, item)
+    switch (action) {
+      case PlayerConstants.ACTION_PLAY:
+        if (uri.indexOf('youtube') > -1) {
+          this.plyrAdapter.play(uri, { ...item, type: 'youtube' })
 
         } else {
           Torrent.start(uri, item, this.supportedFormats)
@@ -73,11 +90,11 @@ export class Player implements PlayerProviderInterface {
 
         break
 
-      case PlayerConstants.PLAYER_ACTION_PAUSE:
+      case PlayerConstants.ACTION_PAUSE:
         this.pause()
         break
 
-      case PlayerConstants.PLAYER_ACTION_STOP:
+      case PlayerConstants.ACTION_STOP:
         this.stop()
         break
 
@@ -86,7 +103,9 @@ export class Player implements PlayerProviderInterface {
   }
 
   play = ({ uri, item }) => {
-    log(`Fire play in ${this.providerSelected}`)
+    const { provider } = this.props
+
+    log(`Fire play in ${provider}`)
     const player = this.getRightPlayer()
 
     if (player && !player.isPlaying()) {
@@ -107,12 +126,14 @@ export class Player implements PlayerProviderInterface {
   }
 
   getRightPlayer = (): PlayerProviderInterface => {
-    if (this.lastPlayer && this.lastPlayer.provider === this.providerSelected) {
+    const { provider } = this.props
+
+    if (this.lastPlayer && this.lastPlayer.provider === provider) {
       return this.lastPlayer
     }
 
-    if (this.providerSelected !== this.plyrAdapter.provider) {
-      return this.lastPlayer = this.streamingProviders.find(provider => provider.provider === this.providerSelected)
+    if (provider !== this.plyrAdapter.provider) {
+      return this.lastPlayer = this.streamingProviders.find(streamingProvider => streamingProvider.provider === provider)
     }
 
     return this.lastPlayer = this.plyrAdapter
@@ -121,8 +142,6 @@ export class Player implements PlayerProviderInterface {
   getDevices = () => Promise.all(
     this.streamingProviders.map(provider => provider.getDevices()),
   )
-
-  // getStatus = () => this.getRightPlayer().getStatus()
 
   destroy = () => {
     Torrent.destroy()
@@ -136,5 +155,4 @@ export class Player implements PlayerProviderInterface {
 
 }
 
-export const MediaPlayer = new Player()
-export default MediaPlayer
+export default Player

@@ -5,8 +5,7 @@ import network from 'network-address'
 
 import Power from 'api/Power'
 import Events from 'api/Events'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { DeviceType } from '../StreamingTypes'
 import { StreamingInterface } from '../StreamingInterface'
@@ -26,14 +25,14 @@ export class ChromeCastProvider implements StreamingInterface {
 
   chromecasts: ChromeCastApiType
 
-  status: string = PlayerStatuses.NONE
+  status: string = PlayerConstants.STATUS_NONE
 
   checkProgressInterval: number
 
   states = {
-    PLAYING  : PlayerStatuses.PLAYING,
-    BUFFERING: PlayerStatuses.BUFFERING,
-    PAUSED   : PlayerStatuses.PAUSED,
+    PLAYING  : PlayerConstants.STATUS_PLAYING,
+    BUFFERING: PlayerConstants.STATUS_BUFFERING,
+    PAUSED   : PlayerConstants.STATUS_PAUSED,
   }
 
   constructor() {
@@ -119,7 +118,7 @@ export class ChromeCastProvider implements StreamingInterface {
     if (newStatus !== this.status) {
       log(`Update status to ${newStatus}`)
 
-      Events.emit(PlayerEvents.STATUS_CHANGE, {
+      Events.emit(PlayerConstants.UPDATE_STATUS, {
         oldState: this.status,
         newStatus,
       })
@@ -143,7 +142,7 @@ export class ChromeCastProvider implements StreamingInterface {
 
           if (percentageComplete > 90) {
             this.clearIntervals()
-            Events.emit(PlayerEvents.VIDEO_ALMOST_DONE)
+            Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
           }
 
         } else {

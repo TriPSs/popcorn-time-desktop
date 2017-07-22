@@ -1,23 +1,23 @@
 // @flow
+import ReduxClazz from 'redux-clazz'
 import debug from 'debug'
 import plyr from 'plyr'
 
 import Power from 'api/Power'
 import Events from 'api/Events'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
 import { PlayerProviderInterface } from '../PlayerInterface'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 
 const log = debug('api:players:plyr')
 
-class PlyrPlayerProvider implements PlayerProviderInterface {
+export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInterface {
 
   provider = 'Plyr'
 
   player: plyr
 
-  status: string = PlayerStatuses.NONE
+  status: string = PlayerConstants.STATUS_NONE
 
   checkProgressInterval: number
 
@@ -26,8 +26,8 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   getPlayer = () => {
     if (!this.player) {
       this.player = plyr.setup({
-        volume         : 10,
-        autoplay       : true,
+        volume  : 10,
+        autoplay: true,
       })[0]
 
       if (this.player) {
@@ -92,7 +92,9 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   onPlay = () => {
     this.updateStatus(PlayerStatuses.PLAYING)
 
-    this.checkProgressInterval = this.progressInterval()
+    if (this.loadedItem.type !== 'youtube') {
+      this.checkProgressInterval = this.progressInterval()
+    }
   }
 
   onPause = () => this.updateStatus(PlayerStatuses.PAUSED)
@@ -100,12 +102,10 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   onEnded = () => this.updateStatus(PlayerStatuses.ENDED)
 
   updateStatus = (newStatus) => {
+    const { updateStatus } = this.props
     log(`Update status to ${newStatus}`)
 
-    Events.emit(PlayerEvents.STATUS_CHANGE, {
-      oldState: this.status,
-      newStatus,
-    })
+    updateStatus(newStatus)
     this.status = newStatus
     this.clearIntervals()
   }
@@ -128,7 +128,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
 
       if (percentageComplete > 90) {
         this.clearIntervals()
-        Events.emit(PlayerEvents.VIDEO_ALMOST_DONE)
+        Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
       }
     }
   }, 500)

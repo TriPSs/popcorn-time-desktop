@@ -2,8 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 
 import type { SeasonType, EpisodeType } from 'api/Metadata/MetadataTypes'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
 import type { State, Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
@@ -39,13 +39,13 @@ export class Show extends React.Component {
   shouldDisableActions = () => {
     const { torrentStatus, playerStatus } = this.props
 
-    return torrentStatus === TorrentStatuses.BUFFERING
-           || torrentStatus === TorrentStatuses.DOWNLOADING
-           || torrentStatus === TorrentStatuses.CONNECTING
-           || playerStatus === PlayerStatuses.PAUSED
-           || playerStatus === PlayerStatuses.CONNECTING
-           || playerStatus === PlayerStatuses.PLAYING
-           || playerStatus === PlayerStatuses.BUFFERING
+    return torrentStatus === TorrentConstants.STATUS_BUFFERING
+           || torrentStatus === TorrentConstants.STATUS_DOWNLOADING
+           || torrentStatus === TorrentConstants.STATUS_CONNECTING
+           || playerStatus === PlayerConstants.STATUS_PAUSED
+           || playerStatus === PlayerConstants.STATUS_CONNECTING
+           || playerStatus === PlayerConstants.STATUS_PLAYING
+           || playerStatus === PlayerConstants.STATUS_BUFFERING
   }
 
   selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
