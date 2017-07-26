@@ -25,12 +25,16 @@ export class Episodes extends React.Component {
     })
   }
 
+  hasTorrents = (episode) => !!episode.torrents['480p'] || !!episode.torrents['720p'] || !!episode.torrents['1080p']
+
   render() {
     const { selectedSeason, selectedEpisode } = this.props
     const { selectSeasonAndEpisode }          = this.props
     const { tooltips }                        = this.state
 
-    const today = new Date().getTime()
+    const tomorrowDate = new Date()
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    const tomorrow = tomorrowDate.getTime()
 
     return (
       <div className={'list'}>
@@ -38,12 +42,12 @@ export class Episodes extends React.Component {
           <a
             className={classNames('list-item', {
               'list-item--active'  : episode.number === selectedEpisode.number,
-              'list-item--disabled': episode.aired > today,
+              'list-item--disabled': episode.aired > tomorrow && !this.hasTorrents(episode),
               'list-item--watched' : episode.watched && episode.number !== selectedEpisode.number,
             })}
             key={episode.number}
             onClick={() => {
-              if (episode.aired < today) {
+              if (episode.aired < tomorrow || this.hasTorrents(episode)) {
                 selectSeasonAndEpisode(selectedSeason.number, episode.number)
               }
             }}
@@ -67,7 +71,7 @@ export class Episodes extends React.Component {
                   }} />
               ))}
 
-              {episode.aired < today && (
+              {episode.aired < tomorrow || this.hasTorrents(episode) && (
                 <Tooltip
                   placement={'top'}
                   isOpen={tooltips[episode.number]}

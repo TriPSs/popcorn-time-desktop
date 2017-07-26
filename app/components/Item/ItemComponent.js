@@ -29,7 +29,6 @@ export default class Item extends React.Component {
 
   componentWillMount() {
     this.getAllData()
-    this.stopPlayback()
   }
 
   componentDidMount() {
@@ -130,9 +129,11 @@ export default class Item extends React.Component {
   }
 
   stopPlayback = () => {
-    const { player } = this.props
+    const { player, playerStatus } = this.props
 
-    player.stop()
+    if (playerStatus !== PlayerConstants.STATUS_NONE) {
+      player.stop()
+    }
   }
 
   showPlayInfo = () => {

@@ -1,13 +1,13 @@
 import { connect } from 'redux-clazz'
 import Torrent from './Torrent'
 
-import * as Actions from './TorrentActions'
-import * as Selectors from './TorrentSelectors'
+import * as TorrentActions from './TorrentActions'
+import * as TorrentSelectors from './TorrentSelectors'
 
 export const mapStateToProps = state => ({
-  status: Selectors.getStatus(state),
+  status: TorrentSelectors.getStatus(state),
 })
 
-const TorrentAdapter = connect(mapStateToProps, { ...Actions })(Torrent)
+const TorrentAdapter = connect(mapStateToProps, TorrentActions)(Torrent)
 
 export default TorrentAdapter

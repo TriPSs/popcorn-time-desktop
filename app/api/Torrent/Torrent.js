@@ -1,19 +1,15 @@
-/**
- * Torrents controller, responsible for playing, stoping, etc
- * @flow
- */
 import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
 import debug from 'debug'
 
-import Events from 'api/Events'
+import ReduxClazz from 'redux-clazz'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as TorrentConstants from './TorrentConstants'
 
 const log  = debug('api:torrent')
 const port = 9091
 
-export class Torrent {
+export class Torrent extends ReduxClazz {
 
   cacheLocation: string
 
@@ -31,7 +27,8 @@ export class Torrent {
 
   loadedMagnet: string
 
-  constructor() {
+  constructor(...context) {
+    super(...context)
     this.engine        = new WebTorrent({ maxConns: 20 })
     this.cacheLocation = remote.app.getPath('temp')
   }
