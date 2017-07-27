@@ -83,3 +83,9 @@ export function updateProvider(provider: string) {
     payload: provider,
   }
 }
+
+export function videoAlmostDone() {
+  return {
+    type: Constants.VIDEO_ALMOST_DONE,
+  }
+}

@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import Events from 'api/Events'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
-import * as PlayerConstants  from 'api/Player/PlayerConstants'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
 
 import Loader from 'components/Loader'
 import Player from 'components/Player'
@@ -23,8 +23,7 @@ export default class Item extends React.Component {
   props: Props
 
   state: State = {
-    torrent      : null,
-    torrentStatus: TorrentConstants.STATUS_NONE,
+    torrent: null,
   }
 
   componentWillMount() {
@@ -33,8 +32,6 @@ export default class Item extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0)
-
-    // Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
 
     const { item } = this.props
     if (item && item.type === MetadataConstants.TYPE_MOVIE) {
@@ -62,16 +59,6 @@ export default class Item extends React.Component {
 
   componentWillUnmount() {
     this.stopPlayback()
-
-   // Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
-  }
-
-  torrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    this.setState({
-      torrentStatus: newStatus,
-    })
   }
 
   play = (playerProvider, torrent = this.state.torrent) => {
@@ -137,8 +124,7 @@ export default class Item extends React.Component {
   }
 
   showPlayInfo = () => {
-    const { torrentStatus } = this.state
-    const { playerStatus }  = this.props
+    const { playerStatus, torrentStatus } = this.props
 
     if (playerStatus === PlayerConstants.STATUS_PLAYING) {
       return false
@@ -150,7 +136,8 @@ export default class Item extends React.Component {
   render() {
     const { match: { params: { itemId, mode } } } = this.props
     const { item, isLoading, toggleWatched }      = this.props
-    const { torrent, torrentStatus }              = this.state
+    const { torrentStatus }                       = this.props
+    const { torrent }                             = this.state
 
     if (isLoading || !item || item.id !== itemId) {
       return <Loader />
@@ -200,9 +187,11 @@ export default class Item extends React.Component {
 
           {item.type === 'show' && (
             <Show
-              toggleWatched={toggleWatched}
-              torrentStatus={torrentStatus}
-              play={this.play} />
+              {...{
+                toggleWatched,
+                torrentStatus,
+                play: this.play,
+              }} />
           )}
 
         </div>

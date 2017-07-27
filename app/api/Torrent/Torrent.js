@@ -33,7 +33,7 @@ export class Torrent extends ReduxClazz {
     this.cacheLocation = remote.app.getPath('temp')
   }
 
-  start(magnetURI: string, item: ContentType, supportedFormats: Array<string>) {
+  start = (magnetURI: string, item: ContentType, supportedFormats: Array<string>) => {
     const { status } = this.props
 
     if (status !== TorrentConstants.STATUS_NONE) {
@@ -75,7 +75,6 @@ export class Torrent extends ReduxClazz {
       )
 
       if (typeof torrentIndex !== 'number') {
-        console.warn('File List', torrent.files.map(_file => _file.name))
         throw new Error(`No torrent could be selected. Torrent Index: ${torrentIndex}`)
       }
 
@@ -148,7 +147,7 @@ export class Torrent extends ReduxClazz {
     }
   }, 1000)
 
-  updateStatus = (newStatus, data = {}) => {
+  updateStatus = (newStatus, data = { uri: this.loadedMagnet, item: this.loadedItem }) => {
     const { status, updateStatus } = this.props
 
     if (status !== newStatus) {
@@ -158,7 +157,7 @@ export class Torrent extends ReduxClazz {
     }
   }
 
-  destroy() {
+  destroy = () => {
     const { status, updateStatus } = this.props
 
     if (status !== TorrentConstants.STATUS_NONE) {
@@ -177,7 +176,7 @@ export class Torrent extends ReduxClazz {
 
       this.clearIntervals()
 
-      updateStatus(TorrentConstants.STATUS_NONE)
+      updateStatus(TorrentConstants.STATUS_NONE, { uri: null, item: null })
     }
   }
 }

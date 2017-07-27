@@ -1,1 +1,1 @@
-export default from './Stats'
+export default from './StatsContainer'

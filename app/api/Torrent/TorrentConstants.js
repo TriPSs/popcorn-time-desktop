@@ -9,6 +9,13 @@ export const STATUS_DOWNLOADED  = `${REDUCER_NAME}.status.downloaded`
 
 export const INITIAL_STATE = {
   status: STATUS_NONE,
+  stats : {
+    progress     : 0,
+    timeRemaining: 0,
+    downloadSpeed: 0,
+    uploadSpeed  : 0,
+    peers        : 0,
+  },
 }
 
 export const UPDATE_STATUS = `${REDUCER_NAME}.events.status.change`

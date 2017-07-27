@@ -148,7 +148,6 @@ export class Show extends React.Component {
                 'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
                 { 'pct-btn-available': torrents[quality] !== null },
                 { 'pct-btn-no-hover': torrents[quality] === null && searched },
-                { 'pct-btn-no-hover': !searched },
               )}>
 
               <div>Play in {quality}</div>

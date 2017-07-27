@@ -36,35 +36,28 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     super(...props)
 
     this.plyrAdapter = PlyrPlayerProvider
-    /*Events.on(TorrentEvents.STATUS_CHANGE, this.handleTorrentStatusChange)*/
-  }
-
-  handleTorrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    if (newStatus === TorrentConstants.STATUS_BUFFERED || newStatus === TorrentConstants.STATUS_DOWNLOADED) {
-      this.play(data)
-    }
   }
 
   clazzWillReceiveProps = (nextProps) => {
     const { action: oldAction, torrentStatus: oldTorrentStatus } = this.props
     const { action: newAction, torrentStatus: newTorrentStatus } = nextProps
 
-    if (oldAction !== newAction) {
+    if (newTorrentStatus !== oldTorrentStatus) {
+      if (newTorrentStatus === TorrentConstants.STATUS_BUFFERED
+          || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED) {
+        const { uri, item } = nextProps
+
+        this.play({ uri, item })
+      }
+
+    } else if (oldAction !== newAction) {
       const { uri, item } = nextProps
+
+      console.log(oldAction, newAction, oldAction !== newAction)
 
       this.handleActionChange(
         newAction, { uri, item },
       )
-    }
-
-    if (newTorrentStatus !== oldTorrentStatus
-        && (newTorrentStatus === TorrentConstants.STATUS_BUFFERED|| newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
-    ) {
-      const { uri, item } = nextProps
-
-      this.play({ uri, item })
     }
   }
 
@@ -120,8 +113,11 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   }
 
   stop = () => {
-    this.getRightPlayer().stop()
-    this.getRightPlayer().destroy()
+    if (this.getRightPlayer().status !== PlayerConstants.STATUS_NONE) {
+      this.getRightPlayer().stop()
+      this.getRightPlayer().destroy()
+    }
+
     this.destroy()
   }
 

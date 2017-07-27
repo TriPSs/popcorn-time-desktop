@@ -10,6 +10,13 @@ export default (state = Constants.INITIAL_STATE, action) => {
         status: action.payload.newStatus,
       }
 
+    case Constants.BUFFERING:
+    case Constants.DOWNLOADING:
+      return {
+        ...state,
+        stats: action.payload,
+      }
+
     default:
       return state
 

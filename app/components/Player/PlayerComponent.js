@@ -15,42 +15,8 @@ export class Player extends React.Component {
 
   props: Props
 
-  state = {
-    torrentStatus: TorrentConstants.STATUS_NONE,
-  }
-
-  componentDidMount() {
-    // Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
-  }
-
- /* componentWillReceiveProps(nextProps) {
-    const { playerAction: newPlayerAction } = nextProps
-    const { playerAction: oldPlayerAction } = this.props
-
-    if (oldPlayerAction !== newPlayerAction) {
-      const { uri, item } = nextProps
-
-      MediaPlayer.firePlayerAction(newPlayerAction, {
-        uri,
-        item: {
-          ...item,
-          type: uri.indexOf('youtube') > -1 ? 'youtube' : 'video/mp4',
-        },
-      })
-    }
-  }*/
-
   componentWillUnmount() {
-    // Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
-  }
-
-  torrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    this.setState({
-      torrentStatus: newStatus,
-    })
   }
 
   shouldShowPlayer = () => {
@@ -63,7 +29,7 @@ export class Player extends React.Component {
   }
 
   isHidden = () => {
-    const { torrentStatus } = this.state
+    const { torrentStatus } = this.props
 
     if (this.shouldShowPlayer()) {
       return false
@@ -99,9 +65,8 @@ export class Player extends React.Component {
   }
 
   render() {
-    const { playerProvider, playerStatus, item } = this.props
-    const { stop }                               = this.props
-    const { torrentStatus }                      = this.state
+    const { playerProvider, playerStatus } = this.props
+    const { stop, torrentStatus }          = this.props
 
     return (
       <div
@@ -111,7 +76,6 @@ export class Player extends React.Component {
         }, classes.player)}>
         {torrentStatus !== TorrentConstants.STATUS_NONE && (
           <Stats {...{
-            item,
             playerProvider,
             playerStatus,
             torrentStatus,

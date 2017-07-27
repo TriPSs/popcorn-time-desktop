@@ -4,10 +4,9 @@ import debug from 'debug'
 import plyr from 'plyr'
 
 import Power from 'api/Power'
-import Events from 'api/Events'
+import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import { PlayerProviderInterface } from '../PlayerInterface'
-import type { ContentType } from 'api/Metadata/MetadataTypes'
 
 const log = debug('api:players:plyr')
 
@@ -70,18 +69,18 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
   }
 
   pause = () => {
-    if (this.player) {
+    if (this.player && this.isPlaying()) {
       this.player.pause()
     }
   }
 
   stop = () => {
-    if (this.player) {
+    if (this.player && this.status !== PlayerConstants.STATUS_NONE) {
       this.player.stop()
     }
   }
 
-  isPlaying = () => this.status === PlayerStatuses.PLAYING
+  isPlaying = () => this.status === PlayerConstants.STATUS_PLAYING
 
   setEventListeners = () => {
     this.player.on('play', this.onPlay)
@@ -90,24 +89,31 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
   }
 
   onPlay = () => {
-    this.updateStatus(PlayerStatuses.PLAYING)
+    this.updateStatus(PlayerConstants.STATUS_PLAYING)
 
     if (this.loadedItem.type !== 'youtube') {
       this.checkProgressInterval = this.progressInterval()
     }
   }
 
-  onPause = () => this.updateStatus(PlayerStatuses.PAUSED)
+  onPause = () => {
+    if (this.status !== PlayerConstants.STATUS_NONE) {
+      this.updateStatus(PlayerConstants.STATUS_PAUSED)
+    }
+  }
 
-  onEnded = () => this.updateStatus(PlayerStatuses.ENDED)
+  onEnded = () => this.updateStatus(PlayerConstants.STATUS_ENDED)
 
   updateStatus = (newStatus) => {
     const { updateStatus } = this.props
-    log(`Update status to ${newStatus}`)
 
-    updateStatus(newStatus)
-    this.status = newStatus
-    this.clearIntervals()
+    if (this.status !== newStatus) {
+      log(`Update status to ${newStatus}`)
+
+      this.status = newStatus
+      updateStatus(newStatus)
+      this.clearIntervals()
+    }
   }
 
   destroy = () => {
@@ -118,7 +124,7 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
       this.player.destroy()
       this.player = null
 
-      this.updateStatus(PlayerStatuses.NONE)
+      this.updateStatus(PlayerConstants.STATUS_NONE)
     }
   }
 
@@ -128,7 +134,9 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
 
       if (percentageComplete > 90) {
         this.clearIntervals()
-        Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
+        const { videoAlmostDone } = this.props
+
+        videoAlmostDone()
       }
     }
   }, 500)

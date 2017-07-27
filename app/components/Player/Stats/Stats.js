@@ -12,30 +12,6 @@ export class Stats extends React.Component {
 
   props: Props
 
-  state: State = {
-    progress     : 0,
-    timeRemaining: 0,
-    downloadSpeed: 0,
-    uploadSpeed  : 0,
-    peers        : 0,
-  }
-
-  componentDidMount() {
-    // Events.on(TorrentEvents.BUFFERING, this.onBuffering)
-    // Events.on(TorrentEvents.DOWNLOADING, this.onBuffering)
-  }
-
-  componentWillUnmount() {
-    // Events.remove(TorrentEvents.BUFFERING, this.onBuffering)
-    // Events.remove(TorrentEvents.DOWNLOADING, this.onBuffering)
-  }
-
-  onBuffering = (event, data) => {
-    this.setState({
-      ...data,
-    })
-  }
-
   status = {
     [TorrentConstants.STATUS_CONNECTING] : 'Connecting...',
     [TorrentConstants.STATUS_DOWNLOADING]: 'Downloading...',
@@ -69,16 +45,16 @@ export class Stats extends React.Component {
       return false
     }
 
-    return playerStatus === PlayerConstants.STATUS_PLAYING|| playerStatus === PlayerConstants.STATUS_PAUSED
+    return playerStatus === PlayerConstants.STATUS_PLAYING || playerStatus === PlayerConstants.STATUS_PAUSED
   }
 
   render() {
-    const { item, torrentStatus, stopPlayer } = this.props
+    const { item, torrentStatus, stopPlayer, stats } = this.props
 
-    const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = this.state
+    const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = stats
 
     const style = {
-      opacity: torrentStatus === TorrentConstants.STATUS_DOWNLOADED? 0 : 1,
+      opacity: torrentStatus === TorrentConstants.STATUS_DOWNLOADED ? 0 : 1,
     }
 
     return (
