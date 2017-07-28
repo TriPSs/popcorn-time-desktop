@@ -121,6 +121,8 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     this.destroy()
   }
 
+  getStatus = () => this.getRightPlayer().getStatus()
+
   getRightPlayer = (): PlayerProviderInterface => {
     const { provider } = this.props
 
@@ -129,7 +131,7 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     }
 
     if (provider !== this.plyrAdapter.provider) {
-      return this.lastPlayer = this.streamingProviders.find(streamingProvider => streamingProvider.provider === provider)
+      return this.lastPlayer = this.streamingProviders.find(streamingProv => streamingProv.provider === provider)
     }
 
     return this.lastPlayer = this.plyrAdapter

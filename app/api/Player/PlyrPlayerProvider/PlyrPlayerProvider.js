@@ -47,7 +47,7 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
       sources: [
         {
           src : uri,
-          type: item.type,
+          type: item.type === 'show' || item.type === 'movie' ? 'video/mp4' : item.type,
         },
       ],
     })
