@@ -10,9 +10,16 @@
   overflow-x: auto;
 
   &__title {
+	position: relative;
 	height: 60px;
 	font-size: 20px;
 	line-height: 60px;
+  }
+
+  &__watched {
+	position: absolute;
+	right: 0;
+	top: 0;
   }
 
   p {

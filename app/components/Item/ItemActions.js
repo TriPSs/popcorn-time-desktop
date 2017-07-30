@@ -1,6 +1,5 @@
 // @flow
 import Butter from 'api/Butter'
-import Database from 'api/Database'
 import { getBestTorrent } from 'api/Torrents/TorrentsHelpers'
 
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
@@ -44,6 +43,7 @@ export function getItem(itemId, mode) {
 
     if (mode === MetadataConstants.TYPE_MOVIE) {
       const item = hasItem(itemId, mode, getState())
+
       if (item) {
         return dispatch(fetchedItem(item))
       }
@@ -108,53 +108,3 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
   }
 }
 
-export function markedMovie(itemId, watched) {
-  return {
-    type   : Constants.MARKED_MOVIE,
-    payload: {
-      itemId,
-      watched,
-    },
-  }
-}
-
-export function markedEpisode(itemId, season, episode, watched) {
-  return {
-    type   : Constants.MARKED_EPISODE,
-    payload: {
-      itemId,
-      season,
-      episode,
-      watched,
-    },
-  }
-}
-
-export function toggleWatched(item) {
-  return (dispatch) => {
-    if (item.type === MetadataConstants.TYPE_MOVIE) {
-      if (item.watched) {
-        Database.watched.markMovieWatched(item.id).then(() => {
-          dispatch(markedMovie(item.showId, false))
-        })
-
-      } else {
-        Database.watched.markMovieUnWatched(item.id).then(() => {
-          dispatch(markedMovie(item.showId, true))
-        })
-      }
-
-    } else if (item.type === MetadataConstants.TYPE_SHOW_EPISODE) {
-      if (item.watched) {
-        Database.watched.markEpisodeNotWatched(item.showId, item.season, item.number).then(() => {
-          dispatch(markedEpisode(item.showId, item.season, item.number, false))
-        })
-
-      } else {
-        Database.watched.markEpisodeWatched(item.showId, item.season, item.number).then(() => {
-          dispatch(markedEpisode(item.showId, item.season, item.number, true))
-        })
-      }
-    }
-  }
-}

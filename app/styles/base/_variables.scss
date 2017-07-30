@@ -41,7 +41,10 @@ $container-max-widths: (
 		xl: 1540px
 ) !default;
 $headings-color: white;
-$navbar-dark-color: #848484;
+
+$menu-height: 64px;
+$menu-item-color: #848484;
+$menu-item-color-active: white;
 
 // Fonts
 $font-family-base: 'Open Sans', sans-serif;
@@ -49,6 +52,8 @@ $headings-font-weight: 400;
 
 // Transitions
 $transition-opacity-in: opacity 0.1s ease-in;
+$transition-all-in: all 0.1s ease-in;
+$transition-color-in: color 0.1s ease-in;
 $transition-opacity-out: opacity 0.1s ease-out;
 
 .row-margin {
@@ -72,13 +77,13 @@ $transition-opacity-out: opacity 0.1s ease-out;
 //
 
 // Card list
-$card-list-color: $navbar-dark-color;
+$card-list-color: $menu-item-color;
 
 // Card
 $card-max-with: 140px;
-$card-min-with: 140px;
+$card-min-with: 130px;
 $card-max-height: 210px;
-$card-min-height: 210px;
+$card-min-height: 200px;
 $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 
@@ -98,3 +103,7 @@ $plyr-tooltip-radius: 0;
 // Lists
 $default-box-shadow: rgba(0, 0, 0, 0.6) 0 6px 16px 4px;
 $list-max-height: 600px;
+
+// Bookmark
+$bookmarked-color: red;
+$bookmark-color: white;

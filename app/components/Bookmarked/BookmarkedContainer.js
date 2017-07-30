@@ -1,6 +1,3 @@
-/**
- * @TODO: Use waitForImages plugin to load background images and fade in on load
- */
 import { connect } from 'react-redux'
 import * as Actions from './BookmarkedActions'
 import * as Selectors from './BookmarkedSelectors'

@@ -32,10 +32,12 @@
 
   &__row {
 	&--movie {
+	  display: flex;
 	  width: 100%;
 	}
 
 	&--show {
+	  display: flex;
 	  width: 100%;
 	  margin-top: 100px;
 

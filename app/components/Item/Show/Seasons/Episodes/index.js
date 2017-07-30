@@ -1,1 +1,3 @@
-export default from './Episodes'
+import Episodes from './Episodes'
+
+export default Episodes

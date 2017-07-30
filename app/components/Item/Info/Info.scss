@@ -25,10 +25,19 @@
   }
 
   &__details {
-	height: 40px;
+	display: flex;
+	align-items: center;
+
+	&-container {
+	  height: 80px;
+	  display: flex;
+	  flex-direction: column;
+	  position: absolute;
+	  bottom: 0;
+	}
 
 	> div {
-	  margin-right: 35px;
+	  margin-right: 25px;
 	}
 
 	:global {
@@ -50,13 +59,29 @@
 
   i {
 	color: white;
+
+	:global {
+	  .ion-heart {
+		&:hover {
+		  color: $bookmarked-color;
+		}
+	  }
+	}
+  }
+
+  &__status {
+	text-transform: capitalize;
   }
 
   &__summary {
 	font-weight: 100;
 	line-height: 150%;
 	max-width: $item-summary-max-with;
-	min-height: 170px
+	margin-bottom: 80px;
+  }
+
+  &__bookmarked {
+	position: relative;
   }
 
 }

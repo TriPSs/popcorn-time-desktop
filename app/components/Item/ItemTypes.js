@@ -11,7 +11,6 @@ export type Props = {
   player: PlayerProviderInterface,
   playerStatus: string,
   devices: Array<DeviceType>,
-  toggleWatched: () => void,
 }
 
 export type State = {

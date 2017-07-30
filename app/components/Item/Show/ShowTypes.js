@@ -5,7 +5,6 @@ export type Props = {
   item: ContentType,
   fetchingEpisodeTorrents: boolean,
   play: (playerProvider: string, torrent: TorrentType) => void,
-  toggleWatched: () => void,
   playerStatus: string,
   torrentStatus: string,
 }

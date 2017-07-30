@@ -1,11 +1,12 @@
 import { connect } from 'react-redux'
-import * as Actions from './WatchedActions'
-/*import * as Selectors from './BookmarkedSelectors'*/
 
-import Watched from './WatchedComponent'
+import * as WatchedActions from './WatchedActions'
+import * as WatchedSelectors from './WatchedSelectors'
+
+import WatchedComponent from './WatchedComponent'
 
 export const mapStateToProps = state => ({
-  watchedItems: [],
+  watchedItems: WatchedSelectors.getMoviesWatched(state),
 })
 
-export default connect(mapStateToProps, { ...Actions })(Watched)
+export default connect(mapStateToProps, { ...WatchedActions })(WatchedComponent)

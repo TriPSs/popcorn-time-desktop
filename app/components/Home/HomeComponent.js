@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
-import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import VisibilitySensor from 'react-visibility-sensor'
 
 import Header from '../Header'
 import CardList from '../CardList'
 
+import classes from './Home.scss'
 import * as Constants from './HomeConstants'
 import type { Props } from './HomeTypes'
 
@@ -82,10 +82,10 @@ export class Home extends React.Component {
     const { modes, isLoading }            = this.props
 
     return (
-      <div className={'container-fluid no-padding'}>
+      <div className={classes.home__container}>
 
         <Header />
-        <div className={'container-fluid'}>
+        <div className={classes.home__cards} style={{ padding: 0 }}>
           <CardList items={modes[mode].items} isLoading={isLoading} />
 
           <VisibilitySensor onChange={this.handleGetMoreItems} />

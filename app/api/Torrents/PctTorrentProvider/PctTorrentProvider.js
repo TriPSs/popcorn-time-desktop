@@ -11,6 +11,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
   defaultFilters = {
     limit: 50,
     sort : 'trending',
+    day  : new Date().getDate(),
   }
 
   popcornAPI: axios = axios.create({
@@ -24,7 +25,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
 
   getMovie = (itemId: string) => (
     this.popcornAPI.get(`movie/${itemId}`)
-        .then(response => this.formatMovie(response.data))
+        .then(response => this.formatMovie(response.data, { params: { day: this.defaultFilters.day } }))
   )
 
   getShows = (page: number = 1, filters = {}) => (
@@ -33,7 +34,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
   )
 
   getShow = (itemId: string) => (
-    this.popcornAPI.get(`show/${itemId}`)
+    this.popcornAPI.get(`show/${itemId}`, { params: { day: this.defaultFilters.day } })
         .then(response => this.formatShow(response.data, true))
   )
 

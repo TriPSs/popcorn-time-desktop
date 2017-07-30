@@ -3,8 +3,10 @@ import React from 'react'
 import { withRouter } from 'react-router'
 import classNames from 'classnames'
 
+import * as MetdataConstants from 'api/Metadata/MetadataConstants'
 import placeHolderImage from 'images/posterholder.png'
 import Bookmarked from 'components/Bookmarked'
+import Watched from 'components/Watched'
 import type { Props } from './CoverTypes'
 import classes from './Cover.scss'
 
@@ -21,8 +23,16 @@ export const Cover = ({ item, history }: Props) => (
         backgroundImage: `url(${item.images.poster.thumb})`,
       }}>
 
-      <div className={classes.cover__overlay}>
+      <div className={classNames(classes.cover__overlay, {
+        [classes['cover__overlay--watched']]: item.watched,
+      })}>
         <Bookmarked className={classes.overlay__bookmark} item={item} />
+
+        {item.type === MetdataConstants.TYPE_MOVIE && (
+          <Watched
+            className={classes.overlay__watched}
+            item={item} />
+        )}
 
         <div
           onClick={() => history.push(`/${item.type}/${item.id}`)}

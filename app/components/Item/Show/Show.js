@@ -19,6 +19,16 @@ export class Show extends React.Component {
     selectedEpisode: null,
   }
 
+  tomorrow: number
+
+  constructor(props) {
+    super(props)
+
+    const tomorrowDate = new Date()
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    this.tomorrow = tomorrowDate.getTime()
+  }
+
   playEpisode = (torrent) => {
     if (torrent !== null) {
       const { play } = this.props
@@ -96,7 +106,7 @@ export class Show extends React.Component {
     }
 
     if (selectedEpisode !== null) {
-      return season.episodes.find(episode => episode.number === selectedEpisode)
+      return season.episodes.find(episode => episode.number === selectedEpisode && episode.aired < this.tomorrow)
     }
 
     return this.getFirstUnwatchedEpisode()
@@ -111,7 +121,7 @@ export class Show extends React.Component {
 
     const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched)
     if (firstUnwatchedEpisode) {
-      if (firstUnwatchedEpisode.aired < new Date().getTime()) {
+      if (firstUnwatchedEpisode.aired < this.tomorrow) {
         return firstUnwatchedEpisode
       }
 
@@ -126,11 +136,16 @@ export class Show extends React.Component {
   }
 
   render() {
-    const { item, toggleWatched }     = this.props
+    const { item }                    = this.props
     const { fetchingEpisodeTorrents } = this.props
     const season                      = this.getSeason()
-    const selectedEpisode             = this.getEpisode()
-    const { torrents, searched }      = selectedEpisode
+
+    let selectedEpisode = this.getEpisode()
+    if (!selectedEpisode) {
+      selectedEpisode = this.getFirstUnwatchedEpisode()
+    }
+
+    const { torrents, searched } = selectedEpisode
 
     return (
       <div>
@@ -185,7 +200,6 @@ export class Show extends React.Component {
             selectedSeason        : season,
             selectedEpisode,
             selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-            toggleWatched,
           }} />
 
         </div>

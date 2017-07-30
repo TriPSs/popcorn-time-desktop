@@ -1,18 +1,19 @@
 // @flow
 import * as BookmarkedConstants from 'components/Bookmarked/BookmarkedConstants'
 import * as ItemConstants from 'components/Item/ItemConstants'
-import * as Constants from './HomeConstants'
+import { WatchedConstants } from 'components/Watched'
+import * as HomeConstants from './HomeConstants'
 
-export default (state = Constants.INITIAL_STATE, action) => {
+export default (state = HomeConstants.INITIAL_STATE, action) => {
   switch (action.type) {
 
-    case Constants.FETCH_ITEMS:
+    case HomeConstants.FETCH_ITEMS:
       return {
         ...state,
         isLoading: true,
       }
 
-    case Constants.FETCHED_ITEMS:
+    case HomeConstants.FETCHED_ITEMS:
       const { items, mode } = action.payload
 
       return {
@@ -33,9 +34,9 @@ export default (state = Constants.INITIAL_STATE, action) => {
         ...state,
         modes: {
           ...state.modes,
-          [Constants.MODE_BOOKMARKS]: {
-            ...state.modes[Constants.MODE_BOOKMARKS],
-            items: state.modes[Constants.MODE_BOOKMARKS].items.filter(item => item.id !== action.payload),
+          [HomeConstants.MODE_BOOKMARKS]: {
+            ...state.modes[HomeConstants.MODE_BOOKMARKS],
+            items: state.modes[HomeConstants.MODE_BOOKMARKS].items.filter(item => item.id !== action.payload),
           },
         },
       }
@@ -45,24 +46,24 @@ export default (state = Constants.INITIAL_STATE, action) => {
         ...state,
         modes: {
           ...state.modes,
-          [Constants.MODE_BOOKMARKS]: {
-            ...state.modes[Constants.MODE_BOOKMARKS],
+          [HomeConstants.MODE_BOOKMARKS]: {
+            ...state.modes[HomeConstants.MODE_BOOKMARKS],
             items: [
-              ...state.modes[Constants.MODE_BOOKMARKS].items,
+              ...state.modes[HomeConstants.MODE_BOOKMARKS].items,
               action.payload.item,
             ],
           },
         },
       }
 
-    case ItemConstants.MARKED_MOVIE:
+    case WatchedConstants.MARKED_MOVIE:
       return {
         ...state,
         modes: {
           ...state.modes,
-          [Constants.MODE_BOOKMARKS]: {
-            ...state.modes[Constants.MODE_BOOKMARKS],
-            items: state.modes[Constants.MODE_BOOKMARKS].items.map((item) => {
+          [HomeConstants.MODE_BOOKMARKS]: {
+            ...state.modes[HomeConstants.MODE_BOOKMARKS],
+            items: state.modes[HomeConstants.MODE_BOOKMARKS].items.map((item) => {
               if (item.id === action.payload.itemId) {
                 return {
                   ...item,

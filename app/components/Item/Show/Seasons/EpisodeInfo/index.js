@@ -1,1 +1,3 @@
-export default from './EpisodesInfo'
+import EpisodeInfo from './EpisodesInfo'
+
+export default EpisodeInfo

@@ -6,6 +6,5 @@ export type Props = {
   item: ContentType,
   torrentStatus: string,
   playerProvider: string,
-  stopPlayer: () => void,
   stats: StatsType,
 }

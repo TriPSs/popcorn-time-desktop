@@ -4,28 +4,19 @@ import classNames from 'classnames'
 import type { Props } from './WatchedTypes'
 import classes from './Watched.scss'
 
-export const Watched = ({ item, watchedItems, toggleWatched, className, icon }: Props) => {
+export default ({ item, watchedItems, toggleWatched, className }: Props) => {
   const isWatched = watchedItems.indexOf(item.id) > -1
 
   return (
     <div className={className}>
-      {icon && (
-        <i
-          onClick={() => toggleWatched(item)}
-          className={classNames('ion-eye',
-            isWatched ? classes['watched--yes'] : classes['watched--no'],
-          )} />
-      )}
-
-      {!icon && (
-        <button
-          onClick={() => toggleWatched(item)}
-          className={'pct-btn--relative pct-btn-trans pct-btn-outline pct-btn-round'}>
-          {isWatched ? 'Unmark Watched' : 'Mark Watched'}
-        </button>
-      )}
+      <i
+        onClick={() => toggleWatched({ ...item, watched: isWatched })}
+        className={classNames({
+          'ion-eye-disabled'       : isWatched,
+          'ion-eye'                : !isWatched,
+          [classes['watched--yes']]: isWatched,
+          [classes['watched--no']] : !isWatched,
+        })} />
     </div>
   )
 }
-
-export default Watched

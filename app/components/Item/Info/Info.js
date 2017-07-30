@@ -2,6 +2,9 @@ import React from 'react'
 import { Tooltip } from 'reactstrap'
 import classNames from 'classnames'
 
+import * as MetdataConstants from 'api/Metadata/MetadataConstants'
+import Bookmarked from 'components/Bookmarked'
+import Watched from 'components/Watched'
 import Rating from 'components/Rating'
 import type { Props, State } from './InfoTypes'
 import classes from './Info.scss'
@@ -24,11 +27,11 @@ export class Info extends React.Component {
   }
 
   render() {
-    const { item, play }         = this.props
+    const { item, play, mode }   = this.props
     const { trailerTooltipOpen } = this.state
 
     return (
-      <div className={classNames('col-sm-6', classes.info)}>
+      <div className={classNames('col-sm-6', classes.info, classes[`info--${mode}`])}>
         <h1 className={classNames('row-margin', classes.info__title)}>
           {item.title}
         </h1>
@@ -55,43 +58,63 @@ export class Info extends React.Component {
           {item.summary}
         </div>
 
-        <div className={classNames('row-margin row-center', classes.info__details)}>
-          {item.rating && (
-            <Rating
-              emptyStarColor={'rgba(255, 255, 255, 0.2)'}
-              starColor={'white'}
-              rating={item.rating}
-            />
-          )}
+        <div className={classes['info__details-container']}>
+          <div className={classes.info__details}>
+            <Bookmarked
+              className={classes.info__bookmarked}
+              item={item} />
 
-          <div>
-            {item.year}
+            {item.type === MetdataConstants.TYPE_MOVIE && (
+              <Watched
+                className={classes.info__bookmarked}
+                item={item} />
+            )}
           </div>
 
-          {item && item.certification && item.certification !== 'n/a' && (
-            <div className={classes.info__certification}>
-              {item.certification}
-            </div>
-          )}
-
-          {item.trailer && item.trailer !== 'n/a' && (
-            <div>
-              <i
-                id={'trailerTooltip'}
-                className={'ion-social-youtube-outline'}
-                onClick={() => play('youtube')}
+          <div className={classes.info__details}>
+            {item.rating && (
+              <Rating
+                emptyStarColor={'rgba(255, 255, 255, 0.2)'}
+                starColor={'white'}
+                rating={item.rating}
               />
-              <Tooltip
-                placement={'top'}
-                isOpen={trailerTooltipOpen}
-                target={'trailerTooltip'}
-                toggle={this.toggleTrailerTooltip}>
-                Trailer
-              </Tooltip>
-            </div>
-          )}
+            )}
 
-          <Devices />
+            <div>
+              {item.year}
+            </div>
+
+            {item.status && (
+              <div className={classes.info__status}>
+                {item.status}
+              </div>
+            )}
+
+            {item && item.certification && item.certification !== 'n/a' && (
+              <div className={classes.info__certification}>
+                {item.certification}
+              </div>
+            )}
+
+            {item.trailer && item.trailer !== 'n/a' && (
+              <div>
+                <i
+                  id={'trailerTooltip'}
+                  className={'ion-social-youtube-outline'}
+                  onClick={() => play('youtube')}
+                />
+                <Tooltip
+                  placement={'top'}
+                  isOpen={trailerTooltipOpen}
+                  target={'trailerTooltip'}
+                  toggle={this.toggleTrailerTooltip}>
+                  Trailer
+                </Tooltip>
+              </div>
+            )}
+
+            <Devices />
+          </div>
         </div>
       </div>
     )

@@ -2,19 +2,46 @@
   "name": "popcorn-time-desktop",
   "version": "0.1.0",
   "description": "An experimental Popcorn Time client",
+  "keywords": [
+    "client",
+    "electron",
+    "es6",
+    "popcorn",
+    "popcorn-time",
+    "react",
+    "redux",
+    "time"
+  ],
+  "homepage": "https://github.com/tripss/popcorn-time-desktop",
+  "bugs": {
+    "url": "https://github.com/tripss/popcorn-time-desktop/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Tycho Bokdam",
+    "email": "t.bokdam@seronaris.nl",
+    "url": "https://github.com/tripss"
+  },
+  "directories": {
+    "buildResources": "resources",
+    "output": "release"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tripss/popcorn-time-desktop.git"
+  },
   "scripts": {
     "bench-api": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest test/**/*.benchmark.js",
     "build": "cross-env NODE_ENV=production npm run build-main && npm run build-renderer",
+    "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./build/webpack.config.main.prod.js --colors",
+    "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./build/webpack.config.renderer.prod.js --colors",
     "build:dll": "node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./build/webpack.config.renderer.dll.js --colors",
     "build:dll:dev": "cross-env NODE_ENV=development npm run build:dll",
     "build:dll:prod": "cross-env NODE_ENV=production npm run build:dll",
-    "build-main": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./build/webpack.config.main.prod.js --colors",
-    "build-renderer": "cross-env NODE_ENV=production node --trace-warnings -r babel-register ./node_modules/webpack/bin/webpack --config ./build/webpack.config.renderer.prod.js --colors",
-    "start:dev": "cross-env DEBUG=app:*,api:* NODE_ENV=development START_HOT=1 npm run start-renderer-dev",
-    "start:prod": "cross-env DEBUG=app:*,api:* NODE_ENV=production START_HOT=1 npm run start-renderer-dev",
     "electron-rebuild": "electron-rebuild --version=1.7.0 --force --types prod,dev,optional && electron-rebuild --version=1.7.0 --force --types prod,dev,optional --module-dir app",
     "flow": "flow",
     "flow-typed": "flow-typed install",
+    "postinstall": "npm run build:dll:dev && node node_modules/fbjs-scripts/node/check-dev-engines.js package.json && node -r babel-register postinstall.js",
     "lint:check": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint --format=node_modules/eslint-formatter-pretty app *.js",
     "lint:js:fix": "eslint --fix --format=node_modules/eslint-formatter-pretty app *.js",
@@ -22,117 +49,67 @@
     "lint:summary": "eslint-nibble app test *.js",
     "package": "npm run postinstall && npm run build && build --publish never",
     "package:all": "npm run postinstall && npm run build && build --publish never --mac --win --linux",
-    "package:win": "cross-env NODE_ENV=production npm run postinstall && npm run build && build --publish never --win",
-    "package:win:debug": "cross-env DEBUG_PROD=true npm run package:win",
     "package:mac": "cross-env NODE_ENV=production npm run build:dll && npm run build && build --publish never --mac",
     "package:mac:debug": "cross-env DEBUG_PROD=true npm run package:mac",
+    "package:win": "cross-env NODE_ENV=production npm run postinstall && npm run build && build --publish never --win",
+    "package:win:debug": "cross-env DEBUG_PROD=true npm run package:win",
     "prestart": "npm run build",
-    "prettier": "prettier --single-quote --write \"./{app,test}/{actions,api,components,containers,reducers,utils}/**/*.js\" && prettier --single-quote --write \"./app/{actions,api,components,containers,reducers,utils}/**/*.jsx\"",
-    "postinstall": "npm run build:dll:dev && node node_modules/fbjs-scripts/node/check-dev-engines.js package.json && node -r babel-register postinstall.js",
+    "start": "cross-env NODE_ENV=production electron ./",
+    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev",
+    "start-renderer-dev": "cross-env NODE_ENV=development HOT=1 node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./build/webpack.config.renderer.dev.js",
+    "start:dev": "cross-env DEBUG=app:*,api:* NODE_ENV=development START_HOT=1 npm run start-renderer-dev",
+    "start:prod": "cross-env DEBUG=app:*,api:* NODE_ENV=production START_HOT=1 npm run start-renderer-dev",
     "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest ./test/components/*.spec.js",
     "test-all": "npm run lint && npm run lint-styles && npm run lint-summary && npm run build && npm run test-api && npm run test-e2e",
     "test-api": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 CONFIG_ENDPOINT_TEST=test.org jest ./test/api/butter.spec.js",
     "test-e2e": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest ./test/e2e.spec.js",
     "test-screenshot": "cross-env API_USE_MOCK_DATA=true BABEL_DISABLE_CACHE=1 npm run build && jest ./test/screenshot.e2e.js",
     "test-watch": "npm test -- --watch",
-    "start": "cross-env NODE_ENV=production electron ./",
-    "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev",
-    "start-renderer-dev": "cross-env NODE_ENV=development HOT=1 node --trace-warnings -r babel-register ./node_modules/webpack-dev-server/bin/webpack-dev-server --config ./build/webpack.config.renderer.dev.js"
+    "prettier": "prettier --single-quote --write \"./{app,test}/{actions,api,components,containers,reducers,utils}/**/*.js\" && prettier --single-quote --write \"./app/{actions,api,components,containers,reducers,utils}/**/*.jsx\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tripss/popcorn-time-desktop.git"
+  "dependencies": {
+    "animate.css": "^3.5.2",
+    "axios": "^0.16.2",
+    "bluebird": "^3.5.0",
+    "bootstrap": "4.0.0-alpha.4",
+    "debug": "^2.6.8",
+    "has-own-property": "^1.0.0",
+    "image-webpack-loader": "^3.3.1",
+    "isomorphic-fetch": "2.2.1",
+    "nedb": "^1.8.0",
+    "network-address": "1.1.2",
+    "opensubtitles-api": "4.0.0",
+    "plyr": "2.0.13",
+    "react": "15.6.1",
+    "react-addons-css-transition-group": "15.6.0",
+    "react-addons-test-utils": "15.6.0",
+    "react-addons-transition-group": "15.6.0",
+    "react-dom": "15.6.1",
+    "react-hot-loader": "3.0.0-beta.7",
+    "react-redux": "5.0.5",
+    "react-router": "4.1.1",
+    "react-router-dom": "^4.1.1",
+    "react-router-redux": "5.0.0-alpha.6",
+    "react-star-rating-component": "1.2.4",
+    "react-toggle-switch": "^2.1.4",
+    "react-transition-group": "^1.2.0",
+    "react-visibility-sensor": "3.10.0",
+    "reactstrap": "3.0.1",
+    "redux": "^3.7.1",
+    "redux-clazz": "^1.0.3",
+    "redux-logger": "3.0.6",
+    "redux-thunk": "2.2.0",
+    "rndm": "1.2.0",
+    "semver": "5.3.0",
+    "speedtest-net": "1.3.1",
+    "srt2vtt": "1.3.1",
+    "super-kat": "0.1.0",
+    "torrentapi-wrapper": "0.0.2",
+    "trakt.tv": "5.0.1",
+    "vlc-command": "1.1.1",
+    "webtorrent": "github:amilajack/webtorrent",
+    "yargs": "8.0.2"
   },
-  "author": {
-    "name": "Tycho Bokdam",
-    "email": "t.bokdam@seronaris.nl",
-    "url": "https://github.com/tripss"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tripss/popcorn-time-desktop/issues"
-  },
-  "keywords": [
-    "popcorn-time",
-    "popcorn",
-    "time",
-    "client",
-    "electron",
-    "react",
-    "redux",
-    "es6"
-  ],
-  "build": {
-    "appId": "com.github.popcorn-time-desktop",
-    "productName": "Popcorn Time",
-    "files": [
-      "dist/",
-      "node_modules/",
-      "app.html",
-      "main.prod.js",
-      "main.prod.js.map",
-      "package.json"
-    ],
-    "dmg": {
-      "format": "ULFO",
-      "icon": "./resources/icon.icns",
-      "window": {
-        "width": "500",
-        "height": "300"
-      },
-      "contents": [
-        {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 150,
-          "type": "file"
-        }
-      ]
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "./resources/icon.ico"
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
-    },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    }
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "jsx",
-      "json"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "app/node_modules"
-    ],
-    "transform": {
-      "^.+\\.jsx$": "babel-jest",
-      "^.+\\.js$": "babel-jest"
-    }
-  },
-  "directories": {
-    "buildResources": "resources",
-    "output": "release"
-  },
-  "homepage": "https://github.com/tripss/popcorn-time-desktop",
   "devDependencies": {
     "autoprefixer": "7.1.1",
     "babel-core": "6.25.0",
@@ -230,51 +207,74 @@
     "webpack-merge": "4.1.0",
     "why-did-you-update": "0.0.8"
   },
-  "dependencies": {
-    "animate.css": "^3.5.2",
-    "axios": "^0.16.2",
-    "bluebird": "^3.5.0",
-    "bootstrap": "4.0.0-alpha.4",
-    "debug": "^2.6.8",
-    "has-own-property": "^1.0.0",
-    "image-webpack-loader": "^3.3.1",
-    "isomorphic-fetch": "2.2.1",
-    "nedb": "^1.8.0",
-    "network-address": "1.1.2",
-    "opensubtitles-api": "4.0.0",
-    "plyr": "2.0.13",
-    "react": "15.6.1",
-    "react-addons-css-transition-group": "15.6.0",
-    "react-addons-test-utils": "15.6.0",
-    "react-addons-transition-group": "15.6.0",
-    "react-dom": "15.6.1",
-    "react-hot-loader": "3.0.0-beta.7",
-    "react-redux": "5.0.5",
-    "react-router": "4.1.1",
-    "react-router-dom": "^4.1.1",
-    "react-router-redux": "5.0.0-alpha.6",
-    "react-star-rating-component": "1.2.4",
-    "react-toggle-switch": "^2.1.4",
-    "react-transition-group": "^1.2.0",
-    "react-visibility-sensor": "3.10.0",
-    "reactstrap": "3.0.1",
-    "redux": "^3.7.1",
-    "redux-clazz": "^1.0.3",
-    "redux-logger": "3.0.6",
-    "redux-thunk": "2.2.0",
-    "rndm": "1.2.0",
-    "semver": "5.3.0",
-    "speedtest-net": "1.3.1",
-    "srt2vtt": "1.3.1",
-    "super-kat": "0.1.0",
-    "torrentapi-wrapper": "0.0.2",
-    "trakt.tv": "5.0.1",
-    "vlc-command": "1.1.1",
-    "webtorrent": "github:amilajack/webtorrent",
-    "yargs": "8.0.2"
+  "build": {
+    "appId": "com.github.popcorn-time-desktop",
+    "productName": "Popcorn Time",
+    "files": [
+      "dist/",
+      "node_modules/",
+      "app.html",
+      "main.prod.js",
+      "main.prod.js.map",
+      "package.json"
+    ],
+    "dmg": {
+      "format": "ULFO",
+      "icon": "./resources/icon.icns",
+      "window": {
+        "width": "500",
+        "height": "300"
+      },
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./resources/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    }
   },
   "devEngines": {
     "node": ">=8.x",
     "npm": ">=4.x"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "app/node_modules"
+    ],
+    "transform": {
+      "^.+\\.jsx$": "babel-jest",
+      "^.+\\.js$": "babel-jest"
+    }
   }
 }

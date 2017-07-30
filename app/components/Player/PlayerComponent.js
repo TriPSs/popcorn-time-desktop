@@ -3,7 +3,6 @@ import React from 'react'
 import classNames from 'classnames'
 
 import MediaPlayer from 'api/Player'
-import * as Constants from 'api/Player/PlayerConstants'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
@@ -19,15 +18,6 @@ export class Player extends React.Component {
     MediaPlayer.destroy()
   }
 
-  shouldShowPlayer = () => {
-    const { playerStatus, playerAction } = this.props
-
-    return (playerStatus === PlayerConstants.STATUS_PLAYING
-            || playerStatus === PlayerConstants.STATUS_PAUSED
-            || playerStatus === PlayerConstants.STATUS_BUFFERING)
-           && playerAction !== Constants.ACTION_STOP
-  }
-
   isHidden = () => {
     const { torrentStatus } = this.props
 
@@ -36,6 +26,26 @@ export class Player extends React.Component {
     }
 
     return torrentStatus === TorrentConstants.STATUS_NONE
+  }
+
+
+  shouldShowPlayer = () => {
+    const { playerStatus, playerAction } = this.props
+
+    return (playerStatus === PlayerConstants.STATUS_PLAYING
+            || playerStatus === PlayerConstants.STATUS_PAUSED
+            || playerStatus === PlayerConstants.STATUS_BUFFERING)
+           && playerAction !== PlayerConstants.ACTION_STOP
+  }
+
+  shouldShowControls = () => {
+    const { playerProvider, playerStatus } = this.props
+
+    if (playerProvider !== PlayerConstants.PROVIDER_PLYR) {
+      return false
+    }
+
+    return playerStatus === PlayerConstants.STATUS_PLAYING || playerStatus === PlayerConstants.STATUS_PAUSED
   }
 
   renderVideo = () => {
@@ -71,19 +81,35 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
-          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PROVIDER_CHROMECAST,
-          hidden    : this.isHidden(),
+          'col-sm-6': !this.shouldShowPlayer() || playerProvider === PlayerConstants.PROVIDER_CHROMECAST,
+          [classes['player--hidden']]: this.isHidden(),
         }, classes.player)}>
+
         {torrentStatus !== TorrentConstants.STATUS_NONE && (
           <Stats {...{
             playerProvider,
             playerStatus,
             torrentStatus,
-            stopPlayer: stop,
           }} />
         )}
 
-        {playerProvider === Constants.PROVIDER_PLYR && this.renderVideo()}
+        {!this.shouldShowControls() && (
+          <div className={classes.player__controls}>
+            <button
+              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+              onClick={stop}>
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {this.shouldShowControls() && (
+          <div className={classes.player__controls}>
+            CONTROLS HERE
+          </div>
+        )}
+
+        {playerProvider === PlayerConstants.PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

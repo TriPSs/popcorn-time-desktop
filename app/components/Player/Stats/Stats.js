@@ -2,7 +2,6 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import Events from 'api/Events'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import type { Props, State } from './StatsTypes'
@@ -38,18 +37,8 @@ export class Stats extends React.Component {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutes`
   }
 
-  shouldShowControls = () => {
-    const { playerProvider, playerStatus } = this.props
-
-    if (playerProvider !== PlayerConstants.PLAYER_PROVIDER_PLYR) {
-      return false
-    }
-
-    return playerStatus === PlayerConstants.STATUS_PLAYING || playerStatus === PlayerConstants.STATUS_PAUSED
-  }
-
   render() {
-    const { item, torrentStatus, stopPlayer, stats } = this.props
+    const { item, torrentStatus, stats } = this.props
 
     const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = stats
 
@@ -78,22 +67,6 @@ export class Stats extends React.Component {
           </span>
         </div>
         <div style={style}>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
-
-        {!this.shouldShowControls() && (
-          <div>
-            <button
-              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-              onClick={stopPlayer}>
-              Cancel
-            </button>
-          </div>
-        )}
-
-        {this.shouldShowControls() && (
-          <div>
-            CONTROLS HERE
-          </div>
-        )}
 
       </div>
     )

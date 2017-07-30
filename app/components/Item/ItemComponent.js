@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
-import Events from 'api/Events'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
@@ -43,6 +42,8 @@ export default class Item extends React.Component {
     const { isLoading: wasLoading, match: { params: { itemId: oldItemId } } } = this.props
     const { isLoading, item, match: { params: { itemId: newItemId } } }       = nextProps
 
+    const { torrent } = this.state
+
     if (newItemId !== oldItemId) {
       this.setState({
         torrent: null,
@@ -52,7 +53,7 @@ export default class Item extends React.Component {
       this.getAllData()
       window.scrollTo(0, 0)
 
-    } else if (!isLoading && wasLoading && item.type === MetadataConstants.TYPE_MOVIE) {
+    } else if (((!isLoading && wasLoading) || !torrent) && item && item.type === MetadataConstants.TYPE_MOVIE) {
       this.getBestMovieTorrent(nextProps)
     }
   }
@@ -135,12 +136,11 @@ export default class Item extends React.Component {
 
   render() {
     const { match: { params: { itemId, mode } } } = this.props
-    const { item, isLoading, toggleWatched }      = this.props
-    const { torrentStatus }                       = this.props
+    const { item, isLoading, torrentStatus }      = this.props
     const { torrent }                             = this.state
 
     if (isLoading || !item || item.id !== itemId) {
-      return <Loader />
+      return <Loader {...{ isLoading }} />
     }
 
     return (
@@ -188,7 +188,6 @@ export default class Item extends React.Component {
           {item.type === 'show' && (
             <Show
               {...{
-                toggleWatched,
                 torrentStatus,
                 play: this.play,
               }} />

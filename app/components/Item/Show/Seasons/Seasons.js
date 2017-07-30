@@ -1,6 +1,3 @@
-/**
- * Created by tycho on 10/07/2017.
- */
 import React from 'react'
 import classNames from 'classnames'
 
@@ -9,7 +6,7 @@ import Episodes from './Episodes'
 import EpisodeInfo from './EpisodeInfo'
 import classes from './Seasons.scss'
 
-export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selectedEpisode, toggleWatched }: Props) => (
+export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selectedEpisode }: Props) => (
   <div className={'col-sm-12'}>
     <div className={classNames('col-sm-2', classes.seasons)}>
       <div className={classNames('list', classes.seasons__list)}>
@@ -43,8 +40,10 @@ export const Seasons = ({ seasons, selectSeasonAndEpisode, selectedSeason, selec
     <div className={classNames('col-sm-6', classes.seasons)}>
 
       <EpisodeInfo
-        toggleWatched={toggleWatched}
-        episode={selectedEpisode} />
+        {...{
+          selectSeasonAndEpisode,
+          episode: selectedEpisode,
+        }} />
 
     </div>
   </div>

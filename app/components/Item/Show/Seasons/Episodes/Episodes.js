@@ -1,6 +1,3 @@
-/**
- * Created by tycho on 10/07/2017.
- */
 import React from 'react'
 import classNames from 'classnames'
 import { Tooltip } from 'reactstrap'
@@ -13,6 +10,16 @@ export class Episodes extends React.Component {
 
   state: State = {
     tooltips: [],
+  }
+
+  tomorrow: number
+
+  constructor(props) {
+    super(props)
+
+    const tomorrowDate = new Date()
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    this.tomorrow = tomorrowDate.getTime()
   }
 
   toggleMagnetTooltip = (episode) => {
@@ -32,22 +39,18 @@ export class Episodes extends React.Component {
     const { selectSeasonAndEpisode }          = this.props
     const { tooltips }                        = this.state
 
-    const tomorrowDate = new Date()
-    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
-    const tomorrow = tomorrowDate.getTime()
-
     return (
       <div className={'list'}>
         {selectedSeason.episodes.map(episode => (
           <a
             className={classNames('list-item', {
               'list-item--active'  : episode.number === selectedEpisode.number,
-              'list-item--disabled': episode.aired > tomorrow && !this.hasTorrents(episode),
+              'list-item--disabled': episode.aired > this.tomorrow && !this.hasTorrents(episode),
               'list-item--watched' : episode.watched && episode.number !== selectedEpisode.number,
             })}
             key={episode.number}
             onClick={() => {
-              if (episode.aired < tomorrow || this.hasTorrents(episode)) {
+              if (episode.aired < this.tomorrow || this.hasTorrents(episode)) {
                 selectSeasonAndEpisode(selectedSeason.number, episode.number)
               }
             }}
@@ -71,7 +74,7 @@ export class Episodes extends React.Component {
                   }} />
               ))}
 
-              {episode.aired < tomorrow || this.hasTorrents(episode) && (
+              {episode.aired < this.tomorrow || this.hasTorrents(episode) && (
                 <Tooltip
                   placement={'top'}
                   isOpen={tooltips[episode.number]}

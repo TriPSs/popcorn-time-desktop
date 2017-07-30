@@ -3,6 +3,8 @@
 .stats {
   z-index: 10;
   color: white;
+  display: flex;
+  flex-direction: column;
 
   &__text {
 	height: 20px;

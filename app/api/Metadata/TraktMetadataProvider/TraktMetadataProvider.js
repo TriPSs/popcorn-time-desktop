@@ -72,4 +72,5 @@ export default class TraktMetadataAdapter implements MetadataProviderInterface {
     watchedEpisode.episode === episode.number
     && watchedEpisode.season === episode.season,
   )
+
 }
