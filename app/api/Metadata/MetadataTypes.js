@@ -39,6 +39,9 @@ export type SeasonType = {
   episodes: Array<EpisodeType>,
   watched: number,
   type: string,
+  images: {
+    poster: ImageType,
+  },
 }
 
 export type EpisodeType = {

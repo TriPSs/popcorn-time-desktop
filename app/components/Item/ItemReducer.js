@@ -11,6 +11,7 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         isLoading: true,
       }
 
+    case ItemConstants.UPDATE_ITEM:
     case ItemConstants.FETCHED_ITEM:
       return {
         ...state,

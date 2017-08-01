@@ -11,6 +11,7 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
     <div
       onClick={() => showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null}
       className={classes.cover__image}>
+
       <img
         className={classNames('animated fadeIn')}
         alt={'presentation'}
@@ -19,10 +20,10 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
 
       <div className={classNames(
         classes['cover__image-overlay'],
-        { [classes['cover__image-overlay--with-hover']]: showPlayInfo && mode === MetadataConstants.TYPE_MOVIE },
+        { [classes['cover__image-overlay--with-hover']]: showPlayInfo },
       )} />
 
-      {showPlayInfo && mode === MetadataConstants.TYPE_MOVIE && (
+      {showPlayInfo && (
         <i className={'ion-ios-play'} />
       )}
 

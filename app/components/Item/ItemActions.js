@@ -3,7 +3,8 @@ import Butter from 'api/Butter'
 import { getBestTorrent } from 'api/Torrents/TorrentsHelpers'
 
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
-import * as Constants from './ItemConstants'
+import * as ItemConstants from './ItemConstants'
+import * as ItemSelectors from './ItemSelectors'
 import * as HomeSelectors from '../Home/HomeSelectors'
 
 export function hasItem(itemId, mode, state) {
@@ -13,26 +14,37 @@ export function hasItem(itemId, mode, state) {
 
 export function fetchItem() {
   return {
-    type: Constants.FETCH_ITEM,
+    type: ItemConstants.FETCH_ITEM,
   }
 }
 
 export function fetchedItem(item) {
   return {
-    type   : Constants.FETCHED_ITEM,
+    type   : ItemConstants.FETCHED_ITEM,
     payload: item,
+  }
+}
+
+export const updateItem = item => (dispatch, getState) => {
+  const selectedItem = ItemSelectors.getItem(getState())
+
+  if (selectedItem && selectedItem.id === item.id) {
+    dispatch({
+      type   : ItemConstants.UPDATE_ITEM,
+      payload: item,
+    })
   }
 }
 
 export function fetchEpisodeTorrents() {
   return {
-    type: Constants.FETCH_EPISODE_TORRENTS,
+    type: ItemConstants.FETCH_EPISODE_TORRENTS,
   }
 }
 
 export function fetchedEpisodeTorrents(item) {
   return {
-    type   : Constants.FETCHED_EPISODE_TORRENTS,
+    type   : ItemConstants.FETCHED_EPISODE_TORRENTS,
     payload: item,
   }
 }
@@ -53,6 +65,8 @@ export function getItem(itemId, mode) {
     } else if (mode === MetadataConstants.TYPE_SHOW) {
       return Butter.getShow(itemId).then(show => dispatch(fetchedItem(show)))
     }
+
+    return null
   }
 }
 

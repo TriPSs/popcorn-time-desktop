@@ -1,5 +1,5 @@
 // @flow
-import MetadataAdapter from './Metadata/MetadataAdapter'
+import MetadataAdapter from './Metadata'
 import PctTorrentProvider from './Torrents/PctTorrentProvider'
 import TorrentAdapter from './Torrents'
 
@@ -13,8 +13,8 @@ export class Butter {
 
   constructor() {
     this.pctAdapter      = new PctTorrentProvider()
-    this.metadataAdapter = new MetadataAdapter()
     this.torrentAdapter  = new TorrentAdapter()
+    this.metadataAdapter = MetadataAdapter
   }
 
   getMovies = (page: number = 1, filters = {}) => this.pctAdapter.getMovies(page, filters)
@@ -24,8 +24,7 @@ export class Butter {
   getShows = (page: number = 1, filters = {}) => this.pctAdapter.getShows(page, filters)
 
   getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
-                                    .then(pctShow => this.metadataAdapter
-                                                         .getSeasons(pctShow.id, pctShow.seasons)
+                                    .then(pctShow => this.metadataAdapter.getSeasons(itemId, pctShow.seasons)
                                                          .then(seasons => ({
                                                            ...pctShow,
                                                            seasons,

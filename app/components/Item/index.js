@@ -1,14 +1,10 @@
-import ItemReducer from './ItemReducer'
 import ItemContainer from './ItemContainer'
-import ItemComponent from './ItemComponent'
-import * as ItemConstants from './ItemConstants'
 import * as ItemSelectors from './ItemSelectors'
+import * as ItemActions from './ItemActions'
 
 export {
-  ItemReducer,
+  ItemActions,
   ItemContainer,
-  ItemComponent,
-  ItemConstants,
   ItemSelectors,
 }
 

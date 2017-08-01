@@ -1,29 +1,31 @@
+import ReduxClazz from 'redux-clazz'
 import Database from 'api/Database'
 import { MetadataProviderInterface } from './MetadataProviderInterface'
 import TraktMetadataProvider from './TraktMetadataProvider'
+import TmdbMetadataProvider from './TmdbMetadataProvider'
 
-export class MetadataAdapter implements MetadataProviderInterface {
+export class MetadataAdapter extends ReduxClazz implements MetadataProviderInterface {
 
-  providers = [
-    new TraktMetadataProvider(),
-  ]
+  trakt: TraktMetadataProvider
 
-  getSeasons = (itemId: string, pctSeasons) => new Promise(resolve =>
-    Database.watched.getEpisodesWatchedOfShow(itemId).then(({ docs }) => Promise.all(
-      this.providers.map(provider => provider.getSeasons(itemId, pctSeasons, docs)),
-      ).then((response) => {
-        const seasons = []
+  tmdb: TmdbMetadataProvider
 
-        response.forEach(providerSeasons => providerSeasons.forEach((season) => {
-          seasons.push({
-            ...season,
-          })
-        }))
+  constructor(...props) {
+    super(...props)
 
-        resolve(seasons)
-      }),
-    ),
-  )
+    this.trakt = new TraktMetadataProvider()
+    this.tmdb  = new TmdbMetadataProvider()
+  }
+
+  getSeasons = (itemId: string, pctSeasons) => new Promise(resolve => {
+    Database.watched.getEpisodesWatchedOfShow(itemId).then(({ docs }) => {
+      this.trakt.getIds(itemId).then(({ ids: { tmdb } }) => {
+        this.tmdb.getSeasons(itemId, tmdb, pctSeasons, docs).then(seasons => {
+          resolve(seasons)
+        })
+      })
+    })
+  })
 
 }
 

@@ -39,10 +39,9 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
 
         if (!retry) {
           return resolve(this.searchEpisode(item, season, episode, true))
+        }
 
-        } 
         return resolve([])
-        
       })
     })
 
@@ -60,10 +59,9 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
 
            if (!retry) {
              return resolve(this.search(query, category, true))
+           }
 
-           } 
            return resolve([])
-           
          })
     })
 

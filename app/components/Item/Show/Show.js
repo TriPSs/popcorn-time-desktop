@@ -9,6 +9,7 @@ import type { State, Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
 import classes from './Show.scss'
 import Seasons from './Seasons'
+import Episodes from './Episodes'
 
 export class Show extends React.Component {
 
@@ -145,11 +146,34 @@ export class Show extends React.Component {
       selectedEpisode = this.getFirstUnwatchedEpisode()
     }
 
-    const { torrents, searched } = selectedEpisode
+    console.log('item', selectedEpisode, item)
+
+    //const { torrents, searched } = selectedEpisode
 
     return (
-      <div>
-        <div
+      <div className={itemClasses['item__row--show']}>
+        <Seasons {...{
+          seasons               : item.seasons,
+          selectedSeason        : season,
+          selectedEpisode,
+          selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+        }} />
+
+        <Episodes {...{
+          selectedEpisode,
+          selectedSeason        : season,
+          selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+        }} />
+      </div>
+    )
+  }
+}
+
+export default Show
+
+
+/*
+{/*<div
           style={{ opacity: this.shouldDisableActions() ? 0 : 1 }}
           className={classNames(itemClasses['item__row--show'], classes.show__actions)}>
 
@@ -192,20 +216,5 @@ export class Show extends React.Component {
             )}
           </button>
 
-        </div>
+        </div>*/
 
-        <div className={itemClasses['item__row--show']}>
-          <Seasons {...{
-            seasons               : item.seasons,
-            selectedSeason        : season,
-            selectedEpisode,
-            selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-          }} />
-
-        </div>
-      </div>
-    )
-  }
-}
-
-export default Show
