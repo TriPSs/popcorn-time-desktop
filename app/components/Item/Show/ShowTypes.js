@@ -7,9 +7,6 @@ export type Props = {
   play: (playerProvider: string, torrent: TorrentType) => void,
   playerStatus: string,
   torrentStatus: string,
-}
-
-export type State = {
   selectedSeason: number,
   selectedEpisode: number,
 }

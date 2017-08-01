@@ -1,1 +1,3 @@
-export default from './Seasons'
+import Seasons from './Seasons'
+
+export default Seasons

@@ -2,9 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 import placeHolderImage from 'images/posterholder.png'
-
 import type { Props } from './EpisodesTypes'
-import classes from './Episodes.scss'
 
 export default class extends React.Component {
 
@@ -35,7 +33,9 @@ export default class extends React.Component {
               : 'list__item--available',
             )}
             key={episode.number}
-            onClick={() => selectSeasonAndEpisode(selectedSeason.number, episode.number)}
+            onClick={() => episode.aired < this.tomorrow
+              ? selectSeasonAndEpisode(selectedSeason.number, episode.number)
+              : null}
           >
             <div className={'list__item-image-container--hor'}>
               <img
@@ -59,47 +59,4 @@ export default class extends React.Component {
     )
   }
 }
-
-/*export const Seasons = ({ episodes, selectSeasonAndEpisode, selectedSeason, selectedEpisode }: Props) => (
-  <div className={'col-sm-12'}>
-    <div className={classNames('col-sm-2', classes.episodes)}>
-      <div className={classNames('list', classes.episodes__list)}>
-        {episodes.map(season => (
-          <a
-            className={classNames('list-item', {
-              'list-item--active': season.number === selectedSeason.number,
-            })}
-            key={season.number}
-            onClick={() => selectSeasonAndEpisode(season.number)}
-          >
-            <div className={'list-item__text'}>
-              {season.title}
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-
-    <div className={classNames('col-sm-4', classes.episodes)}>
-
-      <Episodes
-        {...{
-          selectedSeason,
-          selectedEpisode,
-          selectSeasonAndEpisode,
-        }} />
-
-    </div>
-
-    <div className={classNames('col-sm-6', classes.episodes)}>
-
-      <EpisodeInfo
-        {...{
-          selectSeasonAndEpisode,
-          episode: selectedEpisode,
-        }} />
-
-    </div>
-  </div>
-)*/
 

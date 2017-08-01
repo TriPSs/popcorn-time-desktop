@@ -1,24 +1,15 @@
 import React from 'react'
-import classNames from 'classnames'
 
 import type { SeasonType, EpisodeType } from 'api/Metadata/MetadataTypes'
-import * as PlayerConstants from 'api/Player/PlayerConstants'
-import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
-import type { State, Props } from './ShowTypes'
+import type { Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
-import classes from './Show.scss'
 import Seasons from './Seasons'
 import Episodes from './Episodes'
 
 export class Show extends React.Component {
 
   props: Props
-
-  state: State = {
-    selectedSeason : null,
-    selectedEpisode: null,
-  }
 
   tomorrow: number
 
@@ -30,33 +21,15 @@ export class Show extends React.Component {
     this.tomorrow = tomorrowDate.getTime()
   }
 
-  playEpisode = (torrent) => {
-    if (torrent !== null) {
-      const { play } = this.props
+  componentWillReceiveProps(nextProps) {
+    const { selectedSeason: newSelectedSeason, selectedEpisode: newSelectedEpisode } = nextProps
+    const { selectedSeason: wasSelectedSeason, selectedEpisode: wasSelectedEpisode } = this.props
 
-      play('default', torrent)
+    if (newSelectedSeason !== wasSelectedSeason || newSelectedEpisode !== wasSelectedEpisode) {
+      const { setBestTorrent } = this.props
 
-    } else {
-      const { item, searchEpisodeTorrents } = this.props
-      const season                          = this.getSeason()
-      const episode                         = this.getEpisode()
-
-      if (!episode.searched) {
-        searchEpisodeTorrents(item, season.number, episode.number)
-      }
+      setBestTorrent(this.getEpisode().torrents)
     }
-  }
-
-  shouldDisableActions = () => {
-    const { torrentStatus, playerStatus } = this.props
-
-    return torrentStatus === TorrentConstants.STATUS_BUFFERING
-           || torrentStatus === TorrentConstants.STATUS_DOWNLOADING
-           || torrentStatus === TorrentConstants.STATUS_CONNECTING
-           || playerStatus === PlayerConstants.STATUS_PAUSED
-           || playerStatus === PlayerConstants.STATUS_CONNECTING
-           || playerStatus === PlayerConstants.STATUS_PLAYING
-           || playerStatus === PlayerConstants.STATUS_BUFFERING
   }
 
   selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
@@ -72,13 +45,11 @@ export class Show extends React.Component {
       }
     }
 
-    this.setState({
-      selectedSeason : selectSeason,
-      selectedEpisode: episodeToSelect,
-    })
+    const { selectSeasonAndEpisode } = this.props
+    selectSeasonAndEpisode(selectSeason, episodeToSelect)
   }
 
-  getSeason = (selectedSeason = this.state.selectedSeason): SeasonType => {
+  getSeason = (selectedSeason = this.props.selectedSeason): SeasonType => {
     const { item } = this.props
 
     if (!item.seasons || !item.seasons.length) {
@@ -99,7 +70,7 @@ export class Show extends React.Component {
     return firstUnwatchedSeason
   }
 
-  getEpisode = (selectedEpisode = this.state.selectedEpisode): EpisodeType => {
+  getEpisode = (selectedEpisode = this.props.selectedEpisode): EpisodeType => {
     const season = this.getSeason()
 
     if (!season || !season.episodes) {
@@ -137,18 +108,13 @@ export class Show extends React.Component {
   }
 
   render() {
-    const { item }                    = this.props
-    const { fetchingEpisodeTorrents } = this.props
-    const season                      = this.getSeason()
+    const { item } = this.props
+    const season   = this.getSeason()
 
     let selectedEpisode = this.getEpisode()
     if (!selectedEpisode) {
       selectedEpisode = this.getFirstUnwatchedEpisode()
     }
-
-    console.log('item', selectedEpisode, item)
-
-    //const { torrents, searched } = selectedEpisode
 
     return (
       <div className={itemClasses['item__row--show']}>
@@ -170,51 +136,4 @@ export class Show extends React.Component {
 }
 
 export default Show
-
-
-/*
-{/*<div
-          style={{ opacity: this.shouldDisableActions() ? 0 : 1 }}
-          className={classNames(itemClasses['item__row--show'], classes.show__actions)}>
-
-          {torrents && Object.keys(torrents).map(quality => (
-            <button
-              key={quality}
-              onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
-                ? this.playEpisode(torrents[quality])
-                : null}
-              className={classNames(
-                'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-                { 'pct-btn-available': torrents[quality] !== null },
-                { 'pct-btn-no-hover': torrents[quality] === null && searched },
-              )}>
-
-              <div>Play in {quality}</div>
-
-            </button>
-          ))}
-
-          <button
-            onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
-              ? this.playEpisode(null)
-              : null}
-            className={classNames(
-              'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-              { 'pct-btn-no-hover': searched || fetchingEpisodeTorrents },
-            )}>
-
-            {!fetchingEpisodeTorrents && !searched && (
-              <div>Search</div>
-            )}
-
-            {fetchingEpisodeTorrents && (
-              <div>Searching...</div>
-            )}
-
-            {!fetchingEpisodeTorrents && searched && (
-              <div>Searched</div>
-            )}
-          </button>
-
-        </div>*/
 

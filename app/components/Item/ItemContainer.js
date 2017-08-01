@@ -16,10 +16,13 @@ export const mapDispatchToProps = dispatch => ({
 })
 
 export const mapStateToProps = state => ({
-  item         : Selectors.getItem(state),
-  isLoading    : Selectors.getIsLoading(state),
-  playerStatus : PlayerSelectors.getStatus(state),
-  torrentStatus: TorrentSelectors.getStatus(state),
+  item           : Selectors.getItem(state),
+  torrent        : Selectors.getTorrent(state),
+  isLoading      : Selectors.getIsLoading(state),
+  selectedSeason : Selectors.getSelectedSeason(state),
+  selectedEpisode: Selectors.getSelectedEpisode(state),
+  playerStatus   : PlayerSelectors.getStatus(state),
+  torrentStatus  : TorrentSelectors.getStatus(state),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Item)

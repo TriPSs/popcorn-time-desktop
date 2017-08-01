@@ -122,3 +122,19 @@ export function searchEpisodeTorrents(item, inSeason, forEpisode) {
   }
 }
 
+export function setTorrent(torrent) {
+  return {
+    type   : ItemConstants.SET_TORRENT,
+    payload: torrent,
+  }
+}
+
+export function selectSeasonAndEpisode(season, episode) {
+  return {
+    type   : ItemConstants.SELECT_SEASON_EPISODE,
+    payload: {
+      selectedSeason : season,
+      selectedEpisode: episode,
+    },
+  }
+}

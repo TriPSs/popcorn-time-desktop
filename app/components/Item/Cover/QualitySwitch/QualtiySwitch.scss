@@ -31,6 +31,26 @@
   }
 }
 
+.show {
+  display: flex;
+
+  .quality {
+	width: 40px;
+	text-align: center;
+	cursor: pointer;
+
+	&--disabled {
+	  cursor: default;
+	  opacity: 0.4;
+	}
+
+	&--active {
+	  font-weight: bold;
+	  font-size: 16px;
+	}
+  }
+}
+
 :global {
   .switch {
 	width: 32px;
@@ -63,5 +83,5 @@
 	  transition: left .2s ease-in-out;
 	}
   }
-
 }
+

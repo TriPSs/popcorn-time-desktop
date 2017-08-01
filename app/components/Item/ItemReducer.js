@@ -11,7 +11,6 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         isLoading: true,
       }
 
-    case ItemConstants.UPDATE_ITEM:
     case ItemConstants.FETCHED_ITEM:
       return {
         ...state,
@@ -30,6 +29,18 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         ...state,
         fetchingEpisodeTorrents: false,
         item                   : action.payload,
+      }
+
+    case ItemConstants.SET_TORRENT:
+      return {
+        ...state,
+        torrent: action.payload,
+      }
+
+    case ItemConstants.SELECT_SEASON_EPISODE:
+      return {
+        ...state,
+        ...action.payload,
       }
 
     case WatchedConstants.MARKED_EPISODE:

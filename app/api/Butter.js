@@ -14,7 +14,7 @@ export class Butter {
   constructor() {
     this.pctAdapter      = new PctTorrentProvider()
     this.torrentAdapter  = new TorrentAdapter()
-    this.metadataAdapter = MetadataAdapter
+    this.metadataAdapter = new MetadataAdapter()
   }
 
   getMovies = (page: number = 1, filters = {}) => this.pctAdapter.getMovies(page, filters)

@@ -1,9 +1,8 @@
-/**
- * Created by tycho on 07/07/2017.
- */
 import React from 'react'
+import classNames from 'classnames'
 import { Tooltip } from 'reactstrap'
 
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import Switch from 'react-toggle-switch'
 import type { Props } from './QualtiySwitchTypes'
 import classes from './QualtiySwitch.scss'
@@ -21,9 +20,15 @@ export class QualitySwitch extends React.Component {
   }
 
   onQualityChange = () => {
-    const { torrents, torrent, setTorrent } = this.props
+    const { torrent } = this.props
 
-    setTorrent(torrents[torrent.quality === '1080p' ? '720p' : '1080p'])
+    this.selectTorrent(torrent.quality === '1080p' ? '720p' : '1080p')
+  }
+
+  selectTorrent = (quality) => {
+    const { torrents, setTorrent } = this.props
+
+    setTorrent(torrents[quality])
   }
 
   toggleMagnetTooltip = () => {
@@ -35,24 +40,45 @@ export class QualitySwitch extends React.Component {
   }
 
   render() {
-    const { magnetTooltipOpen }     = this.state
-    const { torrent, showPlayInfo } = this.props
+    const { magnetTooltipOpen }  = this.state
+    const { showPlayInfo, mode } = this.props
+    const { torrents, torrent }  = this.props
 
     return (
       <div className={classes.container} style={{ opacity: showPlayInfo ? 1 : 0 }}>
-        <div className={classes.quality}>
-          720
-        </div>
+        {mode === MetadataConstants.TYPE_MOVIE && (
+          <div className={classes.movie}>
+            <div className={classes.quality}>
+              720
+            </div>
 
-        <Switch
-          {...{
-            on     : !torrent || torrent.quality === '1080p',
-            onClick: this.onQualityChange,
-          }} />
+            <Switch
+              {...{
+                on     : !torrent || torrent.quality === '1080p',
+                onClick: this.onQualityChange,
+              }} />
 
-        <div className={classes.quality}>
-          1080
-        </div>
+            <div className={classes.quality}>
+              1080
+            </div>
+          </div>
+        )}
+
+        {mode === MetadataConstants.TYPE_SHOW && torrents && (
+          <div className={classes.show}>
+            {Object.keys(torrents).map(quality => (
+              <div
+                key={quality}
+                onClick={() => !torrents[quality] ? null : this.selectTorrent(quality)}
+                className={classNames(classes.quality,
+                  { [classes['quality--disabled']]: !torrents[quality] },
+                  { [classes['quality--active']]: torrent && torrent.quality === quality },
+                )}>
+                {quality}
+              </div>
+            ))}
+          </div>
+        )}
 
         <div
           className={classes.health}

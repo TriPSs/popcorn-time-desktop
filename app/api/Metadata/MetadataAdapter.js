@@ -1,18 +1,15 @@
-import ReduxClazz from 'redux-clazz'
 import Database from 'api/Database'
 import { MetadataProviderInterface } from './MetadataProviderInterface'
 import TraktMetadataProvider from './TraktMetadataProvider'
 import TmdbMetadataProvider from './TmdbMetadataProvider'
 
-export class MetadataAdapter extends ReduxClazz implements MetadataProviderInterface {
+export class MetadataAdapter implements MetadataProviderInterface {
 
   trakt: TraktMetadataProvider
 
   tmdb: TmdbMetadataProvider
 
-  constructor(...props) {
-    super(...props)
-
+  constructor() {
     this.trakt = new TraktMetadataProvider()
     this.tmdb  = new TmdbMetadataProvider()
   }
