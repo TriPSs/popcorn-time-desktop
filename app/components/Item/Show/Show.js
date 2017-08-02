@@ -6,6 +6,7 @@ import type { Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
 import Seasons from './Seasons'
 import Episodes from './Episodes'
+import classes from './Show.scss'
 
 export class Show extends React.Component {
 
@@ -118,18 +119,23 @@ export class Show extends React.Component {
 
     return (
       <div className={itemClasses['item__row--show']}>
-        <Seasons {...{
-          seasons               : item.seasons,
-          selectedSeason        : season,
-          selectedEpisode,
-          selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-        }} />
+        <div className={classes.show}>
+          <div className={classes['show__list-container']}>
+            <Seasons {...{
+              seasons               : item.seasons,
+              selectedSeason        : season,
+              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+            }} />
+          </div>
 
-        <Episodes {...{
-          selectedEpisode,
-          selectedSeason        : season,
-          selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-        }} />
+          <div className={classes['show__list-container']}>
+            <Episodes {...{
+              selectedEpisode,
+              selectedSeason        : season,
+              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+            }} />
+          </div>
+        </div>
       </div>
     )
   }

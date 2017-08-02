@@ -1,14 +1,17 @@
 import React from 'react'
 import classNames from 'classnames'
 
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import type { Props } from './CoverTypes'
 import QualitySwitch from './QualitySwitch'
 import classes from './Cover.scss'
 
+import itemClasses from '../Item.scss'
+
 export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
-  <div className={classNames('col-sm-6', classes.cover)}>
+  <div className={classNames(itemClasses.content__container, classes.cover)}>
     <div
-      onClick={() => showPlayInfo ? play() : null}
+      onClick={() => showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null}
       className={classes.cover__image}>
 
       <img
@@ -19,22 +22,23 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
 
       <div className={classNames(
         classes['cover__image-overlay'],
-        { [classes['cover__image-overlay--with-hover']]: showPlayInfo },
+        { [classes['cover__image-overlay--with-hover']]: mode === MetadataConstants.TYPE_MOVIE && showPlayInfo },
       )} />
 
-      {showPlayInfo && (
+      {showPlayInfo && mode === MetadataConstants.TYPE_MOVIE && (
         <i className={'ion-ios-play'} />
       )}
 
     </div>
 
-    <QualitySwitch {...{
-      mode,
-      showPlayInfo,
-      setTorrent,
-      torrents,
-      torrent,
-    }} />
+    {mode === MetadataConstants.TYPE_MOVIE && (
+      <QualitySwitch {...{
+        showPlayInfo,
+        setTorrent,
+        torrents,
+        torrent,
+      }} />
+    )}
 
   </div>
 )

@@ -6,8 +6,8 @@ export const INITIAL_STATE = {
   item                   : null,
   torrent                : null,
   playerStatus           : null,
-  selectedSeason         : 1,
-  selectedEpisode        : 1,
+  selectedSeason         : null,
+  selectedEpisode        : null,
 }
 
 export const FETCH_ITEM            = `${REDUCER_NAME}.fetch.item`

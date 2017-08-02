@@ -10,6 +10,8 @@ import type { Props, State } from './InfoTypes'
 import classes from './Info.scss'
 import Devices from './Devices'
 
+import itemClasses from '../Item.scss'
+
 export class Info extends React.Component {
 
   props: Props
@@ -31,7 +33,7 @@ export class Info extends React.Component {
     const { trailerTooltipOpen } = this.state
 
     return (
-      <div className={classNames('col-sm-6', classes.info, classes[`info--${mode}`])}>
+      <div className={classNames(itemClasses.content__container, classes.info, classes[`info--${mode}`])}>
         <h1 className={classNames('row-margin', classes.info__title)}>
           {item.title}
         </h1>

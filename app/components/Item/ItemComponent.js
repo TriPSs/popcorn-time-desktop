@@ -30,6 +30,7 @@ export default class Item extends React.Component {
 
     const { item } = this.props
     if (item) {
+
       this.setBestTorrent(this.getTorrents())
     }
   }
@@ -131,13 +132,15 @@ export default class Item extends React.Component {
     } else {
       const { selectedSeason: selectedSeasonNr, selectedEpisode: selectedEpisodeNr } = this.props
 
-      const selectedSeason = item.seasons.find(season => season.number === selectedSeasonNr)
+      if (selectedEpisodeNr && selectedSeasonNr) {
+        const selectedSeason = item.seasons.find(season => season.number === selectedSeasonNr)
 
-      if (selectedSeason) {
-        const selectedEpisode = selectedSeason.episodes.find(episode => episode.number === selectedEpisodeNr)
+        if (selectedSeason) {
+          const selectedEpisode = selectedSeason.episodes.find(episode => episode.number === selectedEpisodeNr)
 
-        if (selectedEpisode) {
-          return selectedEpisode.torrents
+          if (selectedEpisode) {
+            return selectedEpisode.torrents
+          }
         }
       }
     }
@@ -177,6 +180,17 @@ export default class Item extends React.Component {
 
         <div className={classes[`item__content--${mode}`]}>
           <div className={classNames(classes[`item__row--${mode}`], classes[`item__main--${mode}`])}>
+            {this.showPlayInfo() && (
+              <Info
+                {...{
+                  item,
+                  mode,
+                  play: this.play,
+                }} />
+            )}
+
+            <Player item={item} />
+
             <Cover {...{
               mode,
               setTorrent,
@@ -188,16 +202,6 @@ export default class Item extends React.Component {
               showPlayInfo   : this.showPlayInfo(),
             }} />
 
-            {this.showPlayInfo() && (
-              <Info
-                {...{
-                  item,
-                  mode,
-                  play: this.play,
-                }} />
-            )}
-
-            <Player item={item} />
           </div>
 
           {item.type === 'show' && (

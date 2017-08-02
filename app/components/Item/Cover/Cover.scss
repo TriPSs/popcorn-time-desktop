@@ -18,7 +18,6 @@
 	position: relative;
 	width: 233px;
 	height: 350px;
-	cursor: pointer;
 
 	&-overlay {
 	  position: absolute;
@@ -29,6 +28,8 @@
 	  transition: opacity 0.1s linear;
 
 	  &--with-hover {
+		cursor: pointer;
+
 		&:hover {
 		  opacity: 0.3;
 		}

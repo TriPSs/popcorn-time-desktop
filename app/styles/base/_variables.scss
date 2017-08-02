@@ -88,6 +88,9 @@ $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 
 // List
+$list-item-color: rgba(150, 150, 150, 0.33);
+$list-item-active-color: rgba(255, 255, 255, 0.8);
+
 $list-item-bg: $body-bg;
 $list-item-bg-hover: lighten($body-bg, 20%);
 $list-item-bg-disabled: darken($body-bg, 5%);

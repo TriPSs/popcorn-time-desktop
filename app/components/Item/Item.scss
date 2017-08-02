@@ -31,25 +31,32 @@
   }
 
   &__row {
+	display: flex;
+	justify-content: center;
+
 	&--movie {
-	  display: flex;
+	  @extend .item__row;
+
 	  width: 100%;
 	}
 
 	&--show {
-	  display: flex;
-	  width: 100%;
-	  margin-top: 100px;
+	  @extend .item__row;
+
+	  margin: 100px 50px;
 
 	  &:last-of-type {
-		display: flex;
-		margin-top: 100px;
+		display: initial;
+		margin-top: 0;
 		margin-bottom: 100px;
-		flex-direction: row;
-		justify-content: center;
-		min-height: 500px;
 	  }
 	}
   }
 }
 
+.content {
+  &__container {
+	width: 600px;
+	position: relative;
+  }
+}
