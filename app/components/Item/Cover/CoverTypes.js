@@ -1,6 +1,4 @@
-/**
- * @flow
- */
+// @flow
 export type Props = {
   backgroundImage: string,
   poster: string,

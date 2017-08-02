@@ -11,9 +11,9 @@ export type Props = {
   player: PlayerProviderInterface,
   playerStatus: string,
   devices: Array<DeviceType>,
+  torrentStatus: string,
 }
 
 export type State = {
   torrent: TorrentType,
-  torrentStatus: string,
 }

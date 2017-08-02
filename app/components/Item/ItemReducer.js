@@ -31,12 +31,6 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         item                   : action.payload,
       }
 
-    case ItemConstants.SET_TORRENT:
-      return {
-        ...state,
-        torrent: action.payload,
-      }
-
     case ItemConstants.SELECT_SEASON_EPISODE:
       return {
         ...state,

@@ -19,6 +19,31 @@ export default class extends React.Component {
 
   tomorrow: number
 
+  activeEpisodeComponent
+
+  componentWillReceiveProps(nextProps) {
+    const { episodesListComponent: oldEpisodesListComponent } = this.props
+    const { episodesListComponent: newEpisodesListComponent } = nextProps
+
+    if (!oldEpisodesListComponent && newEpisodesListComponent) {
+      newEpisodesListComponent.scrollLeft = (
+        this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
+      )
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { selectedSeason: newSelectedSeason } = this.props
+    const { selectedSeason: oldSelectedSeason } = prevProps
+    const { episodesListComponent }             = this.props
+
+    if (newSelectedSeason !== oldSelectedSeason && episodesListComponent) {
+      episodesListComponent.scrollLeft = (
+        this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
+      )
+    }
+  }
+
   getFormattedAired = (aired: number) => {
     const date = new Date(aired)
 
@@ -26,12 +51,18 @@ export default class extends React.Component {
   }
 
   render() {
-    const { selectedSeason, selectedEpisode, selectSeasonAndEpisode } = this.props
+    const { selectedSeason, selectedEpisode } = this.props
+    const { selectSeasonAndEpisode }          = this.props
 
     return (
       <div className={'list'}>
         {selectedSeason.episodes.map(episode => (
           <a
+            ref={(ref) => {
+              if (episode.number === selectedEpisode.number) {
+                this.activeEpisodeComponent = ref
+              }
+            }}
             className={classNames('list__item--hor',
               {
                 'list__item--active' : episode.number === selectedEpisode.number,
@@ -74,9 +105,12 @@ export default class extends React.Component {
               </div>
 
               <div className={'list__item-qualities'}>
-                <div className={'list__item-quality list__item-quality--active'}>480p</div>
-                <div className={'list__item-quality'}>720p</div>
-                <div className={'list__item-quality'}>1080p</div>
+                {Object.keys(episode.torrents).map(quality => (
+                  <div
+                    className={classNames('list__item-quality')}>
+                    {quality}
+                  </div>
+                ))}
               </div>
 
             </div>

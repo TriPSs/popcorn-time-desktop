@@ -72,6 +72,8 @@
 
 	&-summary {
 	  transition: $transition-opacity-in;
+	  max-height: 200px;
+	  overflow: scroll;
 	}
 
 	&-image {

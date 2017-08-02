@@ -12,6 +12,11 @@ export class Show extends React.Component {
 
   props: Props
 
+  state = {
+    seasonsListComponent : null,
+    episodesListComponent: null,
+  }
+
   tomorrow: number
 
   constructor(props) {
@@ -22,15 +27,10 @@ export class Show extends React.Component {
     this.tomorrow = tomorrowDate.getTime()
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { selectedSeason: newSelectedSeason, selectedEpisode: newSelectedEpisode } = nextProps
-    const { selectedSeason: wasSelectedSeason, selectedEpisode: wasSelectedEpisode } = this.props
+  componentWillUnmount() {
+    const { selectSeasonAndEpisode } = this.props
 
-    if (newSelectedSeason !== wasSelectedSeason || newSelectedEpisode !== wasSelectedEpisode) {
-      const { setBestTorrent } = this.props
-
-      setBestTorrent(this.getEpisode().torrents)
-    }
+    selectSeasonAndEpisode(null, null)
   }
 
   selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
@@ -117,22 +117,30 @@ export class Show extends React.Component {
       selectedEpisode = this.getFirstUnwatchedEpisode()
     }
 
+    const { seasonsListComponent, episodesListComponent } = this.state
+
     return (
       <div className={itemClasses['item__row--show']}>
         <div className={classes.show}>
-          <div className={classes['show__list-container']}>
+          <div
+            ref={ref => !this.state.seasonsListComponent && this.setState({ seasonsListComponent: ref })}
+            className={classes['show__list-container']}>
             <Seasons {...{
               seasons               : item.seasons,
               selectedSeason        : season,
               selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              seasonsListComponent,
             }} />
           </div>
 
-          <div className={classes['show__list-container']}>
+          <div
+            ref={ref => !this.state.episodesListComponent && this.setState({ episodesListComponent: ref })}
+            className={classes['show__list-container']}>
             <Episodes {...{
               selectedEpisode,
               selectedSeason        : season,
               selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              episodesListComponent,
             }} />
           </div>
         </div>

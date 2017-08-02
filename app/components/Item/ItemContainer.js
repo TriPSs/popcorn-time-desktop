@@ -17,7 +17,6 @@ export const mapDispatchToProps = dispatch => ({
 
 export const mapStateToProps = state => ({
   item           : Selectors.getItem(state),
-  torrent        : Selectors.getTorrent(state),
   isLoading      : Selectors.getIsLoading(state),
   selectedSeason : Selectors.getSelectedSeason(state),
   selectedEpisode: Selectors.getSelectedEpisode(state),

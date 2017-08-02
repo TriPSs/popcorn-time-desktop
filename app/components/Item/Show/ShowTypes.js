@@ -10,3 +10,4 @@ export type Props = {
   selectedSeason: number,
   selectedEpisode: number,
 }
+

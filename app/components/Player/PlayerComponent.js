@@ -6,6 +6,7 @@ import MediaPlayer from 'api/Player'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
+import itemClasses from '../Item/Item.scss'
 import type { Props } from './PlayerTypes'
 import classes from './Player.scss'
 import Stats from './Stats'
@@ -27,7 +28,6 @@ export class Player extends React.Component {
 
     return torrentStatus === TorrentConstants.STATUS_NONE
   }
-
 
   shouldShowPlayer = () => {
     const { playerStatus, playerAction } = this.props
@@ -81,8 +81,8 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
-          'col-sm-6': !this.shouldShowPlayer() || playerProvider === PlayerConstants.PROVIDER_CHROMECAST,
-          [classes['player--hidden']]: this.isHidden(),
+          [itemClasses.content__container]: !this.shouldShowPlayer() || playerProvider === PlayerConstants.PROVIDER_CHROMECAST,
+          [classes['player--hidden']]     : this.isHidden(),
         }, classes.player)}>
 
         {torrentStatus !== TorrentConstants.STATUS_NONE && (
