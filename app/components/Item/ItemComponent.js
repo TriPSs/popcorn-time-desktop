@@ -29,8 +29,8 @@ export default class Item extends React.Component {
     window.scrollTo(0, 0)
 
     const { item } = this.props
-    if (item && item.type === MetadataConstants.TYPE_MOVIE) {
-      this.getBestMovieTorrent()
+    if (item) {
+      this.setBestTorrent(this.getTorrents())
     }
   }
 
