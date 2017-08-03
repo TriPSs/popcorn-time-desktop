@@ -58,10 +58,29 @@ export const toggleWatched = item => (dispatch) => {
       })
 
     } else {
-      Database.watched.markEpisodeWatched(item.showId, item.season, item.number).then(() => {
-        dispatch(markedEpisode(item.showId, item.season, item.number, true))
+      Database.watched.markEpisodeWatched(item.showId, item.season, item.number, 100).then(() => {
+        dispatch(markedEpisode(item.showId, item.season, item.number, { complete: true, progress: 100 }))
       })
     }
   }
 }
 
+export const updatePercentage = (item, percentage) => (dispatch) => {
+  if (item.type === MetadataConstants.TYPE_MOVIE) {
+
+  } else {
+    Database.watched.updateEpisodePercentage(item.showId, item.season, item.number, percentage).then(() => {
+      dispatch({
+        type   : WatchedConstants.UPDATE_PERCENTAGE_EPISODE,
+        payload: {
+          season : item.season,
+          episode: item.number,
+          watched: {
+            complete: percentage > 95,
+            progress: percentage,
+          },
+        },
+      })
+    })
+  }
+}

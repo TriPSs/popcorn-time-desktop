@@ -1,6 +1,3 @@
-import { connect } from 'redux-clazz'
-import Player from './PlyrPlayerProvider'
+import PlyrPlayerContainer from './PlyrPlayerContainer'
 
-import { updateStatus, videoAlmostDone } from '../PlayerActions'
-
-export default connect(null, { updateStatus, videoAlmostDone })(Player)
+export default PlyrPlayerContainer

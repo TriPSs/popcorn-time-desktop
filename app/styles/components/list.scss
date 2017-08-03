@@ -150,6 +150,19 @@
 	  }
 	}
 
+	&-progress {
+	  position: absolute;
+	  bottom: 5px;
+	  width: 90%;
+	  height: 2px;
+	  box-shadow: $default-box-shadow;
+
+	  div {
+		height: 2px;
+		background: #fff;
+	  }
+	}
+
 	&-play {
 	  position: absolute;
 	  width: 40px;

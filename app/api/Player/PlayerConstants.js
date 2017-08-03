@@ -29,4 +29,3 @@ export const UPDATE_STATUS     = `${REDUCER_NAME}.status.update`
 export const FOUND_DEVICES     = `${REDUCER_NAME}.devices.found`
 export const SELECT_DEVICE     = `${REDUCER_NAME}.devices.select`
 export const LOAD_ITEM         = `${REDUCER_NAME}.load.item`
-export const VIDEO_ALMOST_DONE = `${REDUCER_NAME}.video.almost.done`

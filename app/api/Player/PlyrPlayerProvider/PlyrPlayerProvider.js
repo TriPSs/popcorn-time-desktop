@@ -47,7 +47,7 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
       sources: [
         {
           src : uri,
-          type: item.type === 'show' || item.type === 'movie' ? 'video/mp4' : item.type,
+          type: item.type === 'youtube' ? 'youtube' : 'video/mp4',
         },
       ],
     })
@@ -130,16 +130,21 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
 
   progressInterval = () => setInterval(() => {
     if (this.player) {
-      const percentageComplete = ((this.player.getCurrentTime() / 60) / this.loadedItem.runtime.inMinutes) * 100
+      const { updatePercentage } = this.props
+      const percentage           = this.getPercentage()
 
-      if (percentageComplete > 90) {
+      if (percentage > 95) {
         this.clearIntervals()
-        const { videoAlmostDone } = this.props
 
-        videoAlmostDone()
+        updatePercentage(this.loadedItem, 100)
+
+      } else {
+        updatePercentage(this.loadedItem, percentage)
       }
     }
-  }, 500)
+  }, 10000)
+
+  getPercentage = () => ((this.player.getCurrentTime() / 60) / this.loadedItem.runtime.inMinutes) * 100
 
   clearIntervals = () => {
     if (this.checkProgressInterval) {

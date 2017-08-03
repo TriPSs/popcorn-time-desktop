@@ -53,8 +53,6 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     } else if (oldAction !== newAction) {
       const { uri, item } = nextProps
 
-      console.log(oldAction, newAction, oldAction !== newAction)
-
       this.handleActionChange(
         newAction, { uri, item },
       )

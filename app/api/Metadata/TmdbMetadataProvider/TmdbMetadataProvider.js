@@ -64,7 +64,7 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
     aired   : new Date(episode.air_date).getTime(),
     images  : this.formatImage(episode.still_path),
     torrents: this.getEpisodeTorrents(episode.episode_number, pctSeason),
-    watched : this.isEpisodeWatched(episode, watchedEpisodes),
+    watched : this.getEpisodeWatched(episode, watchedEpisodes),
   }))
 
   getEpisodeTorrents = (episodeNumber, pctSeason) => {
@@ -79,10 +79,17 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
     return pctSeason[episodeNumber].torrents
   }
 
-  isEpisodeWatched = (episode, watchedEpisodes) => !!watchedEpisodes.find(watchedEpisode =>
-    watchedEpisode.episode === episode.episode_number
-    && watchedEpisode.season === episode.season_number,
-  )
+  getEpisodeWatched = (episode, watchedEpisodes) => {
+    const watchedEpisode = watchedEpisodes.find(watchedEpisode =>
+      watchedEpisode.episode === episode.episode_number
+      && watchedEpisode.season === episode.season_number,
+    )
+
+    return {
+      complete: watchedEpisode ? watchedEpisode.percentage > 95 : false,
+      progress: watchedEpisode ? watchedEpisode.percentage : false,
+    }
+  }
 
   formatImage = (image) => {
     if (!image) {

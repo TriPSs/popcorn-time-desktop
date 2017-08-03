@@ -18,6 +18,16 @@ export default class extends React.Component {
         this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
       )
     }
+
+    const { selectedEpisode: { id: newId, watched: newWatched } } = nextProps
+    const { selectedEpisode: { id: oldId, watched: oldWatched } } = this.props
+
+    // When marked watched, select the next unwatched episode
+    if (newId === oldId && newWatched.complete && !oldWatched.complete) {
+      const { selectSeasonAndEpisode } = this.props
+
+      selectSeasonAndEpisode(nextProps.selectedEpisode.season)
+    }
   }
 
   setSelectedEpisodeRef = ref => this.activeEpisodeComponent = ref

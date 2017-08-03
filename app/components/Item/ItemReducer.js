@@ -37,6 +37,7 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         ...action.payload,
       }
 
+    case WatchedConstants.UPDATE_PERCENTAGE_EPISODE:
     case WatchedConstants.MARKED_EPISODE:
       return {
         ...state,
@@ -58,7 +59,6 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
               return {
                 ...season,
                 episodes,
-                watched: (episodes.filter(episode => !!episode.watched).length / episodes.length) * 100,
               }
             }
 

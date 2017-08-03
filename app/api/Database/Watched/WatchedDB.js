@@ -30,11 +30,22 @@ export class WatchedDB {
   markEpisodeNotWatched = (showId: string, season: string, episode: string) =>
     this.unmarkWatched({ showId, season, episode, type: 'episode' })
 
-  markEpisodeWatched = (showId: string, season: string, episode: string) =>
-    this.markWatched({ showId, season, episode, type: 'episode' })
+  markEpisodeWatched = (showId: string, season: string, episode: string, percentage: number) =>
+    this.markWatched({ showId, season, episode, percentage, type: 'episode' })
 
-  getEpisodesWatchedOfShow = (showId: string) =>
-    new Promise(resolve => this.db.find(
+  updateEpisodePercentage = (showId: string, season: string, episode: string, percentage: number) =>
+    new Promise(resolve =>
+      this.db.update({ showId, season, episode, type: 'episode' }, { $set: { percentage } }, {}, (err, numAffected) => {
+        if (!numAffected) {
+          this.markEpisodeWatched(showId, season, episode, percentage).then(resolve)
+
+        } else {
+          resolve()
+        }
+      }))
+
+  getEpisodesWatchedOfShow = (showId: string) => new Promise(resolve =>
+    this.db.find(
       {
         showId,
         type: 'episode',

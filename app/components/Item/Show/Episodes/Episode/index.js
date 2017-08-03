@@ -1,3 +1,3 @@
-import Episode from './Episode'
+import EpisodeContainer from './EpisodeContainer'
 
-export default Episode
+export default EpisodeContainer

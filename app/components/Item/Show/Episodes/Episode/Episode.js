@@ -24,11 +24,24 @@ export default class extends React.Component {
 
   tomorrow: number
 
-  componentDidMount() {
-    const { episode: { torrents } } = this.props
+  componentWillMount() {
+    this.setBestTorrent()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { episode: { id: oldId } } = nextProps
+    const { episode: { id: newId } } = this.props
+
+    if (oldId !== newId) {
+      this.setBestTorrent(nextProps)
+    }
+  }
+
+  setBestTorrent = (props = this.props) => {
+    const { episode: { torrents } } = props
 
     this.setState({
-      torrent: getHighestQualtity(torrents)
+      torrent: getHighestQualtity(torrents),
     })
   }
 
@@ -48,6 +61,18 @@ export default class extends React.Component {
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getYear()}`
   }
 
+  play = () => {
+    const { episode, item, player } = this.props
+    const { torrent }               = this.state
+
+    if (torrent) {
+      player.play(torrent.url, { ...item, ...episode })
+
+    } else {
+      // TODO:: SEARCH
+    }
+  }
+
   render() {
     const { episode, setSelectedEpisodeRef }          = this.props
     const { selectSeasonAndEpisode, selectedEpisode } = this.props
@@ -64,7 +89,7 @@ export default class extends React.Component {
         className={classNames('list__item--hor',
           {
             'list__item--active' : episode.number === selectedEpisode.number,
-            'list__item--watched': episode.watched && episode.number !== selectedEpisode.number,
+            'list__item--watched': episode.watched.complete && episode.number !== selectedEpisode.number,
           }, episode.aired > this.tomorrow
             ? 'list__item--disabled'
             : 'list__item--available',
@@ -98,7 +123,9 @@ export default class extends React.Component {
               item={episode} />
           )}
 
-          <div className={'list__item-play'}>
+          <div
+            onClick={this.play}
+            className={'list__item-play'}>
             <i className={'ion-ios-play'} />
           </div>
 
@@ -118,6 +145,12 @@ export default class extends React.Component {
               </div>
             ))}
           </div>
+
+          {episode.watched.progress && !episode.watched.complete && (
+            <div className={'list__item-progress'}>
+              <div style={{ width: `${episode.watched.progress}%` }} />
+            </div>
+          )}
 
         </div>
 

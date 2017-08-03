@@ -3,10 +3,7 @@ import type { ContentType } from 'api/Metadata/MetadataTypes'
 
 export type Props = {
   item: ContentType,
-  fetchingEpisodeTorrents: boolean,
   play: (playerProvider: string, torrent: TorrentType) => void,
-  playerStatus: string,
-  torrentStatus: string,
   selectedSeason: number,
   selectedEpisode: number,
 }

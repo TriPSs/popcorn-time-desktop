@@ -62,7 +62,7 @@ export class Show extends React.Component {
     }
 
     let firstUnwatchedSeason = item.seasons.find(season => season.number !== 0
-                                                           && season.episodes.find(episode => !episode.watched))
+                                                           && season.episodes.find(episode => !episode.watched.complete))
 
     if (!firstUnwatchedSeason) {
       firstUnwatchedSeason = item.seasons.find(season => season.number === item.seasons.length - 1)
@@ -92,7 +92,7 @@ export class Show extends React.Component {
       searchInSeason = this.getSeason()
     }
 
-    const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched)
+    const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched.complete)
     if (firstUnwatchedEpisode) {
       if (firstUnwatchedEpisode.aired < this.tomorrow) {
         return firstUnwatchedEpisode
