@@ -1,6 +1,7 @@
 import webpack from 'webpack'
 import webpackMerge from 'webpack-merge'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
+import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
 
 import baseConfig from './webpack.config.renderer.base'
 import { dependencies } from '../package.json'
@@ -66,7 +67,7 @@ if (__PROD__) {
       minimize: true,
       debug   : false,
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    new UglifyJSPlugin({
       beautify: false,
       mangle  : {
         screw_ie8  : true,

@@ -1,6 +1,6 @@
 import webpackMerge from 'webpack-merge'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import BabiliPlugin from 'babili-webpack-plugin'
+import UglifyJSPlugin from 'uglifyjs-webpack-plugin'
 import baseConfig from './webpack.config.base'
 
 import config from '../config'
@@ -23,7 +23,26 @@ export default webpackMerge(baseConfig, {
   },
 
   plugins: [
-    new BabiliPlugin(),
+    new UglifyJSPlugin({
+      beautify: false,
+      mangle  : {
+        screw_ie8  : true,
+        keep_fnames: true,
+      },
+      compress: {
+        warnings    : false,
+        screw_ie8   : true,
+        conditionals: true,
+        unused      : true,
+        comparisons : true,
+        sequences   : true,
+        dead_code   : true,
+        evaluate    : true,
+        if_return   : true,
+        join_vars   : true,
+      },
+      comments: false,
+    }),
 
     new BundleAnalyzerPlugin({
       analyzerMode: config.open_analyzer ? 'server' : 'disabled',
