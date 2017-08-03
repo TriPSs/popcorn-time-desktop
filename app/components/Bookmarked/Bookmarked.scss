@@ -19,7 +19,7 @@
   &--yes {
 	@extend .bookmarked;
 
-	color: $bookmarked-color;
+	color: $bookmarked-color !important;;
   }
 
   &--no {
@@ -28,7 +28,7 @@
 	color: $bookmark-color;
 
 	&:hover {
-	  color: $bookmarked-color;
+	  color: $bookmarked-color !important;
 	}
   }
 }

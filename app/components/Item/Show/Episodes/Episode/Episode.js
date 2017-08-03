@@ -119,6 +119,7 @@ export default class extends React.Component {
 
           {episode.aired < this.tomorrow && (
             <Watched
+              tooltip={{ place: 'left', effect: 'float' }}
               className={'list__item-watched'}
               item={episode} />
           )}

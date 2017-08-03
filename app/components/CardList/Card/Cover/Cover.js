@@ -26,7 +26,10 @@ export const Cover = ({ item, history }: Props) => (
       <div className={classNames(classes.cover__overlay, {
         [classes['cover__overlay--watched']]: item.watched,
       })}>
-        <Bookmarked className={classes.overlay__bookmark} item={item} />
+        <Bookmarked
+          tooltip={{ place: 'left', effect: 'float' }}
+          className={classes.overlay__bookmark}
+          item={item} />
 
         {item.type === MetdataConstants.TYPE_MOVIE && (
           <Watched
