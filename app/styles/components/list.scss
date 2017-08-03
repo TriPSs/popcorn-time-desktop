@@ -138,9 +138,15 @@
 	  color: white;
 	  font-weight: 100;
 	  margin: 0 10px;
+	  opacity: 0.6;
 
 	  &--active {
 		font-weight: bold;
+	  }
+
+	  &--available {
+		cursor: pointer;
+		opacity: 1;
 	  }
 	}
 
