@@ -10,6 +10,7 @@ export const mapStateToProps = state => ({
   action       : PlayerSelectors.getAction(state),
   uri          : PlayerSelectors.getUri(state),
   item         : PlayerSelectors.getItem(state),
+  playerStatus : PlayerSelectors.getStatus(state),
   torrentStatus: TorrentSelectors.getStatus(state),
 })
 
