@@ -3,7 +3,7 @@ import type { MovieType, ShowType } from './MetadataTypes'
 
 export interface MetadataProviderInterface {
 
-  getMovies: (page: number, limit: number, options: optionsType) => Promise<MovieType>,
+  getMovies: (page: number, limit: number, options: Object) => Promise<MovieType>,
 
   getMovie: (itemId: string) => MovieType,
 

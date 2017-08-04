@@ -11,7 +11,8 @@ import itemClasses from '../Item.scss'
 export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
   <div className={classNames(itemClasses.content__container, classes.cover)}>
     <div
-      onClick={() => showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null}
+      role={'presentation'}
+      onClick={() => (showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null)}
       className={classes.cover__image}>
 
       <img

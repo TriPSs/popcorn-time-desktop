@@ -7,8 +7,6 @@ export default class extends React.Component {
 
   props: Props
 
-  activeEpisodeComponent
-
   componentWillReceiveProps(nextProps) {
     const { episodesListComponent: oldEpisodesListComponent } = this.props
     const { episodesListComponent: newEpisodesListComponent } = nextProps
@@ -30,8 +28,6 @@ export default class extends React.Component {
     }
   }
 
-  setSelectedEpisodeRef = ref => this.activeEpisodeComponent = ref
-
   componentDidUpdate(prevProps) {
     const { selectedSeason: newSelectedSeason } = this.props
     const { selectedSeason: oldSelectedSeason } = prevProps
@@ -43,6 +39,10 @@ export default class extends React.Component {
       )
     }
   }
+
+  setSelectedEpisodeRef = ref => this.activeEpisodeComponent = ref
+
+  activeEpisodeComponent
 
   render() {
     const { selectedSeason, selectedEpisode } = this.props

@@ -9,7 +9,7 @@ import * as TorrentConstants from './TorrentConstants'
 const log  = debug('api:torrent')
 const port = 9091
 
-export class Torrent extends ReduxClazz {
+export default class extends ReduxClazz {
 
   cacheLocation: string
 
@@ -56,23 +56,22 @@ export class Torrent extends ReduxClazz {
       const { files } = torrent
 
       const { file, torrentIndex } = files.reduce((previous, current, index) => {
-          const formatIsSupported = !!supportedFormats.find(format => current.name.includes(format))
+        const formatIsSupported = !!supportedFormats.find(format => current.name.includes(format))
 
-          if (formatIsSupported) {
-            if (previous !== 'undefined' && current.length > previous.file.length) {
-              previous.file.deselect()
+        if (formatIsSupported) {
+          if (previous !== 'undefined' && current.length > previous.file.length) {
+            previous.file.deselect()
 
-              return {
-                file        : current,
-                torrentIndex: index,
-              }
+            return {
+              file        : current,
+              torrentIndex: index,
             }
           }
+        }
 
-          return previous
-        },
-        { file: files[0], torrentIndex: 0 },
-      )
+        return previous
+
+      }, { file: files[0], torrentIndex: 0 })
 
       if (typeof torrentIndex !== 'number') {
         throw new Error(`No torrent could be selected. Torrent Index: ${torrentIndex}`)
@@ -180,6 +179,3 @@ export class Torrent extends ReduxClazz {
     }
   }
 }
-
-export default Torrent
-

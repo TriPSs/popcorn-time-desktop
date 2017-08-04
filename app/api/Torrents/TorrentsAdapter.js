@@ -2,13 +2,13 @@ import debug from 'debug'
 
 import type { ShowType } from 'api/Metadata/MetadataTypes'
 import { TorrentProviderInterface } from './TorrentsProviderInterface'
-import torrentProviders from './TorrentProviders'
+import providers from './TorrentProviders'
 
 const log = debug('api:torrents:adapter')
 
 export class TorrentsAdapter implements TorrentProviderInterface {
 
-  providers = torrentProviders()
+  providers = providers()
 
   searchEpisode = (item: ShowType, season: string, episode: string) => {
     log(`Search episode ${episode} of season ${season} from the show ${item.title}`)

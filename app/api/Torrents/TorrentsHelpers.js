@@ -1,14 +1,14 @@
 // @flow
 export const formatShowToSearchQuery = (title, season, episode) => {
   const searchTitle = title.toLowerCase()
-                           .replace(' ', '.')
+    .replace(' ', '.')
 
   return `${searchTitle}.${formatSeasonEpisodeToString(season, episode)}`
 }
 
 export const formatSeasonEpisodeToString = (season, episode) => (
   `s${String(season).length === 1 ? `0${String(season)}` : String(season)
-    }e${String(episode).length === 1 ? `0${String(episode)}` : String(episode)}`
+  }e${String(episode).length === 1 ? `0${String(episode)}` : String(episode)}`
 )
 
 export const getHealth = (seeds, peers) => {
@@ -27,7 +27,7 @@ export const getHealth = (seeds, peers) => {
   const weightedTotal = weightedRatio + weightedSeeds
 
   // Scale from [0, 100] to [0, 3]. Drops the decimal places
-  const scaledTotal = ((weightedTotal * 3) / 100) | 0
+  const scaledTotal = ((weightedTotal * 3) / 100) || 0
 
   if (scaledTotal === 1) {
     return {
@@ -142,7 +142,7 @@ export const getBestTorrent = (torrentOne, torrentTwo) => {
 export const getHighestQualtity = (torrents) => {
   let bestQuality = null
 
-  Object.keys(torrents).map((quality) => {
+  Object.keys(torrents).forEach((quality) => {
     if (bestQuality === null || parseInt(bestQuality, 10) < parseInt(quality, 10)) {
       if (torrents[quality] !== null) {
         bestQuality = quality

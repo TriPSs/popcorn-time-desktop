@@ -3,7 +3,7 @@ import MetadataAdapter from './Metadata'
 import PctTorrentProvider from './Torrents/PctTorrentProvider'
 import TorrentAdapter from './Torrents'
 
-export class Butter {
+export default new (class {
 
   metadataAdapter: MetadataAdapter
 
@@ -17,25 +17,37 @@ export class Butter {
     this.metadataAdapter = new MetadataAdapter()
   }
 
-  getMovies = (page: number = 1, filters = {}) => this.pctAdapter.getMovies(page, filters)
+  getMovies = (page: number = 1, filters: Object = {}) => (
+    this.pctAdapter.getMovies(page, filters)
+  )
 
-  getMovie = (itemId: string) => this.pctAdapter.getMovie(itemId)
+  getMovie = (itemId: string) => (
+    this.pctAdapter.getMovie(itemId)
+  )
 
-  getShows = (page: number = 1, filters = {}) => this.pctAdapter.getShows(page, filters)
+  getShows = (page: number = 1, filters: Object = {}) => (
+    this.pctAdapter.getShows(page, filters)
+  )
 
-  getShow = (itemId: string) => this.pctAdapter.getShow(itemId)
-                                    .then(pctShow => this.metadataAdapter.getSeasons(itemId, pctShow.seasons)
-                                                         .then(seasons => ({
-                                                           ...pctShow,
-                                                           seasons,
-                                                         })))
+  getShow = (itemId: string) => (
+    this.pctAdapter
+      .getShow(itemId)
+      .then(pctShow => (
+        this.metadataAdapter
+          .getSeasons(itemId, pctShow.seasons)
+          .then(seasons => ({
+            ...pctShow,
+            seasons,
+          }))),
+      )
+  )
 
-  searchEpisode = (...args) => this.torrentAdapter.searchEpisode(...args)
+  searchEpisode = (...args) => (
+    this.torrentAdapter.searchEpisode(...args)
+  )
 
-  search = (...args) => this.torrentAdapter.search(...args)
+  search = (...args) => (
+    this.torrentAdapter.search(...args)
+  )
 
-}
-
-export const instance = new Butter()
-
-export default instance
+})()

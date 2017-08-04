@@ -1,6 +1,5 @@
 // @flow
 import * as BookmarkedConstants from 'components/Bookmarked/BookmarkedConstants'
-import * as ItemConstants from 'components/Item/ItemConstants'
 import { WatchedConstants } from 'components/Watched'
 import * as HomeConstants from './HomeConstants'
 
@@ -14,17 +13,15 @@ export default (state = HomeConstants.INITIAL_STATE, action) => {
       }
 
     case HomeConstants.FETCHED_ITEMS:
-      const { items, mode } = action.payload
-
       return {
         ...state,
         isLoading: false,
         modes    : {
           ...state.modes,
-          [mode]: {
-            page : state.modes[mode].page + 1,
-            limit: state.modes[mode].limit,
-            items: [...state.modes[mode].items, ...items],
+          [action.payload.mode]: {
+            page : state.modes[action.payload.mode].page + 1,
+            limit: state.modes[action.payload.mode].limit,
+            items: [...state.modes[action.payload.mode].items, ...action.payload.items],
           },
         },
       }

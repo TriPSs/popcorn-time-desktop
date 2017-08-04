@@ -14,14 +14,12 @@ export class MetadataAdapter implements MetadataProviderInterface {
     this.tmdb  = new TmdbMetadataProvider()
   }
 
-  getSeasons = (itemId: string, pctSeasons) => new Promise(resolve => {
-    Database.watched.getEpisodesWatchedOfShow(itemId).then(({ docs }) => {
-      this.trakt.getIds(itemId).then(({ ids: { tmdb } }) => {
-        this.tmdb.getSeasons(itemId, tmdb, pctSeasons, docs).then(seasons => {
-          resolve(seasons)
-        })
-      })
-    })
+  getSeasons = (itemId: string, pctSeasons) => new Promise((resolve) => {
+    Database.watched.getEpisodesWatchedOfShow(itemId).then(({ docs }) =>
+      this.trakt.getIds(itemId).then(({ ids: { tmdb } }) =>
+        this.tmdb.getSeasons(itemId, tmdb, pctSeasons, docs).then(resolve),
+      ),
+    )
   })
 
 }

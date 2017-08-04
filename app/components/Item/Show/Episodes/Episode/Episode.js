@@ -22,8 +22,6 @@ export default class extends React.Component {
     this.tomorrow = tomorrowDate.getTime()
   }
 
-  tomorrow: number
-
   componentWillMount() {
     this.setBestTorrent()
   }
@@ -34,6 +32,21 @@ export default class extends React.Component {
 
     if (oldId !== newId) {
       this.setBestTorrent(nextProps)
+    }
+  }
+
+  handleOnPlayIconClick = () => {
+    const { episode, item, player } = this.props
+    const { selectedEpisode }       = this.props
+    const { torrent }               = this.state
+
+    if (selectedEpisode.number === episode.number) {
+      if (torrent) {
+        player.play(torrent.url, { ...item, ...episode })
+
+      } else {
+        // TODO:: SEARCH
+      }
     }
   }
 
@@ -56,25 +69,12 @@ export default class extends React.Component {
     }
   }
 
+  tomorrow: number
+
   getFormattedAired = (aired: number) => {
     const date = new Date(aired)
 
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getYear()}`
-  }
-
-  play = () => {
-    const { episode, item, player } = this.props
-    const { selectedEpisode }       = this.props
-    const { torrent }               = this.state
-
-    if (selectedEpisode.number === episode.number) {
-      if (torrent) {
-        player.play(torrent.url, { ...item, ...episode })
-
-      } else {
-        // TODO:: SEARCH
-      }
-    }
   }
 
   render() {
@@ -85,6 +85,7 @@ export default class extends React.Component {
 
     return (
       <a
+        role={'presentation'}
         ref={(ref) => {
           if (episode.number === selectedEpisode.number) {
             setSelectedEpisodeRef(ref)
@@ -99,9 +100,9 @@ export default class extends React.Component {
             : 'list__item--available',
         )}
         key={episode.number}
-        onClick={() => episode.aired < this.tomorrow
+        onClick={() => (episode.aired < this.tomorrow
           ? selectSeasonAndEpisode(selectedEpisode.season, episode.number)
-          : null}
+          : null)}
       >
         <div className={'list__item-image-container--hor'}>
           <img
@@ -129,7 +130,8 @@ export default class extends React.Component {
           )}
 
           <div
-            onClick={this.play}
+            role={'presentation'}
+            onClick={this.handleOnPlayIconClick}
             className={'list__item-play'}>
             <i className={'ion-ios-play'} />
           </div>
@@ -137,6 +139,7 @@ export default class extends React.Component {
           <div className={'list__item-qualities'}>
             {Object.keys(episode.torrents).map(quality => (
               <div
+                role={'presentation'}
                 key={quality}
                 className={classNames(
                   'list__item-quality',

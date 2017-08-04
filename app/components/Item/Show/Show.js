@@ -8,7 +8,7 @@ import Seasons from './Seasons'
 import Episodes from './Episodes'
 import classes from './Show.scss'
 
-export class Show extends React.Component {
+export default class extends React.Component {
 
   props: Props
 
@@ -16,8 +16,6 @@ export class Show extends React.Component {
     seasonsListComponent : null,
     episodesListComponent: null,
   }
-
-  tomorrow: number
 
   constructor(props) {
     super(props)
@@ -32,6 +30,8 @@ export class Show extends React.Component {
 
     selectSeasonAndEpisode(null, null)
   }
+
+  tomorrow: number
 
   selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
     let episodeToSelect = selectEpisode
@@ -61,11 +61,12 @@ export class Show extends React.Component {
       return item.seasons.find(season => season.number === selectedSeason)
     }
 
-    let firstUnwatchedSeason = item.seasons.find(season => season.number !== 0
-                                                           && season.episodes.find(episode => !episode.watched.complete))
+    let firstUnwatchedSeason = item.seasons
+      .find(season => season.number !== 0 && season.episodes.find(episode => !episode.watched.complete))
 
     if (!firstUnwatchedSeason) {
-      firstUnwatchedSeason = item.seasons.find(season => season.number === item.seasons.length - 1)
+      firstUnwatchedSeason = item.seasons
+        .find(season => season.number === item.seasons.length - 1)
     }
 
     return firstUnwatchedSeason
@@ -148,6 +149,3 @@ export class Show extends React.Component {
     )
   }
 }
-
-export default Show
-

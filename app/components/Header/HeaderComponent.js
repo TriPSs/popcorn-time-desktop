@@ -6,8 +6,12 @@ import classNames from 'classnames'
 
 import * as HomeConstants from 'components/Home/HomeConstants'
 import classes from './Header.scss'
+import type { Props } from './HeaderTypes'
 
-export class Header extends React.Component {
+@withRouter()
+export default class extends React.Component {
+
+  props: Props
 
   state = {
     searchQuery: '',
@@ -71,5 +75,3 @@ export class Header extends React.Component {
     )
   }
 }
-
-export default withRouter(Header)

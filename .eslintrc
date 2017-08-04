@@ -156,6 +156,7 @@
     "fp/no-unused-expression": "off",
     "fp/no-valueof-field": "off",
     "import/no-extraneous-dependencies": "off",
+    "import/no-named-as-default": 0,
     "no-var": "off",
     "no-let": "off",
     "no-plusplus": "off",

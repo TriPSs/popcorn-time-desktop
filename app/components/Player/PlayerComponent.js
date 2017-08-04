@@ -30,12 +30,13 @@ export class Player extends React.Component {
   }
 
   shouldShowPlayer = () => {
-    const { playerStatus, playerAction } = this.props
+    const { playerStatus, playerAction, playerProvider } = this.props
 
-    return (playerStatus === PlayerConstants.STATUS_PLAYING
-            || playerStatus === PlayerConstants.STATUS_PAUSED
-            || playerStatus === PlayerConstants.STATUS_BUFFERING)
-           && playerAction !== PlayerConstants.ACTION_STOP
+    return playerProvider === PlayerConstants.PROVIDER_CHROMECAST
+           || ((playerStatus === PlayerConstants.STATUS_PLAYING
+                || playerStatus === PlayerConstants.STATUS_PAUSED
+                || playerStatus === PlayerConstants.STATUS_BUFFERING)
+               && playerAction !== PlayerConstants.ACTION_STOP)
   }
 
   shouldShowControls = () => {
@@ -69,7 +70,9 @@ export class Player extends React.Component {
           Close
         </button>
 
-        <video controls />
+        <video controls>
+          <track kind={'captions'} />
+        </video>
       </div>
     )
   }
@@ -81,7 +84,7 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
-          [itemClasses.content__container]: !this.shouldShowPlayer() || playerProvider === PlayerConstants.PROVIDER_CHROMECAST,
+          [itemClasses.content__container]: !this.shouldShowPlayer(),
           [classes['player--hidden']]     : this.isHidden(),
         }, classes.player)}>
 

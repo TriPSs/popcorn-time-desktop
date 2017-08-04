@@ -3,8 +3,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
-import * as PlayerConstants from 'api/Player/PlayerConstants'
-import type { Props, State } from './StatsTypes'
+import type { Props } from './StatsTypes'
 import classes from './Stats.scss'
 
 export class Stats extends React.Component {
@@ -27,7 +26,7 @@ export class Stats extends React.Component {
 
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
 
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${this.sizes[i]}`
+    return `${(bytes / (1024 ** i)).toFixed(2)} ${this.sizes[i]}`
   }
 
   formatMillisToMinutesAndSeconds = (millis) => {

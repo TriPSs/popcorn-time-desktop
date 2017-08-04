@@ -117,10 +117,10 @@ export class ChromeCastProvider implements StreamingInterface {
     if (newStatus !== this.status) {
       log(`Update status to ${newStatus}`)
 
-      /*Events.emit(PlayerConstants.UPDATE_STATUS, {
+      /* Events.emit(PlayerConstants.UPDATE_STATUS, {
         oldState: this.status,
         newStatus,
-      })*/
+      }) */
       this.status = newStatus
       this.clearIntervals()
 
@@ -141,7 +141,7 @@ export class ChromeCastProvider implements StreamingInterface {
 
           if (percentageComplete > 90) {
             this.clearIntervals()
-           // Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
+            // Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
           }
 
         } else {

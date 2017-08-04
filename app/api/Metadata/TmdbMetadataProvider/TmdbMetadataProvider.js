@@ -27,7 +27,7 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
 
   getSeasons = (itemId, tmdbId: string, pctSeasons, watchedEpisodes) =>
     this.tmdb.get(`tv/${tmdbId}`)
-        .then(({ data }) => this.formatSeasons(data.seasons, pctSeasons, itemId, tmdbId, watchedEpisodes))
+      .then(({ data }) => this.formatSeasons(data.seasons, pctSeasons, itemId, tmdbId, watchedEpisodes))
 
   formatSeasons = (seasons, pctSeasons, itemId, tmdbId, watchedEpisodes) => Promise.all(
     seasons.map(season =>
@@ -80,14 +80,14 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
   }
 
   getEpisodeWatched = (episode, watchedEpisodes) => {
-    const watchedEpisode = watchedEpisodes.find(watchedEpisode =>
+    const episodeWatched = watchedEpisodes.find(watchedEpisode =>
       watchedEpisode.episode === episode.episode_number
       && watchedEpisode.season === episode.season_number,
     )
 
     return {
-      complete: watchedEpisode ? watchedEpisode.percentage > 95 : false,
-      progress: watchedEpisode ? watchedEpisode.percentage : false,
+      complete: episodeWatched ? episodeWatched.percentage > 95 : false,
+      progress: episodeWatched ? episodeWatched.percentage : false,
     }
   }
 

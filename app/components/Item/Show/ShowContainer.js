@@ -11,4 +11,4 @@ export const mapStateToProps = state => ({
   selectedEpisode: Selectors.getSelectedEpisode(state),
 })
 
-export default connect(mapStateToProps, { selectSeasonAndEpisode, })(Show)
+export default connect(mapStateToProps, { selectSeasonAndEpisode })(Show)

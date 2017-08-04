@@ -5,13 +5,9 @@ import { ConnectedRouter } from 'react-router-redux'
 
 import 'styles/core.global.scss'
 import Routes from 'routes'
+import type { Props } from './RootTypes'
 
-type Props = {
-  store: Object,
-  history: Object
-}
-
-export class RootContainer extends React.Component {
+export default class extends React.Component {
 
   props: Props
 
@@ -24,6 +20,7 @@ export class RootContainer extends React.Component {
 
   render() {
     const { store, history } = this.props
+
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
@@ -33,5 +30,3 @@ export class RootContainer extends React.Component {
     )
   }
 }
-
-export default RootContainer

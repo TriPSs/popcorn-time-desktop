@@ -1,3 +1,3 @@
-import MetadataAdapter from './MetadataAdapter'
+import Metadata from './MetadataAdapter'
 
-export default MetadataAdapter
+export default Metadata

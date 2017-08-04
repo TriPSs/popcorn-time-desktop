@@ -1,6 +1,5 @@
 // @flow
-
-import type { MovieType, ShowType } from '../../api/metadata/MetadataTypes'
+import type { MovieType, ShowType } from 'api/Metadata/MetadataTypes'
 
 export type activeModeOptionsType = {
   searchQuery: ?string,
@@ -27,7 +26,6 @@ export type Props = {
     }
   },
 
-  items: Array<itemType>,
   isLoading: boolean,
   infinitePagination: boolean
 }

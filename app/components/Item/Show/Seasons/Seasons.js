@@ -3,13 +3,10 @@ import classNames from 'classnames'
 
 import placeHolderImage from 'images/posterholder.png'
 import type { Props } from './SeasonsTypes'
-import classes from './Seasons.scss'
 
 export default class extends React.Component {
 
   props: Props
-
-  activeSeasonComponent
 
   componentDidUpdate(prevProps) {
     const { seasonsListComponent: newSeasonsListComponent } = this.props
@@ -22,6 +19,8 @@ export default class extends React.Component {
     }
   }
 
+  activeSeasonComponent
+
   render() {
     const { seasons, selectSeasonAndEpisode, selectedSeason } = this.props
 
@@ -29,6 +28,7 @@ export default class extends React.Component {
       <div className={'list'}>
         {seasons.map(season => (
           <a
+            role={'presentation'}
             ref={(ref) => {
               if (season.number === selectedSeason.number) {
                 this.activeSeasonComponent = ref

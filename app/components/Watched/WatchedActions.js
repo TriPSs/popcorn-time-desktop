@@ -12,31 +12,25 @@ export const getMoviesWatched = () => (dispatch) => {
   })
 }
 
-export function markedMovie(itemId) {
-  return {
-    type   : WatchedConstants.MARKED_MOVIE,
-    payload: itemId,
-  }
-}
+export const markedMovie = itemId => ({
+  type   : WatchedConstants.MARKED_MOVIE,
+  payload: itemId,
+})
 
-export function removeMarkedMovie(itemId) {
-  return {
-    type   : WatchedConstants.REMOVE_MOVIE_WATCHED,
-    payload: itemId,
-  }
-}
+export const removeMarkedMovie = itemId => ({
+  type   : WatchedConstants.REMOVE_MOVIE_WATCHED,
+  payload: itemId,
+})
 
-export function markedEpisode(itemId, season, episode, watched) {
-  return {
-    type   : WatchedConstants.MARKED_EPISODE,
-    payload: {
-      itemId,
-      season,
-      episode,
-      watched,
-    },
-  }
-}
+export const markedEpisode = (itemId, season, episode, watched) => ({
+  type   : WatchedConstants.MARKED_EPISODE,
+  payload: {
+    itemId,
+    season,
+    episode,
+    watched,
+  },
+})
 
 export const toggleWatched = item => (dispatch) => {
   if (item.type === MetadataConstants.TYPE_MOVIE) {
@@ -67,6 +61,7 @@ export const toggleWatched = item => (dispatch) => {
 
 export const updatePercentage = (item, percentage) => (dispatch) => {
   if (item.type === MetadataConstants.TYPE_MOVIE) {
+    // TODO:: update movie watched percentage
 
   } else {
     Database.watched.updateEpisodePercentage(item.showId, item.season, item.number, percentage).then(() => {

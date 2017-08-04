@@ -49,7 +49,7 @@ export default class Item extends React.Component {
       this.setState({
         torrent: null,
       })
-      this.stopPlayback()
+      this.handlePlayerStop()
 
       this.getAllData()
       window.scrollTo(0, 0)
@@ -60,7 +60,37 @@ export default class Item extends React.Component {
   }
 
   componentWillUnmount() {
-    this.stopPlayback()
+    this.handlePlayerStop()
+  }
+
+  handlePlayerStop = () => {
+    const { player, playerStatus } = this.props
+
+    if (playerStatus !== PlayerConstants.STATUS_NONE) {
+      player.stop()
+    }
+  }
+
+  setBestMovieTorrent = (torrents = this.props.item.torrents) => {
+    this.setTorrent(
+      getHighestQualtity(torrents),
+    )
+  }
+
+  setTorrent = (torrent) => {
+    this.setState({
+      torrent,
+    })
+  }
+
+  showPlayInfo = () => {
+    const { playerStatus, torrentStatus } = this.props
+
+    if (playerStatus === PlayerConstants.STATUS_PLAYING) {
+      return false
+    }
+
+    return torrentStatus === TorrentConstants.STATUS_NONE
   }
 
   play = (playerProvider, torrent = this.state.torrent) => {
@@ -81,36 +111,6 @@ export default class Item extends React.Component {
       default:
         player.play(torrent.url, item)
     }
-  }
-
-  setBestMovieTorrent = (torrents = this.props.item.torrents) => {
-    this.setTorrent(
-      getHighestQualtity(torrents),
-    )
-  }
-
-  setTorrent = (torrent) => {
-    this.setState({
-      torrent,
-    })
-  }
-
-  stopPlayback = () => {
-    const { player, playerStatus } = this.props
-
-    if (playerStatus !== PlayerConstants.STATUS_NONE) {
-      player.stop()
-    }
-  }
-
-  showPlayInfo = () => {
-    const { playerStatus, torrentStatus } = this.props
-
-    if (playerStatus === PlayerConstants.STATUS_PLAYING) {
-      return false
-    }
-
-    return torrentStatus === TorrentConstants.STATUS_NONE
   }
 
   getAllData = () => {
@@ -135,7 +135,7 @@ export default class Item extends React.Component {
           <button
             style={{ zIndex: 1060 }}
             className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-            onClick={this.stopPlayback}>
+            onClick={this.handlePlayerStop}>
             <i className={'ion-ios-arrow-back'} />
             Back
           </button>

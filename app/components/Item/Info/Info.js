@@ -81,7 +81,7 @@ export default ({ item, play, mode }: Props) => (
         {item.trailer && item.trailer !== 'n/a' && (
           <div data-tip data-for={'trailer-tooltip'}>
 
-            <i className={'ion-social-youtube-outline'} onClick={() => play('youtube')} />
+            <i role={'presentation'} className={'ion-social-youtube-outline'} onClick={() => play('youtube')} />
 
             <ReactTooltip id={'trailer-tooltip'} effect={'solid'}>
               Trailer

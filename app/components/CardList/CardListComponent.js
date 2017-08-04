@@ -4,15 +4,14 @@ import React from 'react'
 import Loader from 'components/Loader'
 
 import type { Props } from './CardListTypes'
-
 import Card from './Card'
 import classes from './CardList.scss'
 
 export const CardList = ({ items, isLoading, limit }: Props) => (
   <div className={classes.container}>
-    {(limit ? items.filter((e, i) => i < limit) : items).map((item, index) => (
+    {(limit ? items.filter((e, i) => i < limit) : items).map(item => (
       <Card
-        key={`item-${index}`}
+        key={`item-${item.id}`}
         item={item} />
     ))}
 

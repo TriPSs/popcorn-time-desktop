@@ -38,6 +38,7 @@ export const Cover = ({ item, history }: Props) => (
         )}
 
         <div
+          role={'presentation'}
           onClick={() => history.push(`/${item.type}/${item.id}`)}
           className={classes.overlay__click} />
       </div>
