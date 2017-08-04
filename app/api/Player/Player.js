@@ -43,8 +43,9 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     const { action: newAction, torrentStatus: newTorrentStatus } = nextProps
 
     if (newTorrentStatus !== oldTorrentStatus) {
-      if (newTorrentStatus === TorrentConstants.STATUS_BUFFERED
-          || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED) {
+      if ((newTorrentStatus === TorrentConstants.STATUS_BUFFERED
+          || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
+      && this.getStatus() !== PlayerConstants.STATUS_PAUSED) {
         const { uri, item } = nextProps
 
         this.play({ uri, item })

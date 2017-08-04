@@ -4,12 +4,12 @@ import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
+import logoImage from 'images/logo.png'
 import * as HomeConstants from 'components/Home/HomeConstants'
 import classes from './Header.scss'
 import type { Props } from './HeaderTypes'
 
-@withRouter()
-export default class extends React.Component {
+export class Header extends React.Component {
 
   props: Props
 
@@ -60,6 +60,10 @@ export default class extends React.Component {
             </Link>
           </li>
 
+          <li className={classNames(classes.menu__item, classes['menu__item-logo'])}>
+            <img src={logoImage} alt={'Popcorn Time'} />
+          </li>
+
           <li className={classNames(classes.menu__item, {
             [classes['menu__item--active']]: mode === HomeConstants.MODE_BOOKMARKS,
           }, classes['menu__item-right'])}>
@@ -75,3 +79,5 @@ export default class extends React.Component {
     )
   }
 }
+
+export default withRouter(Header)

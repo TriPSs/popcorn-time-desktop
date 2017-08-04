@@ -11,7 +11,6 @@
 import { app, BrowserWindow } from 'electron'
 import sourceMapSupport from 'source-map-support'
 import electronDebug from 'electron-debug'
-import electronDevtoolsInstaller, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer'
 
 import MenuBuilder from './menu'
 
@@ -29,18 +28,16 @@ if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true')
 }
 
 const installExtensions = async() => {
+  const installer = require('electron-devtools-installer') // eslint-disable-line global-require
+
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS
   const extensions    = [
-    REACT_DEVELOPER_TOOLS,
-    REDUX_DEVTOOLS,
+    'REACT_DEVELOPER_TOOLS',
+    'REDUX_DEVTOOLS',
   ]
 
-  return Promise.all(extensions.map(name => electronDevtoolsInstaller(electronDevtoolsInstaller[name], forceDownload)))
+  return Promise.all(extensions.map(name => installer.default(installer[name], forceDownload)))
 }
-
-/**
- * Add event listeners...
- */
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even

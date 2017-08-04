@@ -13,8 +13,9 @@ export default class TraktMetadataAdapter implements MetadataProviderInterface {
 
   constructor() {
     this.trakt = new Trakt({
-      client_id    : this.clientId,
-      client_secret: this.clientSecret,
+      client_id     : this.clientId,
+      client_secret : this.clientSecret,
+      useElectronNet: false,
     })
   }
 
