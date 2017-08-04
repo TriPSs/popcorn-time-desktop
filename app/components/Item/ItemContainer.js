@@ -1,8 +1,9 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as PlayerActions from 'components/Player/PlayerActions'
-import * as PlayerSelectors from 'components/Player/PlayerSelectors'
+import * as PlayerActions from 'api/Player/PlayerActions'
+import * as PlayerSelectors from 'api/Player/PlayerSelectors'
+import * as TorrentSelectors from 'api/Torrent/TorrentSelectors'
 
 import * as Actions from './ItemActions'
 import * as Selectors from './ItemSelectors'
@@ -15,9 +16,12 @@ export const mapDispatchToProps = dispatch => ({
 })
 
 export const mapStateToProps = state => ({
-  item        : Selectors.getItem(state),
-  isLoading   : Selectors.getIsLoading(state),
-  playerStatus: PlayerSelectors.getPlayerStatus(state),
+  item           : Selectors.getItem(state),
+  isLoading      : Selectors.getIsLoading(state),
+  selectedSeason : Selectors.getSelectedSeason(state),
+  selectedEpisode: Selectors.getSelectedEpisode(state),
+  playerStatus   : PlayerSelectors.getStatus(state),
+  torrentStatus  : TorrentSelectors.getStatus(state),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Item)

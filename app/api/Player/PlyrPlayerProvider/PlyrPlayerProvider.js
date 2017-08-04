@@ -1,23 +1,22 @@
 // @flow
+import ReduxClazz from 'redux-clazz'
 import debug from 'debug'
 import plyr from 'plyr'
 
 import Power from 'api/Power'
-import Events from 'api/Events'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import { PlayerProviderInterface } from '../PlayerInterface'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
+import { PlayerProviderInterface } from '../PlayerInterface'
 
 const log = debug('api:players:plyr')
 
-class PlyrPlayerProvider implements PlayerProviderInterface {
+export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInterface {
 
   provider = 'Plyr'
 
   player: plyr
 
-  status: string = PlayerStatuses.NONE
+  status: string = PlayerConstants.STATUS_NONE
 
   checkProgressInterval: number
 
@@ -26,8 +25,8 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   getPlayer = () => {
     if (!this.player) {
       this.player = plyr.setup({
-        volume         : 10,
-        autoplay       : true,
+        volume  : 10,
+        autoplay: true,
       })[0]
 
       if (this.player) {
@@ -48,7 +47,7 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
       sources: [
         {
           src : uri,
-          type: item.type,
+          type: item.type === 'youtube' ? 'youtube' : 'video/mp4',
         },
       ],
     })
@@ -70,18 +69,18 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   }
 
   pause = () => {
-    if (this.player) {
+    if (this.player && this.isPlaying()) {
       this.player.pause()
     }
   }
 
   stop = () => {
-    if (this.player) {
+    if (this.player && this.status !== PlayerConstants.STATUS_NONE) {
       this.player.stop()
     }
   }
 
-  isPlaying = () => this.status === PlayerStatuses.PLAYING
+  isPlaying = () => this.status === PlayerConstants.STATUS_PLAYING
 
   setEventListeners = () => {
     this.player.on('play', this.onPlay)
@@ -90,24 +89,31 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
   }
 
   onPlay = () => {
-    this.updateStatus(PlayerStatuses.PLAYING)
+    this.updateStatus(PlayerConstants.STATUS_PLAYING)
 
-    this.checkProgressInterval = this.progressInterval()
+    if (this.loadedItem.type !== 'youtube') {
+      this.checkProgressInterval = this.progressInterval()
+    }
   }
 
-  onPause = () => this.updateStatus(PlayerStatuses.PAUSED)
+  onPause = () => {
+    if (this.status !== PlayerConstants.STATUS_NONE) {
+      this.updateStatus(PlayerConstants.STATUS_PAUSED)
+    }
+  }
 
-  onEnded = () => this.updateStatus(PlayerStatuses.ENDED)
+  onEnded = () => this.updateStatus(PlayerConstants.STATUS_ENDED)
 
   updateStatus = (newStatus) => {
-    log(`Update status to ${newStatus}`)
+    const { updateStatus } = this.props
 
-    Events.emit(PlayerEvents.STATUS_CHANGE, {
-      oldState: this.status,
-      newStatus,
-    })
-    this.status = newStatus
-    this.clearIntervals()
+    if (this.status !== newStatus) {
+      log(`Update status to ${newStatus}`)
+
+      this.status = newStatus
+      updateStatus(newStatus)
+      this.clearIntervals()
+    }
   }
 
   destroy = () => {
@@ -118,20 +124,27 @@ class PlyrPlayerProvider implements PlayerProviderInterface {
       this.player.destroy()
       this.player = null
 
-      this.updateStatus(PlayerStatuses.NONE)
+      this.updateStatus(PlayerConstants.STATUS_NONE)
     }
   }
 
   progressInterval = () => setInterval(() => {
     if (this.player) {
-      const percentageComplete = ((this.player.getCurrentTime() / 60) / this.loadedItem.runtime.inMinutes) * 100
+      const { updatePercentage } = this.props
+      const percentage           = this.getPercentage()
 
-      if (percentageComplete > 90) {
+      if (percentage > 95) {
         this.clearIntervals()
-        Events.emit(PlayerEvents.VIDEO_ALMOST_DONE)
+
+        updatePercentage(this.loadedItem, 100)
+
+      } else {
+        updatePercentage(this.loadedItem, percentage)
       }
     }
-  }, 500)
+  }, 10000)
+
+  getPercentage = () => ((this.player.getCurrentTime() / 60) / this.loadedItem.runtime.inMinutes) * 100
 
   clearIntervals = () => {
     if (this.checkProgressInterval) {

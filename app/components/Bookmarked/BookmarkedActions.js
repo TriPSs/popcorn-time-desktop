@@ -20,7 +20,6 @@ export function getBookmarks() {
 
 export function toggleBookmark(item) {
   return (dispatch, getState) => {
-    // TODO:: Add item to shows or movies
     const { id, type } = item
 
     if (!isBookmarked(id, Selectors.getBookmarkes(getState()))) {

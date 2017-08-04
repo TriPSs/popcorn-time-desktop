@@ -1,12 +1,11 @@
 // @flow
+import ReduxClazz from 'redux-clazz'
 import chromecastAPI from 'chromecasts'
 import debug from 'debug'
 import network from 'network-address'
 
 import Power from 'api/Power'
-import Events from 'api/Events'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import type { DeviceType } from '../StreamingTypes'
 import { StreamingInterface } from '../StreamingInterface'
@@ -14,7 +13,7 @@ import type { ChromeCastApiType, ChromeCastType } from './ChromeCastTypes'
 
 const log = debug('api:players:chromecast')
 
-export class ChromeCastProvider implements StreamingInterface {
+export default class extends ReduxClazz implements StreamingInterface {
 
   provider: string = 'Chromecast'
 
@@ -26,17 +25,21 @@ export class ChromeCastProvider implements StreamingInterface {
 
   chromecasts: ChromeCastApiType
 
-  status: string = PlayerStatuses.NONE
+  status: string = PlayerConstants.STATUS_NONE
 
   checkProgressInterval: number
 
+  loadedItem: ContentType
+
   states = {
-    PLAYING  : PlayerStatuses.PLAYING,
-    BUFFERING: PlayerStatuses.BUFFERING,
-    PAUSED   : PlayerStatuses.PAUSED,
+    PLAYING  : PlayerConstants.STATUS_PLAYING,
+    BUFFERING: PlayerConstants.STATUS_BUFFERING,
+    PAUSED   : PlayerConstants.STATUS_PAUSED,
   }
 
-  constructor() {
+  constructor(...props) {
+    super(...props)
+
     this.chromecasts = chromecastAPI()
     this.chromecasts.on('update', this.onChromecastsUpdate)
   }
@@ -76,7 +79,7 @@ export class ChromeCastProvider implements StreamingInterface {
     Power.enableSaveMode()
     log(`Connecting to: ${this.selectedDevice.name} (${this.selectedDevice.host})`)
 
-    this.updateStatus(PlayerStatuses.CONNECTING)
+    this.updateStatus(PlayerConstants.STATUS_CONNECTING)
     this.loadedItem = item
     const media     = {
       type: 'video/mp4',
@@ -93,59 +96,48 @@ export class ChromeCastProvider implements StreamingInterface {
       },
     }
 
-    this.selectedDevice.play(streamingUrl, media, (error, status) => this.updateStatus(this.states[status.playerState]))
+    this.selectedDevice.play(streamingUrl, media, (error, status) => {
+      if (status) {
+        this.updateStatus(this.states[status.playerState])
+      }
+    })
+
     this.selectedDevice.on('status', status => this.updateStatus(this.states[status.playerState]))
   }
 
   pause = () => {
     log('Pause...')
-    if (this.selectedDevice && this.status !== PlayerStatuses.NONE) {
+    if (this.selectedDevice && this.status !== PlayerConstants.STATUS_NONE) {
       this.selectedDevice.pause()
     }
   }
 
   stop = () => {
     log('Stop...')
-    if (this.selectedDevice && this.status !== PlayerStatuses.NONE) {
+    if (this.selectedDevice && this.status !== PlayerConstants.STATUS_NONE) {
       this.selectedDevice.stop()
     }
   }
 
-  isPlaying = () => this.status === PlayerStatuses.PLAYING
+  isPlaying = () => this.status === PlayerConstants.STATUS_PLAYING
 
   updateStatus = (nStatus) => {
-    const newStatus = nStatus !== 'undefined' ? nStatus : PlayerStatuses.NONE
+    const newStatus = nStatus !== 'undefined' ? nStatus : PlayerConstants.STATUS_NONE
 
     if (newStatus !== this.status) {
       log(`Update status to ${newStatus}`)
+      const { updateStatus } = this.props
 
-      Events.emit(PlayerEvents.STATUS_CHANGE, {
-        oldState: this.status,
-        newStatus,
-      })
       this.status = newStatus
+      updateStatus(newStatus)
       this.clearIntervals()
 
-      if (newStatus === PlayerStatuses.PLAYING) {
+      if (newStatus === PlayerConstants.STATUS_PLAYING) {
         this.checkProgressInterval = this.progressInterval()
+
+      } else if (newStatus === PlayerConstants.STATUS_NONE) {
+        this.destroyPlayer()
       }
-    }
-  }
-
-  destroy = () => {
-    if (this.status !== PlayerStatuses.NONE) {
-      log('Destroy...')
-      Power.disableSaveMode()
-
-      if (this.selectedDevice) {
-        this.selectedDevice.stop()
-      }
-
-      if (this.chromecasts) {
-        this.chromecasts.destroy()
-      }
-
-      this.updateStatus(PlayerStatuses.NONE)
     }
   }
 
@@ -153,11 +145,16 @@ export class ChromeCastProvider implements StreamingInterface {
     if (this.selectedDevice) {
       this.selectedDevice.status((err, data) => {
         if (typeof data !== 'undefined') {
-          const percentageComplete = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
+          const { updatePercentage } = this.props
+          const percentage           = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
 
-          if (percentageComplete > 90) {
+          if (percentage > 95) {
             this.clearIntervals()
-            Events.emit(PlayerEvents.VIDEO_ALMOST_DONE)
+
+            updatePercentage(this.loadedItem, 100)
+
+          } else {
+            updatePercentage(this.loadedItem, percentage)
           }
 
         } else {
@@ -166,13 +163,31 @@ export class ChromeCastProvider implements StreamingInterface {
         }
       })
     }
-  }, 500)
+  }, 10000)
 
   clearIntervals = () => {
     if (this.checkProgressInterval) {
       clearInterval(this.checkProgressInterval)
     }
   }
-}
 
-export default ChromeCastProvider
+  destroy = () => {
+    if (this.status !== PlayerConstants.STATUS_NONE) {
+      log('Destroy...')
+      this.destroyPlayer()
+      this.updateStatus(PlayerConstants.STATUS_NONE)
+    }
+  }
+
+  destroyPlayer = () => {
+    Power.disableSaveMode()
+
+    if (this.selectedDevice) {
+      this.selectedDevice.stop()
+    }
+
+    if (this.chromecasts) {
+      this.chromecasts.destroy()
+    }
+  }
+}

@@ -1,5 +1,5 @@
 // @flow
-import type { RatingType } from 'api/metadata/MetadataTypes'
+import type { RatingType } from 'api/Metadata/MetadataTypes'
 
 export type Props = {
   rating: RatingType,

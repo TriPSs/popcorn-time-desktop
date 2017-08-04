@@ -9,6 +9,11 @@ cache:
   - node_modules -> package.json
   - app/node_modules -> app/package.json
 
+branches:
+  only:
+  - master
+  - develop
+
 matrix:
   fast_finish: true
 
@@ -23,11 +28,11 @@ clone_depth: 1
 install:
   - ps: Install-Product node $env:nodejs_version
   - set CI=true
-  - yarn
-  - cd app && yarn
+  - npm i
+  - cd app && npm i
 
 test_script:
-  # - npm run lint
+  - npm run lint:check
   # - npm run test
-  - npm run package
-  - npm run test-e2e
+  - npm run package:ci
+  # - npm run test-e2e

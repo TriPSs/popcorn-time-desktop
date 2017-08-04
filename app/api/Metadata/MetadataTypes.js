@@ -39,6 +39,9 @@ export type SeasonType = {
   episodes: Array<EpisodeType>,
   watched: number,
   type: string,
+  images: {
+    poster: ImageType,
+  },
 }
 
 export type EpisodeType = {
@@ -49,7 +52,10 @@ export type EpisodeType = {
   season: number,
   summary: string,
   aired: number,
-  watched: boolean,
+  watched: {
+    complete: boolean,
+    progress: number,
+  },
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,

@@ -1,11 +1,11 @@
 // @flow
 import React from 'react'
-import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import VisibilitySensor from 'react-visibility-sensor'
 
 import Header from '../Header'
 import CardList from '../CardList'
 
+import classes from './Home.scss'
 import * as Constants from './HomeConstants'
 import type { Props } from './HomeTypes'
 
@@ -24,12 +24,6 @@ export class Home extends React.Component {
         searchScrollTop: 0,
       }
     }
-  }
-
-  componentWillMount() {
-    const { bookmarks } = this.props
-
-    bookmarks.getBookmarks()
   }
 
   componentDidMount() {
@@ -64,9 +58,9 @@ export class Home extends React.Component {
       throw new Error('"document" not defined. You are probably not running in the renderer process')
     }
 
-    const { activeMode } = this.props
+    const { match: { params: { mode } } } = this.props
 
-    global.pct[`${activeMode}ScrollTop`] = document.body.scrollTop
+    global.pct[`${mode}ScrollTop`] = document.body.scrollTop
   }
 
   handleGetMoreItems = (isVisible: boolean = true) => {
@@ -88,10 +82,10 @@ export class Home extends React.Component {
     const { modes, isLoading }            = this.props
 
     return (
-      <div className={'container-fluid'}>
+      <div className={classes.home__container}>
 
         <Header />
-        <div className={'container-fluid'}>
+        <div className={classes.home__cards} style={{ padding: 0 }}>
           <CardList items={modes[mode].items} isLoading={isLoading} />
 
           <VisibilitySensor onChange={this.handleGetMoreItems} />

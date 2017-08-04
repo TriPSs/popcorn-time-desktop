@@ -25,12 +25,12 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
       }).then((results) => {
         const bestTorrents = {}
         results.filter(torrent => torrent.episode_info.imdb === item.id)
-               .map(torrent => this.formatTorrent(torrent, Helpers.determineQuality(torrent.download)))
-               .forEach((torrent: TorrentType) => {
-                 if (!bestTorrents[torrent.quality] || Helpers.getBestTorrent(bestTorrents[torrent.quality], torrent)) {
-                   bestTorrents[torrent.quality] = torrent
-                 }
-               })
+          .map(torrent => this.formatTorrent(torrent, Helpers.determineQuality(torrent.download)))
+          .forEach((torrent: TorrentType) => {
+            if (!bestTorrents[torrent.quality] || Helpers.getBestTorrent(bestTorrents[torrent.quality], torrent)) {
+              bestTorrents[torrent.quality] = torrent
+            }
+          })
 
         resolve(bestTorrents)
 
@@ -39,10 +39,9 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
 
         if (!retry) {
           return resolve(this.searchEpisode(item, season, episode, true))
+        }
 
-        } 
         return resolve([])
-        
       })
     })
 
@@ -55,16 +54,15 @@ export default class RarbgTorrentProvider implements TorrentProviderInterface {
         sort    : 'seeders',
         verified: false,
       }).then(results => results.map(torrent => this.formatTorrent(torrent)))
-         .catch((error) => {
-           log(`Failed search ${error}`)
+        .catch((error) => {
+          log(`Failed search ${error}`)
 
-           if (!retry) {
-             return resolve(this.search(query, category, true))
+          if (!retry) {
+            return resolve(this.search(query, category, true))
+          }
 
-           } 
-           return resolve([])
-           
-         })
+          return resolve([])
+        })
     })
 
   formatTorrent = (torrent, quality) => ({

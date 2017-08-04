@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as PlayerActions from 'components/Player/PlayerActions'
-import * as PlayerSelectors from 'components/Player/PlayerSelectors'
+import * as PlayerActions from 'api/Player/PlayerActions'
+import * as PlayerSelectors from 'api/Player/PlayerSelectors'
 
 import Devices from './Devices'
 

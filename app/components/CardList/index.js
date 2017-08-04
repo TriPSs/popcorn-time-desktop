@@ -1,3 +1,3 @@
-import CardList from './CardListComponent'
+import CardListComponent from './CardListComponent'
 
-export default CardList
+export default CardListComponent

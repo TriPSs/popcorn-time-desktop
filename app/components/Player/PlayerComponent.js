@@ -2,15 +2,12 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import Events from 'api/Events'
 import MediaPlayer from 'api/Player'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as PlayerEvents from 'api/Player/PlayerEvents'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import * as PlayerConstants from 'api/Player/PlayerConstants'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
+import itemClasses from '../Item/Item.scss'
 import type { Props } from './PlayerTypes'
-import * as Constants from './PlayerConstants'
 import classes from './Player.scss'
 import Stats from './Stats'
 
@@ -18,70 +15,36 @@ export class Player extends React.Component {
 
   props: Props
 
-  state = {
-    torrentStatus: TorrentStatuses.NONE,
-  }
-
-  componentDidMount() {
-    Events.on(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.on(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { playerAction: newPlayerAction } = nextProps
-    const { playerAction: oldPlayerAction } = this.props
-
-    if (oldPlayerAction !== newPlayerAction) {
-      const { uri, item } = nextProps
-
-      MediaPlayer.firePlayerAction(newPlayerAction, {
-        uri,
-        item: {
-          ...item,
-          type: uri.indexOf('youtube') > -1 ? 'youtube' : 'video/mp4',
-        },
-      })
-    }
-  }
-
   componentWillUnmount() {
-    Events.remove(PlayerEvents.STATUS_CHANGE, this.playerStatusChanged)
-    Events.remove(TorrentEvents.STATUS_CHANGE, this.torrentStatusChange)
     MediaPlayer.destroy()
   }
 
-  playerStatusChanged = (event, data) => {
-    const { newStatus }    = data
-    const { updateStatus } = this.props
-
-    updateStatus(newStatus)
-  }
-
-  torrentStatusChange = (event, data) => {
-    const { newStatus } = data
-
-    this.setState({
-      torrentStatus: newStatus,
-    })
-  }
-
-  shouldShowPlayer = () => {
-    const { playerStatus, playerAction } = this.props
-
-    return (playerStatus === PlayerStatuses.PLAYING
-            || playerStatus === PlayerStatuses.PAUSED
-            || playerStatus === PlayerStatuses.BUFFERING)
-           && playerAction !== Constants.PLAYER_ACTION_STOP
-  }
-
   isHidden = () => {
-    const { torrentStatus } = this.state
+    const { torrentStatus } = this.props
 
     if (this.shouldShowPlayer()) {
       return false
     }
 
-    return torrentStatus === TorrentStatuses.NONE
+    return torrentStatus === TorrentConstants.STATUS_NONE
+  }
+
+  shouldShowPlayer = () => {
+    const { playerStatus, playerAction } = this.props
+
+    return playerStatus !== PlayerConstants.STATUS_NONE
+           && playerStatus !== PlayerConstants.STATUS_ENDED
+           && playerAction !== PlayerConstants.ACTION_STOP
+  }
+
+  shouldShowControls = () => {
+    const { playerProvider, playerStatus } = this.props
+
+    if (playerProvider === PlayerConstants.PROVIDER_PLYR) {
+      return false
+    }
+
+    return playerStatus === PlayerConstants.STATUS_PLAYING || playerStatus === PlayerConstants.STATUS_PAUSED
   }
 
   renderVideo = () => {
@@ -105,33 +68,46 @@ export class Player extends React.Component {
           Close
         </button>
 
-        <video controls />
+        <video controls>
+          <track kind={'captions'} />
+        </video>
       </div>
     )
   }
 
   render() {
-    const { playerProvider, playerStatus, item } = this.props
-    const { stop }                               = this.props
-    const { torrentStatus }                      = this.state
+    const { playerProvider, playerStatus } = this.props
+    const { stop, torrentStatus }          = this.props
 
     return (
       <div
         className={classNames({
-          'col-sm-6': !this.shouldShowPlayer() || playerProvider === Constants.PLAYER_PROVIDER_CHROMECAST,
-          hidden    : this.isHidden(),
+          [classes['player--hidden']]: this.isHidden(),
         }, classes.player)}>
-        {torrentStatus !== TorrentStatuses.NONE && (
+
+        {torrentStatus !== TorrentConstants.STATUS_NONE && (
           <Stats {...{
-            item,
             playerProvider,
             playerStatus,
             torrentStatus,
-            stopPlayer: stop,
           }} />
         )}
 
-        {playerProvider === Constants.PLAYER_PROVIDER_PLYR && this.renderVideo()}
+        <div className={classes.player__controls}>
+          {this.shouldShowControls() && (
+            <div>
+              OTHER CONTROLS COME HERE
+            </div>
+          )}
+
+          <button
+            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+            onClick={stop}>
+            Cancel
+          </button>
+        </div>
+
+        {playerProvider === PlayerConstants.PROVIDER_PLYR && this.renderVideo()}
       </div>
     )
   }

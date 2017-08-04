@@ -1,10 +1,10 @@
 import { remote } from 'electron'
 import debug from 'debug'
 
-const log = debug('api:power')
+const log                  = debug('api:power')
 const { powerSaveBlocker } = remote
 
-export class Power {
+export default new (class {
 
   powerSaveBlockerId: number
 
@@ -23,7 +23,4 @@ export class Power {
     }
   }
 
-}
-
-export const instance = new Power()
-export default instance
+})()

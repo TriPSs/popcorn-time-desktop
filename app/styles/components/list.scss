@@ -1,76 +1,224 @@
 .list {
-  box-shadow: $default-box-shadow;
-  background: $body-bg;
-  width: 100%;
-  color: #FFF;
-  max-height: $list-max-height;
-  overflow-x: auto;
-
-  &-item {
-	position: relative;
 	display: flex;
-	width: 100%;
-	background: $list-item-bg;
-	padding: 5px 30px;
-	cursor: pointer;
+	flex-flow: row wrap;
+	position: relative;
 
-	&__text {
-	  height: 60px;
-	  line-height: 60px;
-	  overflow: hidden;
-	  text-overflow: ellipsis;
-	  white-space: nowrap;
-	  z-index: 2;
-	}
+	&__item {
+		margin: 3.5px;
+		position: relative;
+		width: 130px;
+		min-width: 130px;
+		color: $list-item-color !important;
+		transition: $transition-opacity-in;
 
-	&__health {
-	  margin-left: auto;
-	  display: flex;
-	  align-items: center;
+		&--hor {
+			@extend .list__item;
 
-	  i {
-		font-size: 22px;
-		color: rgba(255, 255, 255, 0.6);
-	  }
+			width: 275px;
+			min-width: 275px;
 
-	  &-status {
-		margin-left: 5px;
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		transition: background-color 500ms linear;
-
-		&:first-of-type {
-		  margin-left: 20px;
+			.list__item-image-placeholder {
+				width: 80px;
+			}
 		}
-	  }
+
+		&--available {
+			cursor: pointer;
+
+			&:hover {
+				color: $list-item-active-color !important;
+
+				.list__item-overlay {
+					opacity: 0.2;
+				}
+			}
+		}
+
+		&--active {
+			color: $list-item-active-color !important;
+
+			.list__item-overlay {
+				opacity: 0.2;
+			}
+
+			.list__item-play,
+			.list__item-search,
+			.list__item-loader,
+			.list__item-qualities {
+				opacity: 1;
+			}
+		}
+
+		&--watched {
+			opacity: 0.4;
+
+			&:hover {
+				opacity: 1;
+			}
+		}
+
+		&--disabled {
+			.list__item-overlay {
+				opacity: 0.85;
+				cursor: default;
+			}
+		}
+
+		&-title {
+			margin-top: 10px;
+			margin-bottom: 15px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			transition: $transition-opacity-in;
+		}
+
+		&-summary {
+			transition: $transition-opacity-in;
+			max-height: 200px;
+			overflow: scroll;
+		}
+
+		&-image {
+			width: 100%;
+			height: 100%;
+
+			&-placeholder {
+				width: 130px;
+			}
+
+			&-container {
+				position: relative;
+				width: 100%;
+				box-shadow: $default-box-shadow;
+				background: transparent;
+				text-align: center;
+				height: 190px;
+
+				&--hor {
+					@extend .list__item-image-container;
+
+					height: 150px;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+			}
+		}
+
+		&-overlay {
+			position: absolute;
+			background: #000;
+			width: 100%;
+			height: 100%;
+			opacity: 0.6;
+			top: 0;
+			transition: $transition-opacity-in;
+
+			&-text {
+				position: absolute;
+				color: rgba(255, 255, 255, 0.5);
+			}
+		}
+
+		&-watched {
+			position: absolute;
+			top: 0;
+			right: 15px;
+		}
+
+		&-qualities {
+			position: absolute;
+			margin-top: 40px;
+			display: flex;
+			height: 30px;
+			line-height: 30px;
+			opacity: 0;
+			transition: $transition-opacity-in;
+		}
+
+		&-loader {
+			opacity: 0;
+		}
+
+		&-quality {
+			color: white;
+			font-weight: 100;
+			margin: 0 10px;
+			opacity: 0.6;
+
+			&--active {
+				font-weight: bold;
+			}
+
+			&--available {
+				cursor: pointer;
+				opacity: 1;
+			}
+		}
+
+		&-progress {
+			position: absolute;
+			bottom: 5px;
+			width: 90%;
+			height: 2px;
+			box-shadow: $default-box-shadow;
+
+			div {
+				height: 2px;
+				background: #fff;
+			}
+		}
+
+		&-search {
+			position: absolute;
+			transition: $transition-opacity-in;
+			opacity: 0;
+			font-size: 25px;
+			left: 20px;
+			top: 3px;
+		}
+
+		&-play {
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			opacity: 0;
+			transition: $transition-opacity-in;
+
+			:global {
+				i {
+					&.ion-search {
+						font-size: 25px;
+
+						&:before {
+							padding-left: 1px;
+						}
+					}
+				}
+			}
+
+			i {
+				position: absolute;
+				top: 0;
+				display: flex;
+				color: white;
+				font-size: 35px;
+				justify-content: center;
+				align-items: center;
+				pointer-events: none;
+
+				&:before {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					border: 2px solid white;
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					padding-left: 5px;
+				}
+			}
+		}
 	}
-
-	&:hover {
-	  background: $list-item-bg-hover;
-	  transition: background-color 200ms linear;
-	}
-
-	&--active {
-	  background: $list-item-bg-hover;
-	}
-
-	&--disabled {
-	  background: $list-item-bg-disabled;
-
-	  &:hover {
-		background: $list-item-bg-disabled;
-	  }
-	}
-
-	&--watched {
-	  opacity: 0.4;
-	  background: darken($body-bg, 2%);
-
-	  &:hover {
-		opacity: 1;
-	  }
-	}
-  }
-
 }

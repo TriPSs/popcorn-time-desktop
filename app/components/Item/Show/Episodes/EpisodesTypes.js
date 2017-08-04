@@ -2,11 +2,8 @@
 import type { SeasonType } from 'api/Metadata/MetadataTypes'
 
 export type Props = {
-  selectedSeason: SeasonType,
+  seasons: Array<SeasonType>,
+  selectedSeason: number,
   selectedEpisode: number,
   selectSeasonAndEpisode: () => void,
-}
-
-export type State = {
-  tooltips: Array,
 }

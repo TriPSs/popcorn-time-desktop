@@ -1,5 +1,3 @@
-/* eslint global-require: 1, flowtype-errors/show-errors: 0 */
-
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes
@@ -11,38 +9,35 @@
  * @flow
  */
 import { app, BrowserWindow } from 'electron'
+import sourceMapSupport from 'source-map-support'
+import electronDebug from 'electron-debug'
+
 import MenuBuilder from './menu'
 
 let mainWindow = null
 
 if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support')
   sourceMapSupport.install()
 }
 
 if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-  require('electron-debug')()
-  const path = require('path')
-  const p    = path.join(__dirname, '..', 'app', 'node_modules')
-  require('module').globalPaths.push(p)
+  electronDebug()
+  /*  const path = require('path')
+    const p    = path.join(__dirname, '..', 'app', 'node_modules')
+    require('module').globalPaths.push(p) */
 }
 
-const installExtensions = async () => {
-  const installer     = require('electron-devtools-installer')
+const installExtensions = async() => {
+  const installer = require('electron-devtools-installer') // eslint-disable-line global-require
+
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS
   const extensions    = [
     'REACT_DEVELOPER_TOOLS',
     'REDUX_DEVTOOLS',
   ]
 
-  return Promise
-    .all(extensions.map(name => installer.default(installer[name], forceDownload)))
-    .catch(console.log)
+  return Promise.all(extensions.map(name => installer.default(installer[name], forceDownload)))
 }
-
-/**
- * Add event listeners...
- */
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
@@ -52,7 +47,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('ready', async () => {
+app.on('ready', async() => {
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions()
   }
@@ -63,6 +58,7 @@ app.on('ready', async () => {
     width          : 1285,
     minHeight      : 745,
     height         : 745,
+    center         : true,
     backgroundColor: '#252525',
     webPreferences : {
       darkTheme             : true,

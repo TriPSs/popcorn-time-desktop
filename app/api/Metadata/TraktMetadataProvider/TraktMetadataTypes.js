@@ -1,8 +1,6 @@
 // @flow
 
-export type EpisodeType = {
-  available_translations: Array,
-  first_aired: string,
+export type TraktItemType = {
   ids: {
     imbdb: string,
     tmdb: number,
@@ -10,13 +8,4 @@ export type EpisodeType = {
     tvdb: number,
     tvrage: number,
   },
-  number: number,
-  number_abs: number,
-  overview: string,
-  rating: number,
-  runtime: number,
-  season: number,
-  title: string,
-  updated_at: string,
-  votes: number,
 }

@@ -1,1 +1,3 @@
-export default from './Player'
+import PlayerContainer from './PlayerContainer'
+
+export default PlayerContainer

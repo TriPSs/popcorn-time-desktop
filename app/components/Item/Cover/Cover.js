@@ -1,16 +1,20 @@
 import React from 'react'
 import classNames from 'classnames'
-import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 
+import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import type { Props } from './CoverTypes'
 import QualitySwitch from './QualitySwitch'
 import classes from './Cover.scss'
 
+import itemClasses from '../Item.scss'
+
 export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
-  <div className={classNames('col-sm-6', classes.cover)}>
+  <div className={classNames(itemClasses.content__container, classes.cover)}>
     <div
-      onClick={() => showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null}
+      role={'presentation'}
+      onClick={() => (showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null)}
       className={classes.cover__image}>
+
       <img
         className={classNames('animated fadeIn')}
         alt={'presentation'}
@@ -19,7 +23,7 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
 
       <div className={classNames(
         classes['cover__image-overlay'],
-        { [classes['cover__image-overlay--with-hover']]: showPlayInfo && mode === MetadataConstants.TYPE_MOVIE },
+        { [classes['cover__image-overlay--with-hover']]: mode === MetadataConstants.TYPE_MOVIE && showPlayInfo },
       )} />
 
       {showPlayInfo && mode === MetadataConstants.TYPE_MOVIE && (
@@ -29,12 +33,14 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
     </div>
 
     {mode === MetadataConstants.TYPE_MOVIE && (
-      <QualitySwitch
-        showPlayInfo={showPlayInfo}
-        setTorrent={setTorrent}
-        torrents={torrents}
-        torrent={torrent} />
+      <QualitySwitch {...{
+        showPlayInfo,
+        setTorrent,
+        torrents,
+        torrent,
+      }} />
     )}
+
   </div>
 )
 

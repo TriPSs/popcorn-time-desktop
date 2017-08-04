@@ -1,6 +1,0 @@
-export const NONE        = 'torrent.status.none'
-export const CONNECTING  = 'torrent.status.connecting'
-export const BUFFERING   = 'torrent.status.buffering'
-export const BUFFERED    = 'torrent.status.buffered'
-export const DOWNLOADING = 'torrent.status.downloading'
-export const DOWNLOADED  = 'torrent.status.downloaded'

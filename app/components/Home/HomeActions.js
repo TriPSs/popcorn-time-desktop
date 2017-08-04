@@ -35,15 +35,16 @@ export function getItems(mode, page = 1) {
         return Butter.getShows(page, filters).then(shows => dispatch(fetchedItems(shows, mode)))
 
       case Constants.MODE_BOOKMARKS:
-        return Database.movies.getAll().then(({ docs }) => {
-          dispatch(fetchedItems(docs, mode))
+        return Database.movies.getAll().then(({ docs: movies }) => {
+          dispatch(fetchedItems(movies, mode))
 
-          return Database.shows.getAll().then(({ docs }) => dispatch(fetchedItems(docs, mode)))
+          return Database.shows.getAll().then(({ docs: shows }) => dispatch(fetchedItems(shows, mode)))
         })
 
       case Constants.MODE_SEARCH:
       // TODO:: Get searchQuery from state
       // return Butter.getShows(page).then(shows => dispatch(fetchedItems(shows, activeMode)))
+        return null
 
       default:
         return null

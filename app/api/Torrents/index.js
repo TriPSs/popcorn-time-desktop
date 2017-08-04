@@ -1,1 +1,3 @@
-export default from './TorrentsAdapter'
+import Adapter from './TorrentsAdapter'
+
+export default Adapter

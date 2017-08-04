@@ -135,6 +135,7 @@
     "jsx-a11y/img-redundant-alt": [2],
     "jsx-a11y/aria-role": [2],
     "jsx-a11y/no-access-key": [2],
+    "jsx-a11y/href-no-hash": "off",
 
     "class-methods-use-this": "off",
     "fp/no-arguments": "off",
@@ -155,6 +156,7 @@
     "fp/no-unused-expression": "off",
     "fp/no-valueof-field": "off",
     "import/no-extraneous-dependencies": "off",
+    "import/no-named-as-default": 0,
     "no-var": "off",
     "no-let": "off",
     "no-plusplus": "off",

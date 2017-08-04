@@ -1,13 +1,11 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux-clazz'
 import thunk from 'redux-thunk'
-import { createHashHistory } from 'history'
 import { routerMiddleware } from 'react-router-redux'
+import { createLogger } from 'redux-logger'
 
 import reducers from './reducers'
 
-export const history = createHashHistory()
-
-export const configureStore = (initialState) => {
+export default (initialState) => {
   const middleware = [
     thunk,
     routerMiddleware(history),
@@ -15,8 +13,6 @@ export const configureStore = (initialState) => {
 
   const enhancers = []
   if (__DEV__) {
-    const createLogger = require('redux-logger').createLogger
-
     middleware.push(createLogger({
       level    : 'info',
       collapsed: true,
@@ -43,12 +39,12 @@ export const configureStore = (initialState) => {
   )
 
   if (__DEV__ && module.hot) {
+    /* eslint-disable */
     module.hot.accept('./reducers', () =>
       store.replaceReducer(require('./reducers')),
     )
+    /* eslint-enable */
   }
 
   return store
 }
-
-export default { configureStore, history }

@@ -24,13 +24,13 @@ export class Devices extends React.Component {
 
   render() {
     const { devices, selectedDevice, player } = this.props
-    const { open }                    = this.state
+    const { open }                            = this.state
 
     return (
       <div className={classes.devices}>
-        <Dropdown isOpen={open} toggle={this.toggleOpen}>
+        <Dropdown className={classNames({ open })} isOpen={open} toggle={this.toggleOpen}>
           <button
-            onClick={this.toggleOpen}
+            onClick={() => this.toggleOpen()}
             className={classNames(
               'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
               classes.devices__button,

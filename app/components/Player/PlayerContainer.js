@@ -1,18 +1,17 @@
 import { connect } from 'react-redux'
 
-import * as ItemSelectors from '../Item/ItemSelectors'
-import * as Actions from './PlayerActions'
-import * as Selectors from './PlayerSelectors'
+import * as PlayerActions from 'api/Player/PlayerActions'
+import * as PlayerSelectors from 'api/Player/PlayerSelectors'
+import * as TorrentSelectors from 'api/Torrent/TorrentSelectors'
 
 import Player from './PlayerComponent'
 
 export const mapStateToProps = state => ({
-  uri           : Selectors.getUri(state),
-  item          : ItemSelectors.getItem(state),
-  playerAction  : Selectors.getPlayerAction(state),
-  playerStatus  : Selectors.getPlayerStatus(state),
-  playerProvider: Selectors.getPlayerProvider(state),
-  devices       : Selectors.getDevices(state),
+  uri           : PlayerSelectors.getUri(state),
+  playerAction  : PlayerSelectors.getAction(state),
+  playerProvider: PlayerSelectors.getProvider(state),
+  playerStatus  : PlayerSelectors.getStatus(state),
+  torrentStatus : TorrentSelectors.getStatus(state),
 })
 
-export default connect(mapStateToProps, { ...Actions })(Player)
+export default connect(mapStateToProps, PlayerActions)(Player)

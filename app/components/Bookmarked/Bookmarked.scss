@@ -1,7 +1,7 @@
 @import 'base/variables';
 
 .bookmarked {
-  position: absolute;
+  position: relative;
   width: 50px;
   height: 50px;
   font-size: 30px;
@@ -13,22 +13,22 @@
   right: 0;
 
   &:hover {
-	opacity: 1;
+    opacity: 1;
   }
 
   &--yes {
-	@extend .bookmarked;
+    @extend .bookmarked;
 
-	color: red;
+    color: $bookmarked-color !important;
   }
 
   &--no {
-	@extend .bookmarked;
+    @extend .bookmarked;
 
-	color: black;
+    color: $bookmark-color;
 
-	&:hover {
-	  color: red;
-	}
+    &:hover {
+      color: $bookmarked-color !important;
+    }
   }
 }

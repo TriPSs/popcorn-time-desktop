@@ -1,5 +1,4 @@
 import path from 'path'
-import { argv } from 'yargs'
 import environments from './environments'
 
 const base = (...args) => Reflect.apply(path.resolve, null, [path.resolve(__dirname, '..'), ...args])
@@ -36,7 +35,6 @@ config.globals = {
   __PROD__     : config.env === 'production',
   __DEV__      : config.env === 'development',
   __TEST__     : config.env === 'test',
-  __DEBUG__    : config.env === 'development' && !argv.no_debug,
 }
 
 const overrides = environments[config.env]

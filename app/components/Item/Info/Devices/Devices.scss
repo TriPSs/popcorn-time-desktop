@@ -1,77 +1,42 @@
 @import 'base/variables';
 
 .devices {
-  position: relative;
+	position: absolute;
+	right: -20px;
 
   &__button {
-	z-index: 1060;
-	display: flex;
-	position: relative;
-	margin: 0;
+    z-index: 1060;
+    display: flex;
+    position: relative;
+    margin: 0;
   }
 }
 
 .dropdown {
-
   &__menu {
-	background: transparent;
-	border: none;
+    background: transparent;
+    border: none;
 
-	button {
-	  position: relative;
-	  z-index: 100;
-	  color: white;
-	  margin: 5px 0;
-	  padding: 5px 20px;
-	  opacity: 0.2;
-	  transition: opacity 0.1s ease-in;
-	  border: 2px solid white;
-	  border-radius: 30px;
+    button {
+      position: relative;
+      z-index: 100;
+      color: white;
+      margin: 5px 0;
+      padding: 5px 20px;
+      opacity: 0.2;
+      transition: opacity 0.1s ease-in;
+      border: 2px solid white;
+      border-radius: 30px;
 
-	  &:focus {
-		outline: none;
-	  }
+      &:focus {
+        outline: none;
+      }
 
-	  &:hover {
-		opacity: 1;
-		background: transparent;
-		color: white;
-	  }
-	}
+      &:hover {
+        opacity: 1;
+        background: transparent;
+        color: white;
+      }
+    }
   }
-
-  /**
-  &__menu {
-	width: 100%;
-	background: $body-bg;
-	border: 2px solid white;
-	border-radius: 20px 20px 0 0;
-	top: -2px;
-
-	button {
-	  position: relative;
-	  z-index: 100;
-	  color: white;
-	  margin: 10px 0;
-	  padding: 5px 10px;
-	  opacity: 0.6;
-	  transition: opacity 0.1s ease-in;
-	  background: $body-bg;
-
-	  &:focus {
-		outline: none;
-	  }
-
-	  &:first-of-type {
-		margin-top: 40px;
-	  }
-
-	  &:hover {
-		opacity: 1;
-		background: $body-bg;
-		color: white;
-	  }
-	}
-  }
-   */
 }

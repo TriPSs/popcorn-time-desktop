@@ -1,9 +1,38 @@
 {
   "extends": "stylelint-config-standard",
-  "rules": {
-	"color-hex-case": "upper",
+  "rules":   {
+	"color-hex-case": "lower",
 	"selector-pseudo-element-colon-notation": "single",
-	"selector-pseudo-class-no-unknown": [true, {"ignorePseudoClasses": ["global"]}],
-	"indentation": null
+	"selector-pseudo-class-no-unknown": [
+	  true,
+	  {
+		"ignorePseudoClasses": [
+		  "global"
+		]
+	  }
+	],
+	"indentation": null,
+	"at-rule-no-unknown": [
+	  true,
+	  {
+		"ignoreAtRules": [
+		  "extend",
+		  "at-root",
+		  "debug",
+		  "warn",
+		  "error",
+		  "if",
+		  "else",
+		  "for",
+		  "each",
+		  "while",
+		  "mixin",
+		  "include",
+		  "content",
+		  "return",
+		  "function"
+		]
+	  }
+	]
   }
 }

@@ -1,46 +1,44 @@
 // @flow
-import * as Constants from './ItemConstants'
+import { WatchedConstants } from 'components/Watched'
+import * as ItemConstants from './ItemConstants'
 
-export default (state = Constants.INITIAL_STATE, action) => {
+export default (state = ItemConstants.INITIAL_STATE, action) => {
   switch (action.type) {
 
-    case Constants.FETCH_ITEM:
+    case ItemConstants.FETCH_ITEM:
       return {
         ...state,
         isLoading: true,
       }
 
-    case Constants.FETCHED_ITEM:
+    case ItemConstants.FETCHED_ITEM:
       return {
         ...state,
         isLoading: false,
         item     : action.payload,
       }
 
-    case Constants.FETCH_EPISODE_TORRENTS:
+    case ItemConstants.FETCH_EPISODE_TORRENTS:
       return {
         ...state,
         fetchingEpisodeTorrents: true,
       }
 
-    case Constants.FETCHED_EPISODE_TORRENTS:
+    case ItemConstants.FETCHED_EPISODE_TORRENTS:
       return {
         ...state,
         fetchingEpisodeTorrents: false,
         item                   : action.payload,
       }
 
-    case Constants.MARKED_MOVIE_WATCHED:
+    case ItemConstants.SELECT_SEASON_EPISODE:
       return {
         ...state,
-        item: {
-          ...state.item,
-          watched: true,
-        },
+        ...action.payload,
       }
 
-    case Constants.MARKED_EPISODE_UNWATCHED:
-    case Constants.MARKED_EPISODE_WATCHED:
+    case WatchedConstants.UPDATE_PERCENTAGE_EPISODE:
+    case WatchedConstants.MARKED_EPISODE:
       return {
         ...state,
         item: {
@@ -53,18 +51,18 @@ export default (state = Constants.INITIAL_STATE, action) => {
                     ...episode,
                     watched: action.payload.watched,
                   }
-                } 
+                }
                 return episode
-                
+
               })
+
               return {
                 ...season,
                 episodes,
-                watched: (episodes.filter(episode => !!episode.watched).length / episodes.length) * 100,
               }
-            } 
+            }
+
             return season
-            
           }),
         },
       }

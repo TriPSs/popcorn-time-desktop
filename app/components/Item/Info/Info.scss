@@ -5,58 +5,82 @@
   color: white;
 
   &__title {
-	min-height: 50px;
+    min-height: 50px;
   }
 
   &__genres * {
-	text-transform: capitalize;
+    text-transform: capitalize;
   }
 
   &__basic {
-	min-height: 25px;
+    min-height: 25px;
   }
 
   &__certification {
-	border: 1px solid white;
-	box-sizing: border-box;
-	color: white;
-	display: inline-block;
-	padding: 1px 9px;
+    border: 1px solid white;
+    box-sizing: border-box;
+    color: white;
+    display: inline-block;
+    padding: 1px 9px;
   }
 
   &__details {
-	height: 40px;
+    display: flex;
+    align-items: center;
 
-	> div {
-	  margin-right: 35px;
-	}
+    &-container {
+			width: 100%;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      bottom: 0;
+    }
 
-	:global {
-	  .ion-social-youtube-outline {
-		font-size: 30px;
-		cursor: pointer;
+    > div {
+      margin-right: 20px;
+    }
 
-		&:hover {
-		  color: red;
-		}
-	  }
+    :global {
+      .ion-social-youtube-outline {
+        font-size: 30px;
+        cursor: pointer;
 
-	  .dv-star-rating {
-		font-size: 1.3rem;
-		min-width: 115px;
-	  }
-	}
+        &:hover {
+          color: red;
+        }
+      }
+
+      .dv-star-rating {
+        font-size: 1.3rem;
+        min-width: 115px;
+      }
+    }
   }
 
   i {
-	color: white;
+    color: white;
+
+    :global {
+      .ion-heart {
+        &:hover {
+          color: $bookmarked-color;
+        }
+      }
+    }
+  }
+
+  &__status {
+    text-transform: capitalize;
   }
 
   &__summary {
-	font-weight: 100;
-	line-height: 150%;
-	max-width: $item-summary-max-with;
-	min-height: 170px
+    font-weight: 100;
+    line-height: 150%;
+    margin-bottom: 80px;
   }
 
+  &__bookmarked {
+    position: relative;
+  }
 }

@@ -1,0 +1,23 @@
+@import 'base/variables';
+
+.watched {
+  position: relative;
+  transition: $transition-opacity-in;
+  opacity: 0.6;
+  font-size: 30px;
+  z-index: 2000;
+  cursor: pointer;
+  color: $bookmark-color;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &--yes {
+    @extend .watched;
+  }
+
+  &--no {
+    @extend .watched;
+  }
+}

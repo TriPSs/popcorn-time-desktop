@@ -1,11 +1,17 @@
 // @flow
 import React from 'react'
 import { withRouter } from 'react-router'
+import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
-import { Link } from 'react-router-dom'
+import logoImage from 'images/logo.png'
+import * as HomeConstants from 'components/Home/HomeConstants'
+import classes from './Header.scss'
+import type { Props } from './HeaderTypes'
 
 export class Header extends React.Component {
+
+  props: Props
 
   state = {
     searchQuery: '',
@@ -30,63 +36,45 @@ export class Header extends React.Component {
     const { match: { params: { mode } } } = this.props
 
     return (
-      <div className="row" style={{ height: 64 }}>
-        <div className="col-sm-12">
-          <nav className="navbar navbar-dark navbar-fixed-top bg-inverse">
-            <div className="row">
-              <div className="col-sm-6">
-                <ul className="nav navbar-nav">
-                  <li className={classNames('nav-item', {
-                    active: mode === 'movies',
-                  })}>
-                    <Link
-                      to={'/movies'}
-                      replace
-                      className="nav-link">
-                      Movies
-                    </Link>
-                  </li>
-                  <li className={classNames('nav-item', {
-                    active: mode === 'shows',
-                  })}>
-                    <Link
-                      className="nav-link"
-                      to={'/shows'}
-                      replace>
-                      TV Shows
-                    </Link>
-                  </li>
+      <div className={classes.menu__container}>
+        <ul className={classes.menu}>
+          <li className={classNames(classes.menu__item, {
+            [classes['menu__item--active']]: mode === HomeConstants.MODE_MOVIES,
+          }, classes['menu__item-left'])}>
+            <Link
+              to={'/movies'}
+              replace
+              className="nav-link">
+              Movies
+            </Link>
+          </li>
 
-                  <li className={classNames('nav-item', {
-                    active: mode === 'bookmarks',
-                  })}>
-                    <Link
-                      className="nav-link"
-                      to={'/bookmarks'}
-                      replace>
-                      Bookmarks
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              {/* <div className="col-md-offset-3 col-md-3">
-               <div className="input-group pull-right">
-               <span className="input-group-addon" id="basic-addon1">
-               <i className="ion-ios-search-strong" />
-               </span>
-               <input
-               className="form-control"
-               value={searchQuery}
-               onKeyPress={this.handleKeyPress}
-               onChange={this.handleSearchChange}
-               type="text"
-               placeholder="Search"
-               />
-               </div>
-               </div>*/}
-            </div>
-          </nav>
-        </div>
+          <li className={classNames(classes.menu__item, {
+            [classes['menu__item--active']]: mode === HomeConstants.MODE_SHOWS,
+          }, classes['menu__item-left'])}>
+            <Link
+              className="nav-link"
+              to={'/shows'}
+              replace>
+              TV Shows
+            </Link>
+          </li>
+
+          <li className={classNames(classes.menu__item, classes['menu__item-logo'])}>
+            <img src={logoImage} alt={'Popcorn Time'} />
+          </li>
+
+          <li className={classNames(classes.menu__item, {
+            [classes['menu__item--active']]: mode === HomeConstants.MODE_BOOKMARKS,
+          }, classes['menu__item-right'])}>
+            <Link
+              className="nav-link"
+              to={'/bookmarks'}
+              replace>
+              <i className={'ion-heart'} />
+            </Link>
+          </li>
+        </ul>
       </div>
     )
   }

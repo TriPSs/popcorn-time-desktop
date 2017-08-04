@@ -1,50 +1,21 @@
-/**
- * Created by tycho on 07/07/2017.
- */
+// @flow
 import React from 'react'
 import classNames from 'classnames'
 
-import Events from 'api/Events'
-import * as TorrentEvents from 'api/Torrent/TorrentEvents'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as PlayerConstants from '../PlayerConstants'
-import type { Props, State } from './StatsTypes'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
+import itemClasses from 'components/Item/Item.scss'
+import type { Props } from './StatsTypes'
 import classes from './Stats.scss'
 
 export class Stats extends React.Component {
 
   props: Props
 
-  state: State = {
-    progress     : 0,
-    timeRemaining: 0,
-    downloadSpeed: 0,
-    uploadSpeed  : 0,
-    peers        : 0,
-  }
-
-  componentDidMount() {
-    Events.on(TorrentEvents.BUFFERING, this.onBuffering)
-    Events.on(TorrentEvents.DOWNLOADING, this.onBuffering)
-  }
-
-  componentWillUnmount() {
-    Events.remove(TorrentEvents.BUFFERING, this.onBuffering)
-    Events.remove(TorrentEvents.DOWNLOADING, this.onBuffering)
-  }
-
-  onBuffering = (event, data) => {
-    this.setState({
-      ...data,
-    })
-  }
-
   status = {
-    [TorrentStatuses.CONNECTING] : 'Connecting...',
-    [TorrentStatuses.DOWNLOADING]: 'Downloading...',
-    [TorrentStatuses.BUFFERING]  : 'Buffering...',
-    [TorrentStatuses.DOWNLOADED] : 'Complete',
+    [TorrentConstants.STATUS_CONNECTING] : 'Connecting...',
+    [TorrentConstants.STATUS_DOWNLOADING]: 'Downloading...',
+    [TorrentConstants.STATUS_BUFFERING]  : 'Buffering...',
+    [TorrentConstants.STATUS_DOWNLOADED] : 'Complete',
   }
 
   sizes = ['Bytes/s', 'KB/s', 'MB/s']
@@ -56,7 +27,7 @@ export class Stats extends React.Component {
 
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10)
 
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${this.sizes[i]}`
+    return `${(bytes / (1024 ** i)).toFixed(2)} ${this.sizes[i]}`
   }
 
   formatMillisToMinutesAndSeconds = (millis) => {
@@ -66,27 +37,17 @@ export class Stats extends React.Component {
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutes`
   }
 
-  shouldShowControls = () => {
-    const { playerProvider, playerStatus } = this.props
-
-    if (playerProvider !== PlayerConstants.PLAYER_PROVIDER_PLYR) {
-      return false
-    }
-
-    return playerStatus === PlayerStatuses.PLAYING || playerStatus === PlayerStatuses.PAUSED
-  }
-
   render() {
-    const { item, torrentStatus, stopPlayer } = this.props
+    const { item, torrentStatus, stats } = this.props
 
-    const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = this.state
+    const { downloadSpeed, uploadSpeed, peers, progress, timeRemaining } = stats
 
     const style = {
-      opacity: torrentStatus === TorrentStatuses.DOWNLOADED ? 0 : 1,
+      opacity: torrentStatus === TorrentConstants.STATUS_DOWNLOADED ? 0 : 1,
     }
 
     return (
-      <div className={classNames('col-sm-12', classes.stats)}>
+      <div className={classNames(itemClasses.content__container, classes.stats)}>
         <h1 className={'row-margin'}>
           {item.title}
         </h1>
@@ -105,23 +66,8 @@ export class Stats extends React.Component {
             {parseFloat(progress * 100).toFixed(2)}%
           </span>
         </div>
+
         <div style={style}>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
-
-        {!this.shouldShowControls() && (
-          <div>
-            <button
-              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-              onClick={stopPlayer}>
-              Cancel
-            </button>
-          </div>
-        )}
-
-        {this.shouldShowControls() && (
-          <div>
-            CONTROLS HERE
-          </div>
-        )}
 
       </div>
     )

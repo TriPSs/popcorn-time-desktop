@@ -1,8 +1,10 @@
 // @flow
+import type { ShowType } from '../Metadata/MetadataTypes'
+
 export interface TorrentProviderInterface {
 
-  getStatus: () => Promise<boolean>,
+  searchEpisode: (item: ShowType, season: string, episode: string) => Promise<void>,
 
-  search: () => Promise<void>
+  search: (search: string) => Promise<void>,
 
 }

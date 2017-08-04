@@ -1,51 +1,37 @@
 import React from 'react'
-import classNames from 'classnames'
 
-import * as PlayerStatuses from 'api/Player/PlayerStatuses'
-import * as TorrentStatuses from 'api/Torrent/TorrentStatuses'
+import type { SeasonType, EpisodeType } from 'api/Metadata/MetadataTypes'
 
-import type { State, Props } from './ShowTypes'
+import type { Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
-import classes from './Show.scss'
 import Seasons from './Seasons'
+import Episodes from './Episodes'
+import classes from './Show.scss'
 
-export class Show extends React.Component {
+export default class extends React.Component {
 
   props: Props
 
-  state: State = {
-    selectedSeason : null,
-    selectedEpisode: null,
+  state = {
+    seasonsListComponent : null,
+    episodesListComponent: null,
   }
 
-  playEpisode = (torrent) => {
-    if (torrent !== null) {
-      const { play } = this.props
+  constructor(props) {
+    super(props)
 
-      play('default', torrent)
-
-    } else {
-      const { item, searchEpisodeTorrents } = this.props
-      const season                          = this.getSeason()
-      const episode                         = this.getEpisode()
-
-      if (!episode.searched) {
-        searchEpisodeTorrents(item, season.number, episode.number)
-      }
-    }
+    const tomorrowDate = new Date()
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+    this.tomorrow = tomorrowDate.getTime()
   }
 
-  shouldDisableActions = () => {
-    const { torrentStatus, playerStatus } = this.props
+  componentWillUnmount() {
+    const { selectSeasonAndEpisode } = this.props
 
-    return torrentStatus === TorrentStatuses.BUFFERING
-           || torrentStatus === TorrentStatuses.DOWNLOADING
-           || torrentStatus === TorrentStatuses.CONNECTING
-           || playerStatus === PlayerStatuses.PAUSED
-           || playerStatus === PlayerStatuses.CONNECTING
-           || playerStatus === PlayerStatuses.PLAYING
-           || playerStatus === PlayerStatuses.BUFFERING
+    selectSeasonAndEpisode(null, null)
   }
+
+  tomorrow: number
 
   selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
     let episodeToSelect = selectEpisode
@@ -60,13 +46,11 @@ export class Show extends React.Component {
       }
     }
 
-    this.setState({
-      selectedSeason : selectSeason,
-      selectedEpisode: episodeToSelect,
-    })
+    const { selectSeasonAndEpisode } = this.props
+    selectSeasonAndEpisode(selectSeason, episodeToSelect)
   }
 
-  getSeason = (selectedSeason = this.state.selectedSeason) => {
+  getSeason = (selectedSeason = this.props.selectedSeason): SeasonType => {
     const { item } = this.props
 
     if (!item.seasons || !item.seasons.length) {
@@ -77,17 +61,18 @@ export class Show extends React.Component {
       return item.seasons.find(season => season.number === selectedSeason)
     }
 
-    let firstUnwatchedSeason = item.seasons.find(season => season.number !== 0
-                                                           && season.episodes.find(episode => !episode.watched))
+    let firstUnwatchedSeason = item.seasons
+      .find(season => season.number !== 0 && season.episodes.find(episode => !episode.watched.complete))
 
     if (!firstUnwatchedSeason) {
-      firstUnwatchedSeason = item.seasons.find(season => season.number === item.seasons.length - 1)
+      firstUnwatchedSeason = item.seasons
+        .find(season => season.number === item.seasons.length - 1)
     }
 
     return firstUnwatchedSeason
   }
 
-  getEpisode = (selectedEpisode = this.state.selectedEpisode) => {
+  getEpisode = (selectedEpisode = this.props.selectedEpisode): EpisodeType => {
     const season = this.getSeason()
 
     if (!season || !season.episodes) {
@@ -95,29 +80,28 @@ export class Show extends React.Component {
     }
 
     if (selectedEpisode !== null) {
-      return season.episodes.find(episode => episode.number === selectedEpisode)
+      return season.episodes.find(episode => episode.number === selectedEpisode && episode.aired < this.tomorrow)
     }
 
     return this.getFirstUnwatchedEpisode()
   }
 
-  getFirstUnwatchedEpisode = (season = null) => {
+  getFirstUnwatchedEpisode = (season = null): EpisodeType => {
     let searchInSeason = season
 
     if (searchInSeason === null) {
       searchInSeason = this.getSeason()
     }
 
-    const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched)
+    const firstUnwatchedEpisode = searchInSeason.episodes.find(episode => !episode.watched.complete)
     if (firstUnwatchedEpisode) {
-      if (firstUnwatchedEpisode.aired < new Date().getTime()) {
+      if (firstUnwatchedEpisode.aired < this.tomorrow) {
         return firstUnwatchedEpisode
+      }
 
-      } 
       return searchInSeason.episodes.find(
-          episode => episode.number === (firstUnwatchedEpisode.number - 1),
-        )
-      
+        episode => episode.number === (firstUnwatchedEpisode.number - 1),
+      )
     }
 
     return searchInSeason.episodes.find(
@@ -126,73 +110,42 @@ export class Show extends React.Component {
   }
 
   render() {
-    const { item, toggleWatched }     = this.props
-    const { fetchingEpisodeTorrents } = this.props
-    const season                      = this.getSeason()
-    const selectedEpisode             = this.getEpisode()
-    const { torrents, searched }      = selectedEpisode
+    const { item } = this.props
+    const season   = this.getSeason()
+
+    let selectedEpisode = this.getEpisode()
+    if (!selectedEpisode) {
+      selectedEpisode = this.getFirstUnwatchedEpisode()
+    }
+
+    const { seasonsListComponent, episodesListComponent } = this.state
 
     return (
-      <div>
-        <div
-          style={{ opacity: this.shouldDisableActions() ? 0 : 1 }}
-          className={classNames(itemClasses['item__row--show'], classes.show__actions)}>
+      <div className={itemClasses['item__row--show']}>
+        <div className={classes.show}>
+          <div
+            ref={ref => !this.state.seasonsListComponent && this.setState({ seasonsListComponent: ref })}
+            className={classes['show__list-container']}>
+            <Seasons {...{
+              seasons               : item.seasons,
+              selectedSeason        : season,
+              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              seasonsListComponent,
+            }} />
+          </div>
 
-          {torrents && Object.keys(torrents).map(quality => (
-            <button
-              key={quality}
-              onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
-                ? this.playEpisode(torrents[quality])
-                : null}
-              className={classNames(
-                'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-                { 'pct-btn-available': torrents[quality] !== null },
-                { 'pct-btn-no-hover': torrents[quality] === null && searched },
-                { 'pct-btn-no-hover': !searched },
-              )}>
-
-              <div>Play in {quality}</div>
-
-            </button>
-          ))}
-
-          <button
-            onClick={() => !fetchingEpisodeTorrents && !this.shouldDisableActions()
-              ? this.playEpisode(null)
-              : null}
-            className={classNames(
-              'pct-btn pct-btn-trans pct-btn-outline pct-btn-round',
-              { 'pct-btn-no-hover': searched || fetchingEpisodeTorrents },
-            )}>
-
-            {!fetchingEpisodeTorrents && !searched && (
-              <div>Search</div>
-            )}
-
-            {fetchingEpisodeTorrents && (
-              <div>Searching...</div>
-            )}
-
-            {!fetchingEpisodeTorrents && searched && (
-              <div>Searched</div>
-            )}
-          </button>
-
-        </div>
-
-        <div className={itemClasses['item__row--show']}>
-          <Seasons {...{
-            seasons               : item.seasons,
-            selectedSeason        : season,
-            selectedEpisode,
-            selectSeasonAndEpisode: this.selectSeasonAndEpisode,
-            toggleWatched,
-          }} />
-
+          <div
+            ref={ref => !this.state.episodesListComponent && this.setState({ episodesListComponent: ref })}
+            className={classes['show__list-container']}>
+            <Episodes {...{
+              selectedEpisode,
+              selectedSeason        : season,
+              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              episodesListComponent,
+            }} />
+          </div>
         </div>
       </div>
     )
   }
 }
-
-export default Show

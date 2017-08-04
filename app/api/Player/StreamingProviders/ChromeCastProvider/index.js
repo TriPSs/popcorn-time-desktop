@@ -1,3 +1,3 @@
-import ChromeCastProvider from './ChromeCastProvider'
+import ChromeCastContainer from './ChromeCastContainer'
 
-export default ChromeCastProvider
+export default ChromeCastContainer
