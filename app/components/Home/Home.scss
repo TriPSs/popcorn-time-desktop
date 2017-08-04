@@ -1,14 +1,8 @@
 @import 'base/variables';
 
 .home {
-
-  &__container {
-
-  }
-
-  &__cards {
-	margin-top: $menu-height;
-	overflow-x: scroll;
-  }
-
+	&__cards {
+		margin-top: $menu-height;
+		overflow-x: scroll;
+	}
 }

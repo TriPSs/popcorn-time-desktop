@@ -4,23 +4,23 @@
   align-items: center;
 
   &__list-container {
-	max-width: 100%;
-	overflow-y: auto;
-	transform: rotateX(180deg);
+    max-width: 100%;
+    overflow-y: auto;
+    transform: rotateX(180deg);
 
-	:global {
-	  .list {
-		transform: rotateX(180deg);
-		flex-flow: row;
-	  }
-	}
+    :global {
+      .list {
+        transform: rotateX(180deg);
+        flex-flow: row;
+      }
+    }
 
-	&:last-of-type {
-	  :global {
-		.list {
-		  min-height: 420px;
-		}
-	  }
-	}
+    &:last-of-type {
+      :global {
+        .list {
+          min-height: 420px;
+        }
+      }
+    }
   }
 }

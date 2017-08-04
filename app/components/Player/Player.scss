@@ -4,17 +4,17 @@
   display: flex;
 
   &--hidden {
-	display: none;
+    display: none;
   }
 
   &__close {
-	z-index: 3001;
-	margin-left: 15px;
+    z-index: 3001;
+    margin-left: 15px;
   }
 
   &__controls {
-	position: absolute;
-	bottom: 0;
+    position: absolute;
+    bottom: 0;
   }
 }
 
@@ -29,42 +29,41 @@
   right: 0;
 
   > div {
-	z-index: 1055;
+    z-index: 1055;
   }
 
   &__close-button {
-	position: absolute !important;
-	top: 0;
-	right: 0;
-	z-index: 1060;
-	color: white !important;
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    z-index: 1060;
+    color: white !important;
   }
 
   :global {
-	.plyr {
-	  position: absolute;
-	  left: 0;
-	  right: 0;
-	  top: 0;
-	  z-index: -100;
-	  min-height: $item-background-height;
-	  opacity: 1;
-	  height: $item-background-height;
-	  overflow: hidden;
+    .plyr {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: -100;
+      min-height: $item-background-height;
+      opacity: 1;
+      height: $item-background-height;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: black;
 
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	  background: black;
+      &__video-wrapper {
+        width: 100%;
 
-	  &__video-wrapper {
-		width: 100%;
-
-		&.plyr--setup {
-		  padding: 0;
-		  height: 100%;
-		}
-	  }
-	}
+        &.plyr--setup {
+          padding: 0;
+          height: 100%;
+        }
+      }
+    }
   }
 }

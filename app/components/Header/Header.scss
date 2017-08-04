@@ -8,54 +8,53 @@
   margin: 0;
 
   &__container {
-	height: 64px;
-	background: $gray-dark;
-	position: fixed;
-	top: 0;
-	width: 100%;
-	z-index: 1050;
+    height: 64px;
+    background: $gray-dark;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
   }
 
   &__item {
-	padding: 0 10px;
+    padding: 0 10px;
 
-	a {
-	  color: $menu-item-color;
+    a {
+      color: $menu-item-color;
 
-	  &:hover {
-		color: $menu-item-color-active;
-	  }
+      &:hover {
+        color: $menu-item-color-active;
+      }
 
-	  :global {
-		.ion-heart {
-		  font-size: 30px;
+      :global {
+        .ion-heart {
+          font-size: 30px;
 
-		  &:hover {
-			color: red;
-		  }
-		}
-	  }
-	}
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
 
-	&--active {
-	  a {
-		color: $menu-item-color-active;
+    &--active {
+      a {
+        color: $menu-item-color-active;
 
-		:global {
-		  .ion-heart {
-			color: red;
-		  }
-		}
-	  }
-	}
+        :global {
+          .ion-heart {
+            color: red;
+          }
+        }
+      }
+    }
 
-	&-left {
-	  float: left;
-	}
+    &-left {
+      float: left;
+    }
 
-	&-right {
-	  float: right;
-	}
-
+    &-right {
+      float: right;
+    }
   }
 }

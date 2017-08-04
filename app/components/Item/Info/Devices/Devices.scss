@@ -4,40 +4,39 @@
   position: relative;
 
   &__button {
-	z-index: 1060;
-	display: flex;
-	position: relative;
-	margin: 0;
+    z-index: 1060;
+    display: flex;
+    position: relative;
+    margin: 0;
   }
 }
 
 .dropdown {
-
   &__menu {
-	background: transparent;
-	border: none;
+    background: transparent;
+    border: none;
 
-	button {
-	  position: relative;
-	  z-index: 100;
-	  color: white;
-	  margin: 5px 0;
-	  padding: 5px 20px;
-	  opacity: 0.2;
-	  transition: opacity 0.1s ease-in;
-	  border: 2px solid white;
-	  border-radius: 30px;
+    button {
+      position: relative;
+      z-index: 100;
+      color: white;
+      margin: 5px 0;
+      padding: 5px 20px;
+      opacity: 0.2;
+      transition: opacity 0.1s ease-in;
+      border: 2px solid white;
+      border-radius: 30px;
 
-	  &:focus {
-		outline: none;
-	  }
+      &:focus {
+        outline: none;
+      }
 
-	  &:hover {
-		opacity: 1;
-		background: transparent;
-		color: white;
-	  }
-	}
+      &:hover {
+        opacity: 1;
+        background: transparent;
+        color: white;
+      }
+    }
   }
 
   /**

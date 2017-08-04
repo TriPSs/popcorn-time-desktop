@@ -18,16 +18,16 @@
   margin-left: 10px;
 
   i {
-	font-size: 22px;
-	color: rgba(255, 255, 255, 0.6);
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.6);
   }
 
   &__status {
-	margin-left: 5px;
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	transition: background-color 500ms linear;
+    margin-left: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transition: background-color 500ms linear;
   }
 }
 
@@ -39,53 +39,53 @@
   display: flex;
 
   .quality {
-	width: 40px;
-	text-align: center;
-	cursor: pointer;
+    width: 40px;
+    text-align: center;
+    cursor: pointer;
 
-	&--disabled {
-	  cursor: default;
-	  opacity: 0.4;
-	}
+    &--disabled {
+      cursor: default;
+      opacity: 0.4;
+    }
 
-	&--active {
-	  font-weight: bold;
-	  font-size: 16px;
-	}
+    &--active {
+      font-weight: bold;
+      font-size: 16px;
+    }
   }
 }
 
 :global {
   .switch {
-	width: 32px;
-	height: 20px;
-	border-radius: 13px;
-	cursor: pointer;
-	display: inline-block;
-	background: rgba(255, 255, 255, 0.6);
-	margin-top: 10px;
+    width: 32px;
+    height: 20px;
+    border-radius: 13px;
+    cursor: pointer;
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.6);
+    margin-top: 10px;
 
-	&.on {
-	  .switch-toggle {
-		left: 17px;
-		top: 4px;
-	  }
-	}
+    &.on {
+      .switch-toggle {
+        left: 17px;
+        top: 4px;
+      }
+    }
 
-	&.disabled {
-	  cursor: not-allowed;
-	}
+    &.disabled {
+      cursor: not-allowed;
+    }
 
-	&-toggle {
-	  width: 13px;
-	  height: 13px;
-	  left: 2px;
-	  top: 4px;
-	  border-radius: 12px;
-	  background: darken(#999, 20%);
-	  position: relative;
-	  transition: left .2s ease-in-out;
-	}
+    &-toggle {
+      width: 13px;
+      height: 13px;
+      left: 2px;
+      top: 4px;
+      border-radius: 12px;
+      background: darken(#999, 20%);
+      position: relative;
+      transition: left 0.2s ease-in-out;
+    }
   }
 }
 

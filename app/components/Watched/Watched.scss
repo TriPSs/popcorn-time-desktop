@@ -10,14 +10,14 @@
   color: $bookmark-color;
 
   &:hover {
-	opacity: 1;
+    opacity: 1;
   }
 
   &--yes {
-	@extend .watched;
+    @extend .watched;
   }
 
   &--no {
-	@extend .watched;
+    @extend .watched;
   }
 }

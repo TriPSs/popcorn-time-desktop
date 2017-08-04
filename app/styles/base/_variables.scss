@@ -5,7 +5,7 @@
 // Base
 $body-bg: #252525;
 $gray-dark: #151515;
-$link-color: #1B221C;
+$link-color: #1b221c;
 $gray: #303030;
 $brand-primary: white;
 $enable-rounded: false;
@@ -41,7 +41,6 @@ $container-max-widths: (
 		xl: 1540px
 ) !default;
 $headings-color: white;
-
 $menu-height: 64px;
 $menu-item-color: #848484;
 $menu-item-color-active: white;
@@ -90,7 +89,6 @@ $card-title-color-hover: darken($card-list-color, 20%);
 // List
 $list-item-color: rgba(150, 150, 150, 0.33);
 $list-item-active-color: rgba(255, 255, 255, 0.8);
-
 $list-item-bg: $body-bg;
 $list-item-bg-hover: lighten($body-bg, 20%);
 $list-item-bg-disabled: darken($body-bg, 5%);

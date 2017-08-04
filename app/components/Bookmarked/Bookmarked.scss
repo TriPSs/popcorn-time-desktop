@@ -13,22 +13,22 @@
   right: 0;
 
   &:hover {
-	opacity: 1;
+    opacity: 1;
   }
 
   &--yes {
-	@extend .bookmarked;
+    @extend .bookmarked;
 
-	color: $bookmarked-color !important;;
+    color: $bookmarked-color !important;
   }
 
   &--no {
-	@extend .bookmarked;
+    @extend .bookmarked;
 
-	color: $bookmark-color;
+    color: $bookmark-color;
 
-	&:hover {
-	  color: $bookmarked-color !important;
-	}
+    &:hover {
+      color: $bookmarked-color !important;
+    }
   }
 }

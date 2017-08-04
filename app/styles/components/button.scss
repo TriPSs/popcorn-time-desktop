@@ -8,50 +8,49 @@
   transition: $transition-opacity-in;
 
   &--relative {
-	@extend .pct-btn;
+    @extend .pct-btn;
 
-	position: relative;
+    position: relative;
   }
 
   &:hover {
-	opacity: 1;
+    opacity: 1;
   }
 
   &:focus {
-	outline: none;
+    outline: none;
   }
 
   i {
-	margin-right: 5px;
+    margin-right: 5px;
   }
 
   &.pct-btn-no-hover {
-	cursor: default;
+    cursor: default;
 
-	&:hover {
-	  opacity: 0.2;
-	}
+    &:hover {
+      opacity: 0.2;
+    }
   }
 
   &.pct-btn-trans {
-	background: transparent;
+    background: transparent;
   }
 
   &.pct-btn-outline {
-	border: 2px solid white;
+    border: 2px solid white;
   }
 
   &.pct-btn-round {
-	border-radius: 30px;
+    border-radius: 30px;
   }
 
   &.pct-btn-available {
-	transition: $transition-opacity-out;
-	opacity: 1;
+    transition: $transition-opacity-out;
+    opacity: 1;
 
-	&:hover {
-	  opacity: 0.8;
-	}
+    &:hover {
+      opacity: 0.8;
+    }
   }
-
 }
