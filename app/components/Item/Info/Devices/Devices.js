@@ -28,7 +28,7 @@ export class Devices extends React.Component {
 
     return (
       <div className={classes.devices}>
-        <Dropdown isOpen={open} toggle={this.toggleOpen}>
+        <Dropdown className={classNames({ open })} isOpen={open} toggle={this.toggleOpen}>
           <button
             onClick={() => this.toggleOpen()}
             className={classNames(
