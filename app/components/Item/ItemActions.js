@@ -70,56 +70,54 @@ export function getItem(itemId, mode) {
   }
 }
 
-export function searchEpisodeTorrents(item, inSeason, forEpisode) {
-  return (dispatch) => {
-    dispatch(fetchEpisodeTorrents())
+export const searchEpisodeTorrents = (item, inSeason, forEpisode) => (dispatch) => {
+  dispatch(fetchEpisodeTorrents())
 
-    Butter.searchEpisode(item, inSeason, forEpisode).then((response) => {
-      const bestTorrents = {}
+  Butter.searchEpisode(item, inSeason, forEpisode).then((response) => {
+    const bestTorrents = {}
 
-      response.forEach(torrents => Object.keys(torrents).forEach((quality) => {
-        const torrent = torrents[quality]
-        if (!bestTorrents[torrent.quality] || getBestTorrent(bestTorrents[torrent.quality], torrent)) {
-          bestTorrents[torrent.quality] = torrent
-        }
-      }))
-
-      /**
-       * Map the torrents to the right episode
-       */
-      const nItem = {
-        ...item,
-        seasons: item.seasons.map((season) => {
-          if (season.number === inSeason) {
-            return {
-              ...season,
-              episodes: season.episodes.map((episode) => {
-                if (episode.number === forEpisode) {
-                  return {
-                    ...episode,
-                    torrents: {
-                      '1080p': getBestTorrent(episode.torrents['1080p'], bestTorrents['1080p']),
-                      '720p' : getBestTorrent(episode.torrents['720p'], bestTorrents['720p']),
-                      '480p' : getBestTorrent(episode.torrents['480p'], bestTorrents['480p']),
-                    },
-                    searched: true,
-                  }
-
-                }
-                return episode
-
-              }),
-            }
-
-          }
-          return season
-
-        }),
+    response.forEach(torrents => Object.keys(torrents).forEach((quality) => {
+      const torrent = torrents[quality]
+      if (!bestTorrents[torrent.quality] || getBestTorrent(bestTorrents[torrent.quality], torrent)) {
+        bestTorrents[torrent.quality] = torrent
       }
+    }))
 
-      dispatch(fetchedEpisodeTorrents(nItem))
-    })
-  }
+    /**
+     * Map the torrents to the right episode
+     */
+    const nItem = {
+      ...item,
+      seasons: item.seasons.map((season) => {
+        if (season.number === inSeason) {
+          return {
+            ...season,
+            episodes: season.episodes.map((episode) => {
+              if (episode.number === forEpisode) {
+                return {
+                  ...episode,
+                  torrents: {
+                    '1080p': getBestTorrent(episode.torrents['1080p'], bestTorrents['1080p']),
+                    '720p' : getBestTorrent(episode.torrents['720p'], bestTorrents['720p']),
+                    '480p' : getBestTorrent(episode.torrents['480p'], bestTorrents['480p']),
+                  },
+                  searched: true,
+                }
+
+              }
+              return episode
+
+            }),
+          }
+
+        }
+        return season
+
+      }),
+    }
+
+    dispatch(fetchedEpisodeTorrents(nItem))
+  })
 }
 
 export function selectSeasonAndEpisode(season, episode) {

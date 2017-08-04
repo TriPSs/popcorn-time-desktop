@@ -40,6 +40,10 @@ a {
   display: none;
 }
 
+.gone {
+	opacity: 0 !important;
+}
+
 .no-padding {
   padding: 0;
 }

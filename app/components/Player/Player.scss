@@ -1,7 +1,8 @@
 @import 'base/variables';
 
 .player {
-  display: flex;
+	position: relative;
+	width: $item-content-width;
 
   &--hidden {
     display: none;
@@ -13,8 +14,9 @@
   }
 
   &__controls {
-    position: absolute;
-    bottom: 0;
+		position: absolute;
+		bottom: 100px;
+		left: 0;
   }
 }
 

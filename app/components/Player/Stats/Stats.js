@@ -3,6 +3,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
+import itemClasses from 'components/Item/Item.scss'
 import type { Props } from './StatsTypes'
 import classes from './Stats.scss'
 
@@ -46,7 +47,7 @@ export class Stats extends React.Component {
     }
 
     return (
-      <div className={classNames('col-sm-12', classes.stats)}>
+      <div className={classNames(itemClasses.content__container, classes.stats)}>
         <h1 className={'row-margin'}>
           {item.title}
         </h1>
@@ -65,6 +66,7 @@ export class Stats extends React.Component {
             {parseFloat(progress * 100).toFixed(2)}%
           </span>
         </div>
+
         <div style={style}>Time left {this.formatMillisToMinutesAndSeconds(timeRemaining)}</div>
 
       </div>

@@ -1,3 +1,5 @@
+@import 'base/variables';
+
 .item {
   position: relative;
   height: 100%;
@@ -53,7 +55,7 @@
 
 .content {
   &__container {
-    width: 550px;
+    width: $item-content-width;
     position: relative;
   }
 }

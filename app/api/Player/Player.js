@@ -120,7 +120,7 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     this.destroy()
   }
 
-  getStatus = () => this.getRightPlayer().getStatus()
+  getStatus = () => this.props.playerStatus
 
   getRightPlayer = (): PlayerProviderInterface => {
     const { provider } = this.props
@@ -141,6 +141,7 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   )
 
   destroy = () => {
+    log('Destroy player')
     Torrent.destroy()
 
     if (this.lastPlayer) {

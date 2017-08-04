@@ -1,9 +1,9 @@
-import ChromeCastProvider from './ChromeCastProvider'
+import chromeCastProvider from './ChromeCastProvider'
 
 export StreamingInterface from './StreamingInterface'
 
 export const streamingProviders = () => ([
-  new ChromeCastProvider(),
+  chromeCastProvider,
 ])
 
 export default streamingProviders

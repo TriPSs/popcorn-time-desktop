@@ -1,4 +1,5 @@
 // @flow
+import ReduxClazz from 'redux-clazz'
 import chromecastAPI from 'chromecasts'
 import debug from 'debug'
 import network from 'network-address'
@@ -12,7 +13,7 @@ import type { ChromeCastApiType, ChromeCastType } from './ChromeCastTypes'
 
 const log = debug('api:players:chromecast')
 
-export class ChromeCastProvider implements StreamingInterface {
+export default class extends ReduxClazz implements StreamingInterface {
 
   provider: string = 'Chromecast'
 
@@ -28,13 +29,17 @@ export class ChromeCastProvider implements StreamingInterface {
 
   checkProgressInterval: number
 
+  loadedItem: ContentType
+
   states = {
     PLAYING  : PlayerConstants.STATUS_PLAYING,
     BUFFERING: PlayerConstants.STATUS_BUFFERING,
     PAUSED   : PlayerConstants.STATUS_PAUSED,
   }
 
-  constructor() {
+  constructor(...props) {
+    super(...props)
+
     this.chromecasts = chromecastAPI()
     this.chromecasts.on('update', this.onChromecastsUpdate)
   }
@@ -91,7 +96,12 @@ export class ChromeCastProvider implements StreamingInterface {
       },
     }
 
-    this.selectedDevice.play(streamingUrl, media, (error, status) => this.updateStatus(this.states[status.playerState]))
+    this.selectedDevice.play(streamingUrl, media, (error, status) => {
+      if (status) {
+        this.updateStatus(this.states[status.playerState])
+      }
+    })
+
     this.selectedDevice.on('status', status => this.updateStatus(this.states[status.playerState]))
   }
 
@@ -116,12 +126,10 @@ export class ChromeCastProvider implements StreamingInterface {
 
     if (newStatus !== this.status) {
       log(`Update status to ${newStatus}`)
+      const { updateStatus } = this.props
 
-      /* Events.emit(PlayerConstants.UPDATE_STATUS, {
-        oldState: this.status,
-        newStatus,
-      }) */
       this.status = newStatus
+      updateStatus(newStatus)
       this.clearIntervals()
 
       if (newStatus === PlayerConstants.STATUS_PLAYING) {
@@ -137,11 +145,16 @@ export class ChromeCastProvider implements StreamingInterface {
     if (this.selectedDevice) {
       this.selectedDevice.status((err, data) => {
         if (typeof data !== 'undefined') {
-          const percentageComplete = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
+          const { updatePercentage } = this.props
+          const percentage           = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
 
-          if (percentageComplete > 90) {
+          if (percentage > 95) {
             this.clearIntervals()
-            // Events.emit(PlayerConstants.VIDEO_ALMOST_DONE)
+
+            updatePercentage(this.loadedItem, 100)
+
+          } else {
+            updatePercentage(this.loadedItem, percentage)
           }
 
         } else {
@@ -150,7 +163,7 @@ export class ChromeCastProvider implements StreamingInterface {
         }
       })
     }
-  }, 500)
+  }, 10000)
 
   clearIntervals = () => {
     if (this.checkProgressInterval) {
@@ -178,5 +191,3 @@ export class ChromeCastProvider implements StreamingInterface {
     }
   }
 }
-
-export default ChromeCastProvider

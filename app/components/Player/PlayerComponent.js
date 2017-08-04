@@ -30,19 +30,17 @@ export class Player extends React.Component {
   }
 
   shouldShowPlayer = () => {
-    const { playerStatus, playerAction, playerProvider } = this.props
+    const { playerStatus, playerAction } = this.props
 
-    return playerProvider === PlayerConstants.PROVIDER_CHROMECAST
-           || ((playerStatus === PlayerConstants.STATUS_PLAYING
-                || playerStatus === PlayerConstants.STATUS_PAUSED
-                || playerStatus === PlayerConstants.STATUS_BUFFERING)
-               && playerAction !== PlayerConstants.ACTION_STOP)
+    return playerStatus !== PlayerConstants.STATUS_NONE
+           && playerStatus !== PlayerConstants.STATUS_ENDED
+           && playerAction !== PlayerConstants.ACTION_STOP
   }
 
   shouldShowControls = () => {
     const { playerProvider, playerStatus } = this.props
 
-    if (playerProvider !== PlayerConstants.PROVIDER_PLYR) {
+    if (playerProvider === PlayerConstants.PROVIDER_PLYR) {
       return false
     }
 
@@ -84,8 +82,7 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
-          [itemClasses.content__container]: !this.shouldShowPlayer(),
-          [classes['player--hidden']]     : this.isHidden(),
+          [classes['player--hidden']]: this.isHidden(),
         }, classes.player)}>
 
         {torrentStatus !== TorrentConstants.STATUS_NONE && (
@@ -96,21 +93,19 @@ export class Player extends React.Component {
           }} />
         )}
 
-        {!this.shouldShowControls() && (
-          <div className={classes.player__controls}>
-            <button
-              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-              onClick={stop}>
-              Cancel
-            </button>
-          </div>
-        )}
+        <div className={classes.player__controls}>
+          {this.shouldShowControls() && (
+            <div>
+              OTHER CONTROLS COME HERE
+            </div>
+          )}
 
-        {this.shouldShowControls() && (
-          <div className={classes.player__controls}>
-            CONTROLS HERE
-          </div>
-        )}
+          <button
+            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+            onClick={stop}>
+            Cancel
+          </button>
+        </div>
 
         {playerProvider === PlayerConstants.PROVIDER_PLYR && this.renderVideo()}
       </div>

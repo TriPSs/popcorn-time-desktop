@@ -6,18 +6,20 @@ import * as PlayerSelectors from 'api/Player/PlayerSelectors'
 import * as TorrentSelectors from 'api/Torrent/TorrentSelectors'
 
 import * as ItemSelectors from 'components/Item/ItemSelectors'
+import { searchEpisodeTorrents } from 'components/Item/ItemActions'
 
 import Episode from './Episode'
 
 export const mapDispatchToProps = dispatch => ({
-  player: bindActionCreators(PlayerActions, dispatch),
+  itemActions: bindActionCreators({ searchEpisodeTorrents }, dispatch),
+  player  : bindActionCreators(PlayerActions, dispatch),
 })
 
 export const mapStateToProps = state => ({
+  fetchingEpisodeTorrents: ItemSelectors.getFetchingEpisodeTorrents(state),
   item                   : ItemSelectors.getItem(state),
   playerStatus           : PlayerSelectors.getStatus(state),
   torrentStatus          : TorrentSelectors.getStatus(state),
-  fetchingEpisodeTorrents: ItemSelectors.getFetchingEpisodeTorrents(state),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Episode)
