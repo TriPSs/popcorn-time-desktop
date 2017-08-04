@@ -8,6 +8,11 @@ cache:
     - node_modules
     - app/node_modules
 
+branches:
+  only:
+  - master
+  - develop
+
 addons:
   apt:
     sources:
