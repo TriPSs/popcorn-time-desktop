@@ -22,6 +22,9 @@
   <a target="_blank" href="https://github.com/tripss/popcorn-time-desktop/pulls">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
   </a>
+	<a target="_blank" href="https://greenkeeper.io">
+    <img src="https://badges.greenkeeper.io/TriPSs/popcorn-time-desktop.svg" alt="Greenkeeper badge" />
+  </a>
 </div>
 
 <br />
