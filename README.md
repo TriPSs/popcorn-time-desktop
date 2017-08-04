@@ -22,13 +22,14 @@
   <a target="_blank" href="https://github.com/tripss/popcorn-time-desktop/pulls">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
   </a>
+	<a target="_blank" href="https://greenkeeper.io">
+    <img src="https://badges.greenkeeper.io/TriPSs/popcorn-time-desktop.svg" alt="Greenkeeper badge" />
+  </a>
 </div>
 
 <br />
 
 ## Features:
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/TriPSs/popcorn-time-desktop.svg)](https://greenkeeper.io/)
 
 **Modern**: This client was started from scratch and was designed to be performant and customizable
 
