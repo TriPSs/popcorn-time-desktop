@@ -4,6 +4,10 @@ sudo: false
 language: node_js
 node_js: "8"
 
+os:
+  - linux
+  - osx
+
 cache:
   directories:
   - node_modules
@@ -16,10 +20,6 @@ env:
   global:
     - ELECTRON_CACHE=$HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
-
-os:
-  - linux
-  - osx
 
 branches:
   only:
@@ -44,7 +44,7 @@ before_install:
 install:
   - npm i
   - cd app && npm i && cd ..
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
+#  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 
 before_script:
   - greenkeeper-lockfile-update

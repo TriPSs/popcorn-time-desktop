@@ -1,6 +1,6 @@
 {
   "name": "popcorn-time-desktop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An experimental Popcorn Time client",
   "keywords": [
     "client",
@@ -45,10 +45,10 @@
     "lint:check": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint --format=node_modules/eslint-formatter-pretty app *.js",
     "lint:js:fix": "eslint --fix --format=node_modules/eslint-formatter-pretty app *.js",
-    "lint:style": "stylelint app/styles/*.scss app/**/*.scss --syntax scss",
+    "lint:style": "stylelint ./app/styles/*.scss ./app/**/*.scss --syntax scss",
     "lint:summary": "eslint-nibble app test *.js",
     "package": "npm run postinstall && npm run build && build --publish never",
-    "package:ci": "npm run postinstall && npm run build && build --publish",
+    "package:ci": "npm run postinstall && npm run build && build --publish onTagOrDraft",
     "package:all": "npm run postinstall && npm run build && build --publish never --mac --win --linux",
     "package:mac": "cross-env NODE_ENV=production npm run build:dll && npm run build && build --publish never --mac",
     "package:mac:debug": "cross-env DEBUG_PROD=true npm run package:mac",
