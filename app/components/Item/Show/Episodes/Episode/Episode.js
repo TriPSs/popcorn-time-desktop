@@ -46,9 +46,10 @@ export default class extends React.Component {
   }
 
   selectTorrent = (quality) => {
-    const { episode: { torrents } } = this.props
+    const { episode: { torrents, number } } = this.props
+    const { selectedEpisode }               = this.props
 
-    if (torrents[quality]) {
+    if (torrents[quality] && selectedEpisode.number === number) {
       this.setState({
         torrent: torrents[quality],
       })
@@ -63,13 +64,16 @@ export default class extends React.Component {
 
   play = () => {
     const { episode, item, player } = this.props
+    const { selectedEpisode }       = this.props
     const { torrent }               = this.state
 
-    if (torrent) {
-      player.play(torrent.url, { ...item, ...episode })
+    if (selectedEpisode.number === episode.number) {
+      if (torrent) {
+        player.play(torrent.url, { ...item, ...episode })
 
-    } else {
-      // TODO:: SEARCH
+      } else {
+        // TODO:: SEARCH
+      }
     }
   }
 
