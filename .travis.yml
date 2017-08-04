@@ -1,12 +1,25 @@
+dist: trusty
 sudo: false
+
 language: node_js
-node_js:
-  - 8
+node_js: "8"
 
 cache:
   directories:
-    - node_modules
-    - app/node_modules
+  - node_modules
+  - app/node_modules
+  - $HOME/.cache/electron
+  - $HOME/.cache/electron-builder
+  - $HOME/.npm/_prebuilds
+
+env:
+  global:
+    - ELECTRON_CACHE=$HOME/.cache/electron
+    - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+
+os:
+  - linux
+  - osx
 
 branches:
   only:
@@ -23,6 +36,7 @@ addons:
       - graphicsmagick
       - xz-utils
       - xorriso
+      - libsecret-1-0
 
 before_install:
   - npm i -g greenkeeper-lockfile@1
@@ -38,7 +52,7 @@ before_script:
 script:
   - npm run lint:check
   # - npm run test
-  - npm run package
+  - npm run package:ci
   # - npm run test-e2e
 
 after_script:
