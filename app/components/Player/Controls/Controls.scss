@@ -1,22 +1,22 @@
 @import 'base/variables';
 
 .container {
-	display: flex;
-	justify-content: center;
-	font-size: 30px;
-	color: white;
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+  color: white;
 
-	i {
-		opacity: 0.2;
-		transition: $transition-opacity-in;
-		cursor: pointer;
+  i {
+    opacity: 0.2;
+    transition: $transition-opacity-in;
+    cursor: pointer;
 
-		&:hover {
-			opacity: 1;
-		}
-	}
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
 .action {
-	margin: 15px;
+  margin: 15px;
 }

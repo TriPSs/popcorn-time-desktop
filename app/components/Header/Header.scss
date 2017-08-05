@@ -5,10 +5,10 @@
   height: $menu-height;
   line-height: $menu-height;
   margin: 0;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding-left: 3px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-left: 3px;
 
   &__container {
     height: $menu-height;
@@ -22,13 +22,13 @@
   &__item {
     padding: 0 10px;
 
-		&:first-of-type {
-			padding-left: 25px;
-		}
+    &:first-of-type {
+      padding-left: 25px;
+    }
 
-		&:last-of-type {
-			padding-right: 25px;
-		}
+    &:last-of-type {
+      padding-right: 25px;
+    }
 
     a {
       color: $menu-item-color;
@@ -68,17 +68,16 @@
       float: right;
     }
 
-		&-logo {
-			position: absolute;
-			width: 100%;
-			pointer-events: none;
-			text-align: center;
+    &-logo {
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+      text-align: center;
 
-			img {
-				width: 35px;
-				opacity: 0.8;
-
-			}
-		}
+      img {
+        width: 35px;
+        opacity: 0.8;
+      }
+    }
   }
 }
