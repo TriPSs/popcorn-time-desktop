@@ -39,13 +39,17 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   }
 
   clazzWillReceiveProps = (nextProps) => {
-    const { action: oldAction, torrentStatus: oldTorrentStatus } = this.props
-    const { action: newAction, torrentStatus: newTorrentStatus } = nextProps
+    const { playerStatus: oldPlayerStatus, action: oldAction, torrentStatus: oldTorrentStatus } = this.props
+    const { playerStatus: newPlayerStatus, action: newAction, torrentStatus: newTorrentStatus } = nextProps
+
+    if (oldPlayerStatus !== newPlayerStatus && newPlayerStatus === PlayerConstants.STATUS_ENDED) {
+      this.destroy()
+    }
 
     if (newTorrentStatus !== oldTorrentStatus) {
       if ((newTorrentStatus === TorrentConstants.STATUS_BUFFERED
            || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
-          && this.getStatus() !== PlayerConstants.STATUS_PAUSED) {
+          && this.getStatus() === PlayerConstants.STATUS_NONE) {
         const { uri, item } = nextProps
 
         this.play({ uri, item })
@@ -110,15 +114,13 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   }
 
   stop = () => {
-    if (this.getRightPlayer().status !== PlayerConstants.STATUS_NONE) {
-      this.getRightPlayer().stop()
-      this.getRightPlayer().destroy()
-    }
+    this.getRightPlayer().stop()
+    this.getRightPlayer().destroy()
 
     this.destroy()
   }
 
-  getStatus = () => this.props.playerStatus
+  getStatus = () => this.getRightPlayer().status
 
   getRightPlayer = (): PlayerProviderInterface => {
     const { provider } = this.props
@@ -142,8 +144,8 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
     log('Destroy player')
     Torrent.destroy()
 
-    if (this.lastPlayer) {
-      this.lastPlayer.destroy()
+    if (this.getRightPlayer()) {
+      this.getRightPlayer().destroy()
 
       this.streamingProviders.map(provider => provider.destroy())
     }

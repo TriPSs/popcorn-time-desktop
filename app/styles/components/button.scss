@@ -4,7 +4,7 @@
   color: white;
   margin: 20px 0;
   padding: 5px 20px;
-  opacity: 0.2;
+  opacity: $button-default-opacity;
   transition: $transition-opacity-in;
 
   &--relative {

@@ -49,8 +49,9 @@ export default class extends React.Component {
   }
 
   renderVideo = () => {
-    const { uri, stop } = this.props
+    const { uri, stop, playerStatus } = this.props
 
+    console.log(playerStatus, playerStatus === PlayerConstants.STATUS_PLAYING)
     return (
       <div
         style={{
@@ -58,7 +59,10 @@ export default class extends React.Component {
           visibility: this.shouldShowPlayer() ? 'inherit' : 'hidden',
           display   : uri ? 'inherit' : 'none',
         }}
-        className={classes.plyr}>
+        className={classNames(classes.plyr, {
+          [classes['plyr--playing']]: playerStatus === PlayerConstants.STATUS_PLAYING,
+          [classes['plyr--paused']] : playerStatus === PlayerConstants.STATUS_PAUSED,
+        })}>
 
         <button
           className={classNames(

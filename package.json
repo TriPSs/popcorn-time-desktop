@@ -109,7 +109,7 @@
     "torrentapi-wrapper": "0.0.2",
     "trakt.tv": "github:tripss/trakt.tv",
     "vlc-command": "1.1.1",
-    "webtorrent": "github:amilajack/webtorrent"
+    "webtorrent": "^0.98.19"
   },
   "devDependencies": {
     "autoprefixer": "7.1.2",
