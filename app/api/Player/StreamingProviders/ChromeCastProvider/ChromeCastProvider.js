@@ -103,13 +103,10 @@ export default class extends ReduxClazz implements StreamingInterface {
     }
 
     this.selectedDevice.play(streamingUrl, media, (error, status) => {
-      console.log('chromecast play', streamingUrl, error, status)
-
-      this.selectedDevice.on('status', status => {
-        console.log(status)
-
+      this.selectedDevice.on('status', (status) => {
         if (status && status.playerState === 'IDLE') {
           this.updateStatus(this.states[status.idleReason])
+
         } else {
           this.updateStatus(this.states[status.playerState])
         }

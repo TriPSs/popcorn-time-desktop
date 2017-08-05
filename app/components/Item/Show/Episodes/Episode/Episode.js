@@ -34,7 +34,7 @@ export default class extends React.Component {
     const { fetchingEpisodeTorrents: isSearchingTorrents, episode: { id: oldId } }  = nextProps
     const { fetchingEpisodeTorrents: wasSearchingTorrents, episode: { id: newId } } = this.props
 
-    if (oldId !== newId || !isSearchingTorrents && wasSearchingTorrents) {
+    if ((oldId !== newId) || (!isSearchingTorrents && wasSearchingTorrents)) {
       this.setBestTorrent(nextProps)
     }
   }

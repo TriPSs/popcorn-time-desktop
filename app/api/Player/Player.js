@@ -96,8 +96,6 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
         this.stop()
         break
 
-        break;
-
       default:
     }
   }

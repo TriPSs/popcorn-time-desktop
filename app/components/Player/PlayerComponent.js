@@ -51,7 +51,6 @@ export default class extends React.Component {
   renderVideo = () => {
     const { uri, stop, playerStatus } = this.props
 
-    console.log(playerStatus, playerStatus === PlayerConstants.STATUS_PLAYING)
     return (
       <div
         style={{
