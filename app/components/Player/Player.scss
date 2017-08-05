@@ -15,8 +15,12 @@
 
   &__controls {
 		position: absolute;
-		bottom: 100px;
+		bottom: 25px;
 		left: 0;
+		width: 100%;
+		display: flex;
+		flex-flow: column;
+		align-items: center;
   }
 }
 

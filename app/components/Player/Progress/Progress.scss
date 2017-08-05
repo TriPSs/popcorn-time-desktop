@@ -1,0 +1,12 @@
+@import 'base/variables';
+
+.container {
+	height: 2px;
+	width: 90%;
+	background: $body-bg;
+
+	div {
+		height: 2px;
+		background: #fff;
+	}
+}

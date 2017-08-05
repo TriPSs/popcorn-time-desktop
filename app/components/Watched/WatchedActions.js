@@ -2,6 +2,7 @@ import Database from 'api/Database'
 
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as WatchedConstants from './WatchedConstants'
+import { selectSeasonAndEpisode } from '../Item/ItemActions'
 
 export const getMoviesWatched = () => (dispatch) => {
   Database.watched.getMoviesWatched().then((movies) => {
@@ -54,6 +55,8 @@ export const toggleWatched = item => (dispatch) => {
     } else {
       Database.watched.markEpisodeWatched(item.showId, item.season, item.number, 100).then(() => {
         dispatch(markedEpisode(item.showId, item.season, item.number, { complete: true, progress: 100 }))
+
+        dispatch(selectSeasonAndEpisode(null, null))
       })
     }
   }

@@ -44,8 +44,8 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
 
     if (newTorrentStatus !== oldTorrentStatus) {
       if ((newTorrentStatus === TorrentConstants.STATUS_BUFFERED
-          || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
-      && this.getStatus() !== PlayerConstants.STATUS_PAUSED) {
+           || newTorrentStatus === TorrentConstants.STATUS_DOWNLOADED)
+          && this.getStatus() !== PlayerConstants.STATUS_PAUSED) {
         const { uri, item } = nextProps
 
         this.play({ uri, item })
@@ -82,13 +82,17 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
 
         break
 
+      case PlayerConstants.ACTION_CONTINUE:
       case PlayerConstants.ACTION_PAUSE:
-        this.pause()
+        this.getRightPlayer().togglePlay()
+
         break
 
       case PlayerConstants.ACTION_STOP:
         this.stop()
         break
+
+        break;
 
       default:
     }
@@ -102,12 +106,6 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
 
     if (player && !player.isPlaying()) {
       player.play(uri, item)
-    }
-  }
-
-  pause = () => {
-    if (this.getRightPlayer().isPlaying()) {
-      this.getRightPlayer().pause()
     }
   }
 

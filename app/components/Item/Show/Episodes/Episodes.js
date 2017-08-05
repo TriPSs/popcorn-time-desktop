@@ -16,24 +16,14 @@ export default class extends React.Component {
         this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
       )
     }
-
-    const { selectedEpisode: { id: newId, watched: newWatched } } = nextProps
-    const { selectedEpisode: { id: oldId, watched: oldWatched } } = this.props
-
-    // When marked watched, select the next unwatched episode
-    if (newId === oldId && newWatched.complete && !oldWatched.complete) {
-      const { selectSeasonAndEpisode } = this.props
-
-      selectSeasonAndEpisode(nextProps.selectedEpisode.season)
-    }
   }
 
   componentDidUpdate(prevProps) {
-    const { selectedSeason: newSelectedSeason } = this.props
-    const { selectedSeason: oldSelectedSeason } = prevProps
-    const { episodesListComponent }             = this.props
+    const { selectedSeason: { number: newSeason } } = this.props
+    const { selectedSeason: { number: oldSeason } } = prevProps
+    const { episodesListComponent }                 = this.props
 
-    if (newSelectedSeason !== oldSelectedSeason && episodesListComponent) {
+    if ((newSeason !== oldSeason) && episodesListComponent) {
       episodesListComponent.scrollLeft = (
         this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
       )

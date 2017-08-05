@@ -105,10 +105,15 @@ export default class extends ReduxClazz implements StreamingInterface {
     this.selectedDevice.on('status', status => this.updateStatus(this.states[status.playerState]))
   }
 
-  pause = () => {
-    log('Pause...')
+  togglePlay = () => {
+    log('Toggle Play...')
     if (this.selectedDevice && this.status !== PlayerConstants.STATUS_NONE) {
-      this.selectedDevice.pause()
+      if (this.status === PlayerConstants.STATUS_PAUSED) {
+        this.selectedDevice.play()
+
+      } else {
+        this.selectedDevice.pause()
+      }
     }
   }
 

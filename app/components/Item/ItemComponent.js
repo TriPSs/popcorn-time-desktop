@@ -86,7 +86,7 @@ export default class Item extends React.Component {
   showPlayInfo = () => {
     const { playerStatus, torrentStatus } = this.props
 
-    if (playerStatus === PlayerConstants.STATUS_PLAYING) {
+    if (playerStatus !== PlayerConstants.STATUS_NONE) {
       return false
     }
 

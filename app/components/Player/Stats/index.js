@@ -1,1 +1,3 @@
-export default from './StatsContainer'
+import StatsContainer from './StatsContainer'
+
+export default StatsContainer

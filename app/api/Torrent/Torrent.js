@@ -1,13 +1,13 @@
 import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
+import portfinder from 'portfinder'
 import debug from 'debug'
 
 import ReduxClazz from 'redux-clazz'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as TorrentConstants from './TorrentConstants'
 
-const log  = debug('api:torrent')
-const port = 9091
+const log = debug('api:torrent')
 
 export default class extends ReduxClazz {
 
@@ -26,6 +26,8 @@ export default class extends ReduxClazz {
   loadedItem: ContentType
 
   loadedMagnet: string
+
+  port: number
 
   constructor(...context) {
     super(...context)
@@ -46,13 +48,7 @@ export default class extends ReduxClazz {
     this.updateStatus(TorrentConstants.STATUS_CONNECTING)
 
     log(`Using ${this.cacheLocation} to save the file!`)
-    this.engine.add(magnetURI, { path: this.cacheLocation }, (torrent) => {
-      if (!this.server) {
-        const server = torrent.createServer()
-        server.listen(port)
-        this.server = server
-      }
-
+    this.engine.add(magnetURI, { path: this.cacheLocation }, torrent => this.createServer(torrent).then(() => {
       const { files } = torrent
 
       const { file, torrentIndex } = files.reduce((previous, current, index) => {
@@ -80,8 +76,24 @@ export default class extends ReduxClazz {
       file.select()
 
       this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex })
-    })
+    }))
   }
+
+  createServer = torrent => new Promise((resolve) => {
+    if (this.server) {
+      return resolve()
+    }
+
+    return portfinder.getPortPromise({ port: 9091 }).then((port) => {
+      const server = torrent.createServer()
+      server.listen(port)
+      this.port   = port
+      this.server = server
+      this.createServer()
+
+      resolve()
+    })
+  })
 
   clearIntervals = () => {
     if (this.checkBufferInterval) {
@@ -99,7 +111,7 @@ export default class extends ReduxClazz {
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentConstants.STATUS_BUFFERED, {
         item: this.loadedItem,
-        uri : `http://localhost:${port}/${torrentIndex}`,
+        uri : `http://localhost:${this.port}/${torrentIndex}`,
       })
 
       this.clearIntervals()
@@ -127,7 +139,7 @@ export default class extends ReduxClazz {
 
       this.updateStatus(TorrentConstants.STATUS_DOWNLOADED, {
         item: this.loadedItem,
-        uri : `http://localhost:${port}/${torrentIndex}`,
+        uri : `http://localhost:${this.port}/${torrentIndex}`,
       })
       this.clearIntervals()
 

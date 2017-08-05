@@ -68,6 +68,18 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
     this.player.play()
   }
 
+  togglePlay = () => {
+    log('Toggle Play...')
+    if (this.player) {
+      if (this.isPlaying()) {
+        this.player.pause()
+
+      } else {
+        this.player.play()
+      }
+    }
+  }
+
   pause = () => {
     if (this.player && this.isPlaying()) {
       this.player.pause()

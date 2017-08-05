@@ -2,21 +2,22 @@
 import React from 'react'
 import classNames from 'classnames'
 
-import MediaPlayer from 'api/Player'
+import Player from 'api/Player'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 
-import itemClasses from '../Item/Item.scss'
 import type { Props } from './PlayerTypes'
 import classes from './Player.scss'
 import Stats from './Stats'
+import Controls from './Controls'
+import Progress from './Progress'
 
-export class Player extends React.Component {
+export default class extends React.Component {
 
   props: Props
 
   componentWillUnmount() {
-    MediaPlayer.destroy()
+    Player.destroy()
   }
 
   isHidden = () => {
@@ -82,6 +83,7 @@ export class Player extends React.Component {
     return (
       <div
         className={classNames({
+          'animated fadeIn'          : !this.isHidden(),
           [classes['player--hidden']]: this.isHidden(),
         }, classes.player)}>
 
@@ -90,21 +92,20 @@ export class Player extends React.Component {
             playerProvider,
             playerStatus,
             torrentStatus,
+            stop,
           }} />
         )}
 
-        <div className={classes.player__controls}>
+        <div className={classNames(classes.player__controls, {
+          'animated fadeIn': !this.isHidden(),
+        })}>
           {this.shouldShowControls() && (
-            <div>
-              OTHER CONTROLS COME HERE
-            </div>
+            <Controls />
           )}
 
-          <button
-            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-            onClick={stop}>
-            Cancel
-          </button>
+          {this.shouldShowControls() && (
+            <Progress />
+          )}
         </div>
 
         {playerProvider === PlayerConstants.PROVIDER_PLYR && this.renderVideo()}
@@ -112,5 +113,3 @@ export class Player extends React.Component {
     )
   }
 }
-
-export default Player
