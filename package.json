@@ -98,7 +98,7 @@
     "react-visibility-sensor": "3.10.1",
     "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
-    "redux-clazz": "^1.0.3",
+    "redux-clazz": "^2.0.0",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.2.0",
     "rndm": "1.2.0",

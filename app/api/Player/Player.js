@@ -12,7 +12,7 @@ import type { Props } from './PlayerTypes'
 
 const log = debug('api:player')
 
-export class Player extends ReduxClazz implements PlayerProviderInterface {
+export default class extends ReduxClazz implements PlayerProviderInterface {
 
   plyrAdapter: PlyrPlayerProvider
 
@@ -35,7 +35,7 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   constructor(...props) {
     super(...props)
 
-    this.plyrAdapter = PlyrPlayerProvider
+    this.plyrAdapter = new PlyrPlayerProvider()
   }
 
   clazzWillReceiveProps = (nextProps) => {
@@ -150,5 +150,3 @@ export class Player extends ReduxClazz implements PlayerProviderInterface {
   }
 
 }
-
-export default Player
