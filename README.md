@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img height="200" width="200" src="resources/background.png" alt="logo" />
+  <img height="200" width="200" src="./resources/logo.png" alt="logo" />
   <br />
   Popcorn Time
 </h1>
@@ -13,11 +13,14 @@
   <a target="_blank" href="https://ci.appveyor.com/project/tripss/popcorn-time-desktop/branch/master">
     <img src="https://ci.appveyor.com/api/projects/status/071qeglg94au8wr2/branch/master?svg=true&maxAge=86400" alt="AppVeyor Build status" />
   </a>
-  <a target="_blank" href="https://david-dm.org/tripss/popcorn-time-desktop?type=dev">
-    <img src="https://img.shields.io/david/dev/tripss/popcorn-time-desktop.svg?maxAge=86400" alt="npm dev dependencies" />
+  <a target="_blank" href="https://david-dm.org/tripss/popcorn-time-desktop" title="dependencies status">
+  	<img src="https://david-dm.org/tripss/popcorn-time-desktop/status.svg"/>
   </a>
-  <a target="_blank" href="https://gitter.im/amilajack/popcorn-time-desktop?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
-    <img src="https://badges.gitter.im/amilajack/popcorn-time-desktop.svg" alt="Gitter" />
+  <a target="_blank" href="https://david-dm.org/tripss/popcorn-time-desktop?type=dev" title="devDependencies status">
+    <img src="https://david-dm.org/tripss/popcorn-time-desktop/dev-status.svg"/>
+  </a>
+  <a target="_blank" href="https://gitter.im/popcorn-time-desktop/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge">
+    <img src="https://badges.gitter.im/popcorn-time-desktop.svg" alt="Gitter" />
   </a>
   <a target="_blank" href="https://github.com/tripss/popcorn-time-desktop/pulls">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
@@ -70,15 +73,15 @@ npm run package
 Please see the [contributing guide](https://github.com/tripss/popcorn-time-desktop/blob/master/CONTRIBUTING.md)
 
 ## Todos:
-See the [roadmap](https://github.com/tripss/popcorn-time-desktop/wiki/Road-Map-and-Progress) for the full list.
+See the [milestones](https://github.com/TriPSs/popcorn-time-desktop/milestones) for the full list.
 
 ## Screenshots
 
 ### Home Page:
-![Home Page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/home.png)
+![Home Page](./images/home.png)
 
 ### Movie Page:
-![Movie page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/movie.png)
+![Movie page](./images/movie.png)
 
 ### Show page:
-![Show page](https://raw.githubusercontent.com/TriPSs/popcorn-time-desktop/master/images/show.png)
+![Show page](./images/show.png)
