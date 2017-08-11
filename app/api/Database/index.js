@@ -1,1 +1,3 @@
-export default from './Database'
+import Database from './Database'
+
+export default Database

@@ -5,6 +5,7 @@ import WatchedDB from './Watched'
 import BookmarksDB from './Bookmarks'
 import MoviesDB from './Movies'
 import ShowsDB from './Shows'
+import SettingsDB from './Settings'
 
 const log = debug('api:database')
 
@@ -18,6 +19,8 @@ export class Database {
 
   shows: ShowsDB
 
+  settings: SettingsDB
+
   constructor() {
     const dbLocation = remote.app.getPath('userData')
 
@@ -27,6 +30,7 @@ export class Database {
     this.bookmarks = new BookmarksDB(dbLocation)
     this.movies    = new MoviesDB(dbLocation)
     this.shows     = new ShowsDB(dbLocation)
+    this.settings  = new SettingsDB(dbLocation)
   }
 
 }
