@@ -37,6 +37,15 @@ export default (state = ItemConstants.INITIAL_STATE, action) => {
         ...action.payload,
       }
 
+    case WatchedConstants.UPDATE_PERCENTAGE_MOVIE:
+      return {
+        ...state,
+        item: {
+          ...state.item,
+          watched: action.payload.watched,
+        },
+      }
+
     case WatchedConstants.UPDATE_PERCENTAGE_EPISODE:
     case WatchedConstants.MARKED_EPISODE:
       return {

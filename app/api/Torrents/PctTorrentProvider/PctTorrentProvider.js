@@ -37,7 +37,7 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
     this.popcornAPI.get(`show/${itemId}`, { params: { day: this.defaultFilters.day } })
       .then(({ data: show }) => this.formatShow(show, true))
   )
-  
+
   formatMovies = (movies: Array<MovieType>) => (movies.map((movie: MovieType) => this.formatMovie(movie)))
 
   formatMovie = (movie: MovieType) => ({

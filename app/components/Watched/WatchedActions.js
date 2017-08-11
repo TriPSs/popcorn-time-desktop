@@ -1,5 +1,6 @@
 import Database from 'api/Database'
 
+import type { MovieType, EpisodeType } from 'api/Metadata/MetadataTypes'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as WatchedConstants from './WatchedConstants'
 import { selectSeasonAndEpisode } from '../Item/ItemActions'
@@ -62,9 +63,21 @@ export const toggleWatched = item => (dispatch) => {
   }
 }
 
-export const updatePercentage = (item, percentage) => (dispatch) => {
+export const updatePercentage = (item: MovieType | EpisodeType, percentage: number) => (dispatch) => {
   if (item.type === MetadataConstants.TYPE_MOVIE) {
-    // TODO:: update movie watched percentage
+    dispatch({
+      type   : WatchedConstants.UPDATE_PERCENTAGE_MOVIE,
+      payload: {
+        watched: {
+          complete: percentage > 95,
+          progress: percentage,
+        },
+      },
+    })
+
+    if (percentage > 95) {
+      dispatch(markedMovie(item.id))
+    }
 
   } else {
     Database.watched.updateEpisodePercentage(item.showId, item.season, item.number, percentage).then(() => {
