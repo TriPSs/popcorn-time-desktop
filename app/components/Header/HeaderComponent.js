@@ -9,7 +9,7 @@ import * as HomeConstants from 'components/Home/HomeConstants'
 import classes from './Header.scss'
 import type { Props } from './HeaderTypes'
 
-export class Header extends React.Component {
+export default withRouter(class extends React.Component {
 
   props: Props
 
@@ -21,15 +21,20 @@ export class Header extends React.Component {
 
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      const { setActiveMode } = this.props
-      const { searchQuery }   = this.state
-
-      setActiveMode('search', {
-        searchQuery,
-      })
-
-      // browserHistory.replace('/search')
+      this.handleSearch()
     }
+  }
+
+  handleSearch = () => {
+    const { history }     = this.props
+    const { searchQuery } = this.state
+
+    history.replace({
+      pathname: '/search',
+      state   : {
+        keywords: searchQuery,
+      },
+    })
   }
 
   render() {
@@ -74,10 +79,27 @@ export class Header extends React.Component {
               <i className={'ion-heart'} />
             </Link>
           </li>
+
+          <li className={classNames(classes.menu__item, classes['menu__item-search'], {
+            [classes['menu__item--active']]: mode === HomeConstants.MODE_SEARCH,
+          }, classes['menu__item-right'])}>
+
+            <input
+              type={'text'}
+              onChange={this.handleSearchChange}
+              onKeyPress={this.handleKeyPress}
+              placeholder={'Search'}
+            />
+
+            <i
+              role={'presentation'}
+              onClick={this.handleSearch}
+              className={'ion-search'} />
+
+          </li>
+
         </ul>
       </div>
     )
   }
-}
-
-export default withRouter(Header)
+})

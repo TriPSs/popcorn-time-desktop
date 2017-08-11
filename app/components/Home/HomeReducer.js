@@ -26,6 +26,15 @@ export default (state = HomeConstants.INITIAL_STATE, action) => {
         },
       }
 
+    case HomeConstants.CLEAR_ITEMS:
+      return {
+        ...state,
+        modes: {
+          ...state.modes,
+          [action.payload]: HomeConstants.INITIAL_STATE.modes[action.payload],
+        },
+      }
+
     case BookmarkedConstants.REMOVE_BOOKMARK:
       return {
         ...state,
