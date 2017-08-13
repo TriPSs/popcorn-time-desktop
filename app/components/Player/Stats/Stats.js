@@ -3,7 +3,7 @@ import React from 'react'
 import classNames from 'classnames'
 
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
-import itemClasses from 'components/Item/Item.scss'
+import itemClasses from 'routes/Item/Item.scss'
 import type { Props } from './StatsTypes'
 import classes from './Stats.scss'
 

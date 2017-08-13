@@ -14,4 +14,9 @@ export {
   HomeActions,
 }
 
-export default HomeContainer
+export default {
+  exact    : true,
+  strict   : true,
+  path     : '/:mode',
+  component: HomeContainer,
+}

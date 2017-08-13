@@ -1,3 +1,5 @@
 import DisclaimerComponent from './DisclaimerComponent'
 
-export default DisclaimerComponent
+export default {
+  component: DisclaimerComponent,
+}

@@ -47,8 +47,6 @@ export const getItems = (mode, page = 1, givenFilters = {}) => (dispatch, getSta
       })
 
     case HomeConstants.MODE_SEARCH:
-      dispatch(clearItems(mode))
-
       return Butter.getMovies(page, filters).then((movies) => {
         dispatch(fetchedItems(movies, mode))
 

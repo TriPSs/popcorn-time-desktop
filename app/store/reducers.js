@@ -6,11 +6,11 @@ import PlayerReducer from 'api/Player/PlayerReducer'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 import TorrentReducer from 'api/Torrent/TorrentReducer'
 
-import * as HomeConstants from '../components/Home/HomeConstants'
-import HomeReducer from '../components/Home/HomeReducer'
+import * as HomeConstants from '../routes/Home/HomeConstants'
+import HomeReducer from '../routes/Home/HomeReducer'
 
-import * as ItemConstants from '../components/Item/ItemConstants'
-import ItemReducer from '../components/Item/ItemReducer'
+import * as ItemConstants from '../routes/Item/ItemConstants'
+import ItemReducer from '../routes/Item/ItemReducer'
 
 import * as BookmarkedConstants from '../components/Bookmarked/BookmarkedConstants'
 import BookmarkedReducer from '../components/Bookmarked/BookmarkedReducer'

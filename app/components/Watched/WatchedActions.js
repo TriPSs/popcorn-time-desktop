@@ -2,8 +2,8 @@ import Database from 'api/Database'
 
 import type { MovieType, EpisodeType } from 'api/Metadata/MetadataTypes'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
+import { selectSeasonAndEpisode } from 'routes/Item/ItemActions'
 import * as WatchedConstants from './WatchedConstants'
-import { selectSeasonAndEpisode } from '../Item/ItemActions'
 
 export const markedMovie = (itemId, watched) => ({
   type   : WatchedConstants.MARKED_MOVIE,

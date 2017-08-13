@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import logoImage from 'images/logo.png'
-import * as HomeConstants from 'components/Home/HomeConstants'
+import * as HomeConstants from 'routes/Home/HomeConstants'
 import classes from './Header.scss'
 import type { Props } from './HeaderTypes'
 

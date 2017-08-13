@@ -5,8 +5,8 @@ import * as PlayerActions from 'api/Player/PlayerActions'
 import * as PlayerSelectors from 'api/Player/PlayerSelectors'
 import * as TorrentSelectors from 'api/Torrent/TorrentSelectors'
 
-import * as ItemSelectors from 'components/Item/ItemSelectors'
-import { searchEpisodeTorrents } from 'components/Item/ItemActions'
+import * as ItemSelectors from 'routes/Item/ItemSelectors'
+import { searchEpisodeTorrents } from 'routes/Item/ItemActions'
 
 import Episode from './Episode'
 

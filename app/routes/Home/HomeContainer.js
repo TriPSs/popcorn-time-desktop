@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import * as BookmarkActions from '../Bookmarked/BookmarkedActions'
+import * as BookmarkActions from 'components/Bookmarked/BookmarkedActions'
 import * as Actions from './HomeActions'
 import * as Selectors from './HomeSelectors'
 

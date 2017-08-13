@@ -4,6 +4,7 @@ import React from 'react'
 import Loader from 'components/Loader'
 import Header from 'components/Header'
 import CardList from 'components/CardList'
+import Fitlers from 'components/Filters'
 
 import classes from './Home.scss'
 import * as HomeConstants from './HomeConstants'
@@ -46,19 +47,19 @@ export class Home extends React.Component {
     if (newMode !== oldMode) {
       window.scrollTo(0, 0)
 
-    } else if (newMode === oldMode && newMode === HomeConstants.MODE_SEARCH) {
+    } else if (newMode === oldMode) {
       const { location: { state: newFilters } } = nextProps
       const { location: { state: oldFilters } } = this.props
 
-      if (newFilters && newFilters.keywords !== oldFilters.keywords) {
-        const { getItems, history } = this.props
+      if (JSON.stringify(newFilters) !== JSON.stringify(oldFilters)) {
+        const { clearItems, getItems, history } = this.props
 
-        if (newFilters.keywords) {
-          getItems(HomeConstants.MODE_SEARCH, 1, newFilters)
-
-        } else {
+        if (newMode === HomeConstants.MODE_SEARCH && !newFilters.keywords) {
           history.push('/movies')
         }
+
+        clearItems(newMode)
+        getItems(newMode, 1, newFilters)
       }
     }
   }
@@ -118,6 +119,7 @@ export class Home extends React.Component {
       <div className={classes.home__container}>
         <Header />
 
+        <Fitlers />
         <div
           ref={ref => this.cardListRef = ref}
           className={classes.home__cards}

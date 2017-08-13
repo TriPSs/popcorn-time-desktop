@@ -8,4 +8,9 @@ export {
   ItemSelectors,
 }
 
-export default ItemContainer
+export default {
+  exact    : true,
+  strict   : true,
+  path     : '/:mode/:itemId',
+  component: ItemContainer,
+}
