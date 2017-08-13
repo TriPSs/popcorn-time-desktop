@@ -19,7 +19,7 @@ export const fetchedItems = (items, mode) => ({
 
 export const clearItems = mode => ({
   type   : HomeConstants.CLEAR_ITEMS,
-  payload: mode
+  payload: mode,
 })
 
 export const getItems = (mode, page = 1, givenFilters = {}) => (dispatch, getState) => {

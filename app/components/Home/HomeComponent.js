@@ -3,7 +3,6 @@ import React from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
 
 import Header from '../Header'
-import Filters from '../Filters'
 import CardList from '../CardList'
 
 import classes from './Home.scss'
@@ -103,8 +102,6 @@ export class Home extends React.Component {
 
         <Header />
         <div style={{ height: 64 }} />
-
-        {/*<Filters />*/}
 
         <div className={classes.home__cards} style={{ padding: 0 }}>
           <CardList items={modes[mode].items} isLoading={isLoading} />

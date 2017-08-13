@@ -11,6 +11,10 @@ import classes from './Disclaimer.scss'
 
 export default class extends React.Component {
 
+  props: {
+    history: Object
+  }
+
   state = {
     loading: true,
   }
@@ -24,7 +28,7 @@ export default class extends React.Component {
 
       } else {
         this.setState({
-          loading: false
+          loading: false,
         })
       }
     })
@@ -61,9 +65,10 @@ export default class extends React.Component {
             <h2>Your Acceptance</h2>
 
             <p>
-              By using the {name} app you signify your agreement to (1) these terms and conditions (the 'Terms of
+              By using the {name} app you signify your agreement to (1) these terms and conditions (the Terms of
               Service').
-              <br /><br />
+              <br />
+              <br />
             </p>
 
             <h2>Privacy Policy.</h2>

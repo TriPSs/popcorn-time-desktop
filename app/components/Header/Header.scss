@@ -1,121 +1,121 @@
 @import 'base/variables';
 
 .menu {
-	list-style: none;
-	height: $menu-height;
-	line-height: $menu-height;
-	margin: 0;
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding-left: 3px;
+  list-style: none;
+  height: $menu-height;
+  line-height: $menu-height;
+  margin: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-left: 3px;
 
-	&__container {
-		height: $menu-height;
-		background: $gray-dark;
-		position: fixed;
-		top: 0;
-		width: 100%;
-		z-index: 1050;
-		opacity: 0.9;
-	}
+  &__container {
+    height: $menu-height;
+    background: $gray-dark;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1050;
+    opacity: 0.9;
+  }
 
-	&__item {
-		padding: 0 10px;
+  &__item {
+    padding: 0 10px;
 
-		&:first-of-type {
-			padding-left: 25px;
-		}
+    &:first-of-type {
+      padding-left: 25px;
+    }
 
-		&:last-of-type {
-			padding-right: 25px;
-		}
+    &:last-of-type {
+      padding-right: 25px;
+    }
 
-		a {
-			color: $menu-item-color;
+    a {
+      color: $menu-item-color;
 
-			&:hover {
-				color: $menu-item-color-active;
-			}
+      &:hover {
+        color: $menu-item-color-active;
+      }
 
-			:global {
-				.ion-heart {
-					font-size: 30px;
+      :global {
+        .ion-heart {
+          font-size: 30px;
 
-					&:hover {
-						color: red;
-					}
-				}
-			}
-		}
+          &:hover {
+            color: red;
+          }
+        }
+      }
+    }
 
-		&--active {
-			a {
-				color: $menu-item-color-active;
+    &--active {
+      a {
+        color: $menu-item-color-active;
 
-				:global {
-					.ion-heart {
-						color: red;
-					}
-				}
-			}
-		}
+        :global {
+          .ion-heart {
+            color: red;
+          }
+        }
+      }
+    }
 
-		&-left {
-			float: left;
-		}
+    &-left {
+      float: left;
+    }
 
-		&-right {
-			float: right;
-		}
+    &-right {
+      float: right;
+    }
 
-		&-logo {
-			position: absolute;
-			width: 100%;
-			pointer-events: none;
-			text-align: center;
+    &-logo {
+      position: absolute;
+      width: 100%;
+      pointer-events: none;
+      text-align: center;
 
-			img {
-				width: 30px;
-				opacity: 0.8;
-			}
-		}
+      img {
+        width: 30px;
+        opacity: 0.8;
+      }
+    }
 
-		&-search {
-			display: flex;
-			position: relative;
-			align-items: center;
-			height: $menu-height;
+    &-search {
+      display: flex;
+      position: relative;
+      align-items: center;
+      height: $menu-height;
 
-			i {
-				position: absolute;
-				color: $menu-item-color;
-				right: 40px;
-				font-size: 22px;
-				cursor: pointer;
-				z-index: 1001;
-			}
+      i {
+        position: absolute;
+        color: $menu-item-color;
+        right: 40px;
+        font-size: 22px;
+        cursor: pointer;
+        z-index: 1001;
+      }
 
-			input {
-				background: $menu-item-background;
-				border: none;
-				height: $menu-height - 20;
-				color: $menu-item-color;
-				transition: $transition-all-in;
-				width: 175px;
-				padding-left: 15px;
-				z-index: 1000;
+      input {
+        background: $menu-item-background;
+        border: none;
+        height: $menu-height - 20;
+        color: $menu-item-color;
+        transition: $transition-all-in;
+        width: 175px;
+        padding-left: 15px;
+        z-index: 1000;
 
-				&:focus {
-					color: $menu-item-color-active;
-					outline: none;
-					width: 225px;
+        &:focus {
+          color: $menu-item-color-active;
+          outline: none;
+          width: 225px;
 
-					~ i {
-						color: $menu-item-color-active;
-					}
-				}
-			}
-		}
-	}
+          ~ i {
+            color: $menu-item-color-active;
+          }
+        }
+      }
+    }
+  }
 }
