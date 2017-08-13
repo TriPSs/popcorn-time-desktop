@@ -2,6 +2,7 @@
 import React from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
 
+import Loader from 'components/Loader'
 import Header from '../Header'
 import CardList from '../CardList'
 
@@ -104,10 +105,13 @@ export class Home extends React.Component {
         <div style={{ height: 64 }} />
 
         <div className={classes.home__cards} style={{ padding: 0 }}>
-          <CardList items={modes[mode].items} isLoading={isLoading} />
+          <CardList items={modes[mode].items} />
 
           <VisibilitySensor onChange={this.handleGetMoreItems} />
+          <Loader {...{ isLoading }} />
         </div>
+
+
       </div>
     )
   }

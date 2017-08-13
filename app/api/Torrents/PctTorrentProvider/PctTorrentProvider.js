@@ -70,6 +70,10 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
       rating     : Helpers.formatRating(show.rating),
       num_seasons: show.num_seasons,
       type       : MetadataConstant.TYPE_SHOW,
+      watched    : {
+        complete: false,
+        progress: 0,
+      },
     }
 
     if (isDetail) {

@@ -216,7 +216,7 @@ export default class extends React.Component {
             </div>
           )}
 
-          {episode.watched.progress && !episode.watched.complete && (
+          {episode.watched.progress > 0 && !episode.watched.complete && (
             <div className={'list__item-progress'}>
               <div style={{ width: `${episode.watched.progress}%` }} />
             </div>

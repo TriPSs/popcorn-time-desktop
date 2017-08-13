@@ -11,6 +11,11 @@
   margin: 3.5px;
   overflow: hidden;
   position: relative;
+  flex: 1;
+
+  &:last-of-type {
+    max-width: none;
+  }
 
   &__description {
     height: 25px;
