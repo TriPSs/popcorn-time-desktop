@@ -5,6 +5,7 @@ import { remote } from 'electron'
 import Database from 'api/Database'
 import { DISCLAIMER } from 'api/Database/Settings/SettingsConstants'
 
+import backgroundImage from 'images/bg.jpg'
 import { name } from '../../package.json'
 
 import classes from './Disclaimer.scss'
@@ -55,8 +56,7 @@ export default class extends React.Component {
     }
 
     return (
-      <div className={classes.container}>
-
+      <div className={classes.container} style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className={classes.disclaimer}>
           <div className={classes.disclaimer__head}>
             Terms of Service

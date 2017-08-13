@@ -1,18 +1,18 @@
 {
   "name": "Popcorn-Time",
+  "version": "1.0.0-alpha.1",
   "description": "An experimental PopcornTime client",
   "homepage": "https://github.com/tripss/popcorn-time-desktop",
-  "version": "0.2.0",
-  "main": "./main.prod.js",
+  "license": "MIT",
   "author": {
     "name": "Tycho Bokdam",
     "email": "t.bokdam@seronaris.nl",
     "url": "https://github.com/tripss"
   },
+  "main": "./main.prod.js",
   "scripts": {
     "postinstall": "npm rebuild --runtime=electron --target=1.6.6 --disturl=https://atom.io/download/atom-shell --build-from-source"
   },
-  "license": "MIT",
   "dependencies": {
     "chromecasts": "^1.9.0"
   }

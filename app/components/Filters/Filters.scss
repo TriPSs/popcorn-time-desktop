@@ -36,6 +36,11 @@
   height: 40px;
   line-height: 40px;
   text-transform: capitalize;
+  transition: $transition-color-in;
+
+  &:hover {
+    color: $menu-item-color-active;
+  }
 
   &--active {
     color: $menu-item-color-active;
@@ -45,8 +50,5 @@
     margin: 0 10px;
     font-size: 20px;
   }
-}
-
-.filterHeading {
 }
 

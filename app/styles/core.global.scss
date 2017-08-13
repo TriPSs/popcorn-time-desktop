@@ -2,8 +2,8 @@
 // Modules
 //
 
-@import 'base/fonts';
-@import 'base/variables';
+@import './base/fonts';
+@import './base/variables';
 
 //
 // Dependencies
@@ -30,6 +30,10 @@ html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 a {

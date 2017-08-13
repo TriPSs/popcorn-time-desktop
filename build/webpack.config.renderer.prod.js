@@ -1,6 +1,7 @@
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import webpackMerge from 'webpack-merge'
+import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 
 import config from '../config'
 import baseConfig  from './webpack.config.renderer.base'
@@ -20,6 +21,10 @@ export default webpackMerge(baseConfig, {
 
   plugins: [
     new ExtractTextPlugin('style.css'),
+
+    new UglifyJSPlugin({
+      parallel: true,
+    }),
 
     new BundleAnalyzerPlugin({
       analyzerMode: config.open_analyzer ? 'server' : 'disabled',

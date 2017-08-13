@@ -66,7 +66,7 @@ export default withRouter(class extends React.Component {
           </li>
 
           <li className={classNames(classes.menu__item, classes['menu__item-logo'])}>
-            <img src={logoImage} alt={'Popcorn Time'} />
+            <img src={logoImage} className={'animated fadeIn'} alt={'Popcorn Time'} />
           </li>
 
           <li className={classNames(classes.menu__item, {

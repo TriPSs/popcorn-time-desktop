@@ -1,6 +1,6 @@
 {
-  "name": "popcorn-time-desktop",
-  "version": "0.2.0",
+  "name": "Popcorn-Time",
+  "version": "1.0.0-alpha.1",
   "description": "An experimental Popcorn Time client",
   "keywords": [
     "client",
@@ -49,8 +49,8 @@
     "lint:style:fix": "stylefmt -r app/**/*.scss",
     "lint:summary": "eslint-nibble app *.js",
     "package": "npm run postinstall && npm run build && build --publish never",
-    "package:ci": "npm run postinstall && npm run build && build --publish onTagOrDraft",
     "package:all": "npm run postinstall && npm run build && build --publish never --mac --win --linux",
+    "package:ci": "npm run postinstall && npm run build && build --publish onTagOrDraft",
     "package:mac": "cross-env NODE_ENV=production npm run build:dll && npm run build && build --publish never --mac",
     "package:mac:debug": "cross-env DEBUG_PROD=true npm run package:mac",
     "package:win": "cross-env NODE_ENV=production npm run postinstall && npm run build && build --publish never --win",
