@@ -1,60 +1,73 @@
 @import 'base/variables';
 
 .cover {
-  max-width: $card-max-with;
-  width: 100%;
-  max-height: $card-max-height;
-  min-height: $card-min-height;
-  height: 100%;
-  position: relative;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+	max-width: $card-max-with;
+	width: 100%;
+	max-height: $card-max-height;
+	min-height: $card-min-height;
+	height: 100%;
+	position: relative;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 
-  &__overlay {
-    z-index: 1000;
-    opacity: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    will-change: opacity;
-    transition: opacity 0.1s linear;
-    background: rgba(0, 0, 0, 0.5);
-    cursor: pointer;
+	&__overlay {
+		z-index: 1000;
+		opacity: 0;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		will-change: opacity;
+		background: rgba(0, 0, 0, 0.5);
+		cursor: pointer;
+		transition: $transition-opacity-in;
 
-    &--watched {
-      opacity: 1;
-    }
+		&--watched {
+			opacity: 1;
+			transition: $transition-all-in;
+			background: rgba(0, 0, 0, 0.8);
 
-    &:hover {
-      opacity: 1;
-    }
-  }
+			div {
+				opacity: 0;
+				transition: $transition-opacity-in;
+			}
+
+			&:hover {
+				div {
+					opacity: 1;
+				}
+			}
+		}
+
+		&:hover {
+			opacity: 1;
+		}
+	}
 }
 
 .overlay {
-  &__click {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 1050;
-  }
+	&__click {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		z-index: 1050;
+	}
 
-  &__bookmark {
-    position: absolute;
-    right: 10px;
-    top: 0;
-    z-index: 1055;
-  }
+	&__bookmark {
+		position: absolute;
+		right: 10px;
+		top: 0;
+		z-index: 1055;
+	}
 
-  &__watched {
-    position: absolute;
-    left: 10px;
-    top: 0;
-    z-index: 1055;
-  }
+	&__watched {
+		position: absolute;
+		left: 10px;
+		top: 0;
+		z-index: 1055;
+	}
 }

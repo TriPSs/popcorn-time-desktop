@@ -19,10 +19,12 @@ export default new (class {
 
   getMovies = (page: number = 1, filters: Object = {}) => (
     this.pctAdapter.getMovies(page, filters)
+      .then(this.metadataAdapter.updateMoviesWatched)
   )
 
   getMovie = (itemId: string) => (
     this.pctAdapter.getMovie(itemId)
+      .then(this.metadataAdapter.updateMovieWatched)
   )
 
   getShows = (page: number = 1, filters: Object = {}) => (

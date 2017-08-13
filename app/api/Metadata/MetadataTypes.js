@@ -19,7 +19,10 @@ export type ContentType = {
 export type MovieType = ContentType & {
   certification: string,
   trailer: string,
-  watched: boolean,
+  watched: {
+    complete: boolean,
+    progress: number,
+  },
   torrents: {
     '1080p': TorrentType,
     '720p': TorrentType,

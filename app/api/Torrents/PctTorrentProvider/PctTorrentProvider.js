@@ -53,6 +53,10 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
     rating       : Helpers.formatRating(movie.rating),
     torrents     : Helpers.formatTorrents(movie.torrents.en),
     type         : MetadataConstant.TYPE_MOVIE,
+    watched      : {
+      complete: false,
+      progress: 0,
+    },
   })
 
   formatShows = (shows: Array<ShowType>) => (shows.map(show => this.formatShow(show)))

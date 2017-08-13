@@ -6,9 +6,9 @@ import type { Props } from './WatchedTypes'
 import classes from './Watched.scss'
 
 export default (props: Props) => {
-  const { item, watchedItems, toggleWatched, className, tooltip = { effect: 'solid', place: 'top' } } = props
+  const { item, toggleWatched, className, tooltip = { effect: 'solid', place: 'top' } } = props
 
-  const isWatched = (item.watched ? item.watched.complete : false) || watchedItems.indexOf(item.id) > -1
+  const isWatched = item.watched ? item.watched.complete : false
   const watchedID = `${item.id}-watched-tooltip`
 
   return (
