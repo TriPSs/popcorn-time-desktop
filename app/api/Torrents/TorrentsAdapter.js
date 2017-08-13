@@ -6,7 +6,7 @@ import providers from './TorrentProviders'
 
 const log = debug('api:torrents:adapter')
 
-export class TorrentsAdapter implements TorrentProviderInterface {
+export default class TorrentsAdapter implements TorrentProviderInterface {
 
   providers = providers()
 
@@ -27,5 +27,3 @@ export class TorrentsAdapter implements TorrentProviderInterface {
   }
 
 }
-
-export default TorrentsAdapter

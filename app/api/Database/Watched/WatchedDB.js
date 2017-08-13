@@ -19,13 +19,24 @@ export class WatchedDB {
     resolve(),
   ))
 
-  markMovieWatched = (id: string) => this.markWatched({ id, type: 'movie' })
+  markMovieWatched = (id: string, percentage: number) => this.markWatched({ id, percentage, type: 'movie' })
 
   markMovieUnWatched = (id: string) => this.unmarkWatched({ id, type: 'movie' })
 
   getMoviesWatched = () => new Promise(resolve => this.db.find({ type: 'movie' }, (error, docs) =>
-    resolve(docs.map(item => item.id)),
+    resolve({ error, docs }),
   ))
+
+  updateMoviePercentage = (id: string, percentage: number) =>
+    new Promise(resolve =>
+      this.db.update({ id, type: 'movie' }, { $set: { percentage } }, {}, (err, numAffected) => {
+        if (!numAffected) {
+          this.markMovieWatched(id, percentage).then(resolve)
+
+        } else {
+          resolve()
+        }
+      }))
 
   markEpisodeNotWatched = (showId: string, season: string, episode: string) =>
     this.unmarkWatched({ showId, season, episode, type: 'episode' })
@@ -45,12 +56,8 @@ export class WatchedDB {
       }))
 
   getEpisodesWatchedOfShow = (showId: string) => new Promise(resolve =>
-    this.db.find(
-      {
-        showId,
-        type: 'episode',
-      }, (error, docs) => resolve({ error, docs }),
-    ))
+    this.db.find({ showId, type: 'episode' }, (error, docs) => resolve({ error, docs })),
+  )
 
 }
 

@@ -1,3 +1,5 @@
+These providers will probably be implemented
+
 ```js
 const Cpb             = require('cpasbien-api');
 const ExtraTorrentAPI = require('extratorrent-api');

@@ -14,6 +14,4 @@ export const mapStateToProps = state => ({
   torrentStatus: TorrentSelectors.getStatus(state),
 })
 
-const MediaPlayer = connect(mapStateToProps, PlayerActions)(Player)
-
-export default MediaPlayer
+export default connect(mapStateToProps, PlayerActions, true)(Player)

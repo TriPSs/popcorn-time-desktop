@@ -8,6 +8,7 @@ export default (state = Constants.INITIAL_STATE, action) => {
       return {
         ...state,
         status: action.payload.newStatus,
+        stats: Constants.INITIAL_STATE.stats,
       }
 
     case Constants.BUFFERING:

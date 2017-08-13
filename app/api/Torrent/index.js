@@ -8,5 +8,4 @@ export const mapStateToProps = state => ({
   status: TorrentSelectors.getStatus(state),
 })
 
-const adapter = connect(mapStateToProps, TorrentActions)(Torrent)
-export default adapter
+export default connect(mapStateToProps, TorrentActions, true)(Torrent)

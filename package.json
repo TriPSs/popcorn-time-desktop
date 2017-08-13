@@ -81,6 +81,7 @@
     "network-address": "1.1.2",
     "opensubtitles-api": "4.0.0",
     "plyr": "2.0.13",
+    "portfinder": "^1.0.13",
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.0",
     "react-addons-transition-group": "^15.6.0",
@@ -97,7 +98,7 @@
     "react-visibility-sensor": "3.10.1",
     "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
-    "redux-clazz": "^1.0.3",
+    "redux-clazz": "^2.0.0",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.2.0",
     "rndm": "1.2.0",
@@ -108,7 +109,7 @@
     "torrentapi-wrapper": "0.0.2",
     "trakt.tv": "github:tripss/trakt.tv",
     "vlc-command": "1.1.1",
-    "webtorrent": "github:amilajack/webtorrent"
+    "webtorrent": "^0.98.19"
   },
   "devDependencies": {
     "autoprefixer": "7.1.2",

@@ -1,8 +1,9 @@
 @import 'base/variables';
 
 .player {
-	position: relative;
-	width: $item-content-width;
+  position: relative;
+  width: $item-content-width;
+  z-index: 2000;
 
   &--hidden {
     display: none;
@@ -14,9 +15,13 @@
   }
 
   &__controls {
-		position: absolute;
-		bottom: 100px;
-		left: 0;
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
   }
 }
 
@@ -31,7 +36,25 @@
   right: 0;
 
   > div {
-    z-index: 1055;
+    z-index: 2000 !important;
+  }
+
+  &--paused {
+    .player__close {
+      opacity: $button-default-opacity;
+    }
+  }
+
+  &--playing {
+    .player__close {
+      opacity: 0;
+    }
+
+    &:hover {
+      .player__close {
+        opacity: $button-default-opacity;
+      }
+    }
   }
 
   &__close-button {

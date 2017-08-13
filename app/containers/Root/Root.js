@@ -12,10 +12,9 @@ export default class extends React.Component {
   props: Props
 
   componentWillMount() {
-    const { bookmarks, watched } = this.props
+    const { bookmarks } = this.props
 
     bookmarks.getBookmarks()
-    watched.getMoviesWatched()
   }
 
   render() {

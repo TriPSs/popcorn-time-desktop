@@ -56,7 +56,7 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
   }
 
   play = (uri: string, item: ContentType) => {
-    if (this.isPlaying()) {
+    if (this.status !== PlayerConstants.STATUS_NONE) {
       return
     }
 
@@ -66,6 +66,18 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
 
     Power.enableSaveMode()
     this.player.play()
+  }
+
+  togglePlay = () => {
+    log('Toggle Play...')
+    if (this.player) {
+      if (this.isPlaying()) {
+        this.player.pause()
+
+      } else {
+        this.player.play()
+      }
+    }
   }
 
   pause = () => {
@@ -117,10 +129,12 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
   }
 
   destroy = () => {
+    log('Destroy Plyr...')
     Power.disableSaveMode()
     this.clearIntervals()
 
     if (this.player) {
+      this.player.stop()
       this.player.destroy()
       this.player = null
 
@@ -144,7 +158,7 @@ export class PlyrPlayerProvider extends ReduxClazz implements PlayerProviderInte
     }
   }, 10000)
 
-  getPercentage = () => ((this.player.getCurrentTime() / 60) / this.loadedItem.runtime.inMinutes) * 100
+  getPercentage = () => (this.player.getCurrentTime() / this.player.getDuration()) * 100
 
   clearIntervals = () => {
     if (this.checkProgressInterval) {

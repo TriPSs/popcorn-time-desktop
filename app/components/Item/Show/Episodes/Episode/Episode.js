@@ -2,6 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 import ReactTooltip from 'react-tooltip'
 
+import * as PlayerConstants from 'api/Player/PlayerConstants'
+import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 import { getHighestQualtity } from 'api/Torrents/TorrentsHelpers'
 import Watched from 'components/Watched'
 import Loader from 'components/Loader'
@@ -32,7 +34,7 @@ export default class extends React.Component {
     const { fetchingEpisodeTorrents: isSearchingTorrents, episode: { id: oldId } }  = nextProps
     const { fetchingEpisodeTorrents: wasSearchingTorrents, episode: { id: newId } } = this.props
 
-    if (oldId !== newId || !isSearchingTorrents && wasSearchingTorrents) {
+    if ((oldId !== newId) || (!isSearchingTorrents && wasSearchingTorrents)) {
       this.setBestTorrent(nextProps)
     }
   }
@@ -81,6 +83,16 @@ export default class extends React.Component {
   }
 
   tomorrow: number
+
+  hidePlay = () => {
+    const { fetchingEpisodeTorrents, episode } = this.props
+    const { playerStatus, torrentStatus }      = this.props
+    const { torrent }                          = this.state
+
+    return playerStatus !== PlayerConstants.STATUS_NONE ||
+           torrentStatus !== TorrentConstants.STATUS_NONE ||
+           (fetchingEpisodeTorrents || (episode.searched && !torrent))
+  }
 
   getFormattedAired = (aired: number) => {
     const date = new Date(aired)
@@ -147,7 +159,7 @@ export default class extends React.Component {
             role={'presentation'}
             onClick={this.handleSearchTorrents}
             className={classNames('list__item-search', {
-              gone: fetchingEpisodeTorrents || episode.searched,
+              gone: this.hidePlay() || episode.searched,
             })}>
 
             <i className={'ion-search'} />
@@ -164,7 +176,7 @@ export default class extends React.Component {
             role={'presentation'}
             onClick={this.handleOnPlayIconClick}
             className={classNames('list__item-play', {
-              gone: fetchingEpisodeTorrents || episode.searched,
+              gone: this.hidePlay(),
             })}>
 
             <i className={classNames({
@@ -179,7 +191,7 @@ export default class extends React.Component {
           </div>
 
           <div className={classNames('list__item-qualities', {
-            gone: fetchingEpisodeTorrents || episode.searched,
+            gone: this.hidePlay(),
           })}>
             {Object.keys(episode.torrents).map(quality => (
               <div
@@ -198,13 +210,13 @@ export default class extends React.Component {
             ))}
           </div>
 
-          {episode.searched && (
+          {!torrent && episode.searched && (
             <div style={{ position: 'absolute' }}>
               No torrents found...
             </div>
           )}
 
-          {episode.watched.progress && !episode.watched.complete && (
+          {episode.watched.progress > 0 && !episode.watched.complete && (
             <div className={'list__item-progress'}>
               <div style={{ width: `${episode.watched.progress}%` }} />
             </div>

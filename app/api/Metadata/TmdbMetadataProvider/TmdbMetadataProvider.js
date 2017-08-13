@@ -87,7 +87,7 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
 
     return {
       complete: episodeWatched ? episodeWatched.percentage > 95 : false,
-      progress: episodeWatched ? episodeWatched.percentage : false,
+      progress: episodeWatched ? episodeWatched.percentage : 0,
     }
   }
 

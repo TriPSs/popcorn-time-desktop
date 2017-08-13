@@ -33,23 +33,6 @@ export default class extends React.Component {
 
   tomorrow: number
 
-  selectSeasonAndEpisode = (selectSeason, selectEpisode = null) => {
-    let episodeToSelect = selectEpisode
-    if (episodeToSelect === null) {
-      const season                = this.getSeason(selectSeason)
-      const firstUnwatchedEpisode = this.getFirstUnwatchedEpisode(season)
-
-      if (firstUnwatchedEpisode) {
-        episodeToSelect = firstUnwatchedEpisode.number
-      } else {
-        episodeToSelect = 1
-      }
-    }
-
-    const { selectSeasonAndEpisode } = this.props
-    selectSeasonAndEpisode(selectSeason, episodeToSelect)
-  }
-
   getSeason = (selectedSeason = this.props.selectedSeason): SeasonType => {
     const { item } = this.props
 
@@ -61,12 +44,12 @@ export default class extends React.Component {
       return item.seasons.find(season => season.number === selectedSeason)
     }
 
-    let firstUnwatchedSeason = item.seasons
-      .find(season => season.number !== 0 && season.episodes.find(episode => !episode.watched.complete))
+    let firstUnwatchedSeason = item.seasons.find(season =>
+      season.number !== 0 && season.episodes.find(episode => !episode.watched.complete))
 
     if (!firstUnwatchedSeason) {
-      firstUnwatchedSeason = item.seasons
-        .find(season => season.number === item.seasons.length - 1)
+      firstUnwatchedSeason = item.seasons.find(season =>
+        season.number === item.seasons.length - 1)
     }
 
     return firstUnwatchedSeason
@@ -110,8 +93,8 @@ export default class extends React.Component {
   }
 
   render() {
-    const { item } = this.props
-    const season   = this.getSeason()
+    const { item, selectSeasonAndEpisode } = this.props
+    const season                           = this.getSeason()
 
     let selectedEpisode = this.getEpisode()
     if (!selectedEpisode) {
@@ -127,9 +110,9 @@ export default class extends React.Component {
             ref={ref => !this.state.seasonsListComponent && this.setState({ seasonsListComponent: ref })}
             className={classes['show__list-container']}>
             <Seasons {...{
-              seasons               : item.seasons,
-              selectedSeason        : season,
-              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              seasons       : item.seasons,
+              selectedSeason: season,
+              selectSeasonAndEpisode,
               seasonsListComponent,
             }} />
           </div>
@@ -139,8 +122,8 @@ export default class extends React.Component {
             className={classes['show__list-container']}>
             <Episodes {...{
               selectedEpisode,
-              selectedSeason        : season,
-              selectSeasonAndEpisode: this.selectSeasonAndEpisode,
+              selectedSeason: season,
+              selectSeasonAndEpisode,
               episodesListComponent,
             }} />
           </div>

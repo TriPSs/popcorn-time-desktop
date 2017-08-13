@@ -1,13 +1,13 @@
 import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
+import portfinder from 'portfinder'
 import debug from 'debug'
 
 import ReduxClazz from 'redux-clazz'
 import type { ContentType } from 'api/Metadata/MetadataTypes'
 import * as TorrentConstants from './TorrentConstants'
 
-const log  = debug('api:torrent')
-const port = 9091
+const log = debug('api:torrent')
 
 export default class extends ReduxClazz {
 
@@ -26,6 +26,8 @@ export default class extends ReduxClazz {
   loadedItem: ContentType
 
   loadedMagnet: string
+
+  port: number
 
   constructor(...context) {
     super(...context)
@@ -46,13 +48,7 @@ export default class extends ReduxClazz {
     this.updateStatus(TorrentConstants.STATUS_CONNECTING)
 
     log(`Using ${this.cacheLocation} to save the file!`)
-    this.engine.add(magnetURI, { path: this.cacheLocation }, (torrent) => {
-      if (!this.server) {
-        const server = torrent.createServer()
-        server.listen(port)
-        this.server = server
-      }
-
+    this.engine.add(magnetURI, { path: this.cacheLocation }, torrent => this.createServer(torrent).then(() => {
       const { files } = torrent
 
       const { file, torrentIndex } = files.reduce((previous, current, index) => {
@@ -79,9 +75,28 @@ export default class extends ReduxClazz {
 
       file.select()
 
-      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex })
-    })
+      this.checkBufferInterval = this.bufferInterval({ torrent, torrentIndex, fileName: file.name })
+    }))
   }
+
+  createServer = torrent => new Promise((resolve) => {
+    log('Creating torrent server...')
+
+    if (this.server) {
+      log('There already is a server..')
+      return resolve()
+    }
+
+    log('Searching available port...')
+    return portfinder.getPortPromise({ port: 9091 }).then((port) => {
+      log('Creating server on port %s...', port)
+      this.server = torrent.createServer()
+      this.port   = port
+      this.server.listen(port)
+
+      resolve()
+    })
+  })
 
   clearIntervals = () => {
     if (this.checkBufferInterval) {
@@ -93,17 +108,17 @@ export default class extends ReduxClazz {
     }
   }
 
-  bufferInterval = ({ torrent, torrentIndex }) => setInterval(() => {
+  bufferInterval = ({ torrent, torrentIndex, fileName }) => setInterval(() => {
     const toBuffer = (1024 * 1024) * 25
 
     if (torrent.downloaded > toBuffer) {
       this.updateStatus(TorrentConstants.STATUS_BUFFERED, {
         item: this.loadedItem,
-        uri : `http://localhost:${port}/${torrentIndex}`,
+        uri : `http://localhost:${this.port}/${torrentIndex}/${fileName}`,
       })
 
       this.clearIntervals()
-      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex })
+      this.checkBufferInterval = this.downloadInterval({ torrent, torrentIndex, fileName })
 
     } else {
       this.updateStatus(TorrentConstants.STATUS_BUFFERING)
@@ -121,13 +136,13 @@ export default class extends ReduxClazz {
 
   }, 1000)
 
-  downloadInterval = ({ torrent, torrentIndex }) => setInterval(() => {
+  downloadInterval = ({ torrent, torrentIndex, fileName }) => setInterval(() => {
     if (torrent.downloaded >= torrent.length) {
       log('Download complete...')
 
       this.updateStatus(TorrentConstants.STATUS_DOWNLOADED, {
         item: this.loadedItem,
-        uri : `http://localhost:${port}/${torrentIndex}`,
+        uri : `http://localhost:${this.port}/${torrentIndex}/${fileName}`,
       })
       this.clearIntervals()
 
@@ -162,15 +177,18 @@ export default class extends ReduxClazz {
     if (status !== TorrentConstants.STATUS_NONE) {
       log('Destroyed Torrent...')
 
-      if (this.server && typeof this.server.close === 'function') {
-        if (this.engine) {
-          this.engine.remove(this.loadedMagnet)
-        }
+      if (this.engine) {
+        this.engine.remove(this.loadedMagnet)
 
-        this.server.close()
-        this.server       = {}
+
         this.loadedMagnet = null
         this.loadedItem   = null
+      }
+
+      if (this.server) {
+        this.server.close()
+        this.server = null
+        this.port   = null
       }
 
       this.clearIntervals()

@@ -26,6 +26,15 @@ export default (state = HomeConstants.INITIAL_STATE, action) => {
         },
       }
 
+    case HomeConstants.CLEAR_ITEMS:
+      return {
+        ...state,
+        modes: {
+          ...state.modes,
+          [action.payload]: HomeConstants.INITIAL_STATE.modes[action.payload],
+        },
+      }
+
     case BookmarkedConstants.REMOVE_BOOKMARK:
       return {
         ...state,
@@ -58,9 +67,9 @@ export default (state = HomeConstants.INITIAL_STATE, action) => {
         ...state,
         modes: {
           ...state.modes,
-          [HomeConstants.MODE_BOOKMARKS]: {
-            ...state.modes[HomeConstants.MODE_BOOKMARKS],
-            items: state.modes[HomeConstants.MODE_BOOKMARKS].items.map((item) => {
+          [HomeConstants.MODE_MOVIES]: {
+            ...state.modes[HomeConstants.MODE_MOVIES],
+            items: state.modes[HomeConstants.MODE_MOVIES].items.map((item) => {
               if (item.id === action.payload.itemId) {
                 return {
                   ...item,

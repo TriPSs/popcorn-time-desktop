@@ -7,4 +7,5 @@ export type Props = {
   torrentStatus: string,
   playerProvider: string,
   stats: StatsType,
+  stop: () => void,
 }

@@ -2,7 +2,7 @@
 
 .cover {
   max-width: $card-max-with;
-  width: 100%;
+  width: $card-min-with;
   max-height: $card-max-height;
   min-height: $card-min-height;
   height: 100%;
@@ -22,12 +22,25 @@
     right: 0;
     left: 0;
     will-change: opacity;
-    transition: opacity 0.1s linear;
     background: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+    transition: $transition-opacity-in;
 
     &--watched {
       opacity: 1;
+      transition: $transition-all-in;
+      background: rgba(0, 0, 0, 0.8);
+
+      div {
+        opacity: 0;
+        transition: $transition-opacity-in;
+      }
+
+      &:hover {
+        div {
+          opacity: 1;
+        }
+      }
     }
 
     &:hover {

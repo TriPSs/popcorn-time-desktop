@@ -1,0 +1,48 @@
+@import 'base/variables';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: $menu-item-color;
+  background: url('images/bg.jpg') no-repeat;
+  background-size: cover;
+}
+
+.disclaimer {
+  width: 600px;
+
+  &__head {
+    font-size: 30px;
+    font-weight: bold;
+    color: $menu-item-color-active;
+  }
+
+  &__content {
+    height: 500px;
+    overflow: scroll;
+  }
+
+  &__actions {
+    width: 600px;
+    display: flex;
+    justify-content: center;
+
+    div {
+      width: 150px;
+      height: 80px;
+    }
+  }
+}
+
+.actions {
+  &--accept {
+    border-color: green !important;
+  }
+
+  &--leave {
+    border-color: red !important;
+  }
+}

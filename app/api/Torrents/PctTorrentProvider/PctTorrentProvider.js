@@ -20,22 +20,22 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
 
   getMovies = (page: number = 1, filters = {}) => (
     this.popcornAPI.get(`movies/${page}`, { params: { ...this.defaultFilters, ...filters } })
-      .then(response => this.formatMovies(response.data))
+      .then(({ data: movies }) => this.formatMovies(movies))
   )
 
   getMovie = (itemId: string) => (
     this.popcornAPI.get(`movie/${itemId}`)
-      .then(response => this.formatMovie(response.data, { params: { day: this.defaultFilters.day } }))
+      .then(({ data: movie }) => this.formatMovie(movie, { params: { day: this.defaultFilters.day } }))
   )
 
   getShows = (page: number = 1, filters = {}) => (
     this.popcornAPI.get(`shows/${page}`, { params: { ...this.defaultFilters, ...filters } })
-      .then(response => this.formatShows(response.data))
+      .then(({ data: shows }) => this.formatShows(shows))
   )
 
   getShow = (itemId: string) => (
     this.popcornAPI.get(`show/${itemId}`, { params: { day: this.defaultFilters.day } })
-      .then(response => this.formatShow(response.data, true))
+      .then(({ data: show }) => this.formatShow(show, true))
   )
 
   formatMovies = (movies: Array<MovieType>) => (movies.map((movie: MovieType) => this.formatMovie(movie)))
@@ -53,6 +53,10 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
     rating       : Helpers.formatRating(movie.rating),
     torrents     : Helpers.formatTorrents(movie.torrents.en),
     type         : MetadataConstant.TYPE_MOVIE,
+    watched      : {
+      complete: false,
+      progress: 0,
+    },
   })
 
   formatShows = (shows: Array<ShowType>) => (shows.map(show => this.formatShow(show)))
@@ -66,6 +70,10 @@ export default class PctTorrentProvider implements TorrentProviderInterface {
       rating     : Helpers.formatRating(show.rating),
       num_seasons: show.num_seasons,
       type       : MetadataConstant.TYPE_SHOW,
+      watched    : {
+        complete: false,
+        progress: 0,
+      },
     }
 
     if (isDetail) {

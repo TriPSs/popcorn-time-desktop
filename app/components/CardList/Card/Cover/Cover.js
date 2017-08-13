@@ -24,7 +24,7 @@ export const Cover = ({ item, history }: Props) => (
       }}>
 
       <div className={classNames(classes.cover__overlay, {
-        [classes['cover__overlay--watched']]: item.watched,
+        [classes['cover__overlay--watched']]: item.watched.complete,
       })}>
         <Bookmarked
           tooltip={{ place: 'left', effect: 'float' }}

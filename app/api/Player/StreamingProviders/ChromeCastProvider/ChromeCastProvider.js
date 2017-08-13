@@ -35,6 +35,8 @@ export default class extends ReduxClazz implements StreamingInterface {
     PLAYING  : PlayerConstants.STATUS_PLAYING,
     BUFFERING: PlayerConstants.STATUS_BUFFERING,
     PAUSED   : PlayerConstants.STATUS_PAUSED,
+    IDLE     : PlayerConstants.STATUS_NONE,
+    FINISHED : PlayerConstants.STATUS_ENDED,
   }
 
   constructor(...props) {
@@ -65,6 +67,10 @@ export default class extends ReduxClazz implements StreamingInterface {
   }
 
   play = (uri: string, item: ContentType) => {
+    if (this.status !== PlayerConstants.STATUS_NONE) {
+      return
+    }
+
     log(`Play ${item.title}`)
 
     let streamingUrl = uri
@@ -96,19 +102,27 @@ export default class extends ReduxClazz implements StreamingInterface {
       },
     }
 
-    this.selectedDevice.play(streamingUrl, media, (error, status) => {
-      if (status) {
-        this.updateStatus(this.states[status.playerState])
-      }
-    })
+    this.selectedDevice.play(streamingUrl, media, () => {
+      this.selectedDevice.on('status', (status) => {
+        if (status && status.playerState === 'IDLE') {
+          this.updateStatus(this.states[status.idleReason])
 
-    this.selectedDevice.on('status', status => this.updateStatus(this.states[status.playerState]))
+        } else {
+          this.updateStatus(this.states[status.playerState])
+        }
+      })
+    })
   }
 
-  pause = () => {
-    log('Pause...')
+  togglePlay = () => {
+    log('Toggle Play...')
     if (this.selectedDevice && this.status !== PlayerConstants.STATUS_NONE) {
-      this.selectedDevice.pause()
+      if (this.status === PlayerConstants.STATUS_PAUSED) {
+        this.selectedDevice.play()
+
+      } else {
+        this.selectedDevice.pause()
+      }
     }
   }
 
@@ -122,7 +136,8 @@ export default class extends ReduxClazz implements StreamingInterface {
   isPlaying = () => this.status === PlayerConstants.STATUS_PLAYING
 
   updateStatus = (nStatus) => {
-    const newStatus = nStatus !== 'undefined' ? nStatus : PlayerConstants.STATUS_NONE
+    log('updateStatus', nStatus)
+    const newStatus = nStatus && nStatus !== 'undefined' ? nStatus : PlayerConstants.STATUS_NONE
 
     if (newStatus !== this.status) {
       log(`Update status to ${newStatus}`)
@@ -146,7 +161,7 @@ export default class extends ReduxClazz implements StreamingInterface {
       this.selectedDevice.status((err, data) => {
         if (typeof data !== 'undefined') {
           const { updatePercentage } = this.props
-          const percentage           = ((data.currentTime / 60) / this.loadedItem.runtime.inMinutes) * 100
+          const percentage           = (data.currentTime / data.media.duration) * 100
 
           if (percentage > 95) {
             this.clearIntervals()
@@ -175,6 +190,7 @@ export default class extends ReduxClazz implements StreamingInterface {
     if (this.status !== PlayerConstants.STATUS_NONE) {
       log('Destroy...')
       this.destroyPlayer()
+
       this.updateStatus(PlayerConstants.STATUS_NONE)
     }
   }
