@@ -12,6 +12,8 @@
   &__close {
     z-index: 3001;
     margin-left: 15px;
+    position: absolute;
+    top: 20px;
   }
 
   &__controls {
@@ -53,6 +55,10 @@
     &:hover {
       .player__close {
         opacity: $button-default-opacity;
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }

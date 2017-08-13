@@ -1,11 +1,8 @@
 @import 'base/variables';
 
 .cover {
-  max-width: $card-max-with;
-  width: $card-min-with;
-  max-height: $card-max-height;
-  min-height: $card-min-height;
-  height: 100%;
+  width: $card-with;
+  height: $card-height;
   position: relative;
   background-repeat: no-repeat;
   background-size: cover;

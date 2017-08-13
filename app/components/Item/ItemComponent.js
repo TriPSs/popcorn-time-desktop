@@ -131,7 +131,7 @@ export default class Item extends React.Component {
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
-        <Link to={`/${mode}s`}>
+        <Link to={`/${mode}s`} className={classes.item__close}>
           <button
             style={{ zIndex: 1060 }}
             className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}

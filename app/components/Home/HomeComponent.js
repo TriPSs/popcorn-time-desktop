@@ -1,10 +1,9 @@
 // @flow
 import React from 'react'
-import VisibilitySensor from 'react-visibility-sensor'
 
 import Loader from 'components/Loader'
-import Header from '../Header'
-import CardList from '../CardList'
+import Header from 'components/Header'
+import CardList from 'components/CardList'
 
 import classes from './Home.scss'
 import * as HomeConstants from './HomeConstants'
@@ -14,15 +13,18 @@ export class Home extends React.Component {
 
   props: Props
 
+  cardListRef: Element
+
   constructor(props: Props) {
     super(props)
 
     // Temporary hack to preserve scroll position
     if (!global.pct) {
       global.pct = {
-        moviesScrollTop: 0,
-        showsScrollTop : 0,
-        searchScrollTop: 0,
+        moviesScrollTop   : 0,
+        showsScrollTop    : 0,
+        searchScrollTop   : 0,
+        bookmarksScrollTop: 0,
       }
     }
   }
@@ -31,6 +33,7 @@ export class Home extends React.Component {
     const { match: { params: { mode } } } = this.props
 
     window.scrollTo(0, global.pct[`${mode}ScrollTop`])
+    window.addEventListener('scroll', this.handlePageScroll)
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -77,9 +80,16 @@ export class Home extends React.Component {
     const { match: { params: { mode } } } = this.props
 
     global.pct[`${mode}ScrollTop`] = document.body.scrollTop
+    window.removeEventListener('scroll', this.handlePageScroll)
   }
 
-  handleGetMoreItems = (isVisible: boolean = true) => {
+  handlePageScroll = () => {
+    if ((window.scrollY + 2000) > this.cardListRef.offsetHeight) {
+      this.handleGetMoreItems(true)
+    }
+  }
+
+  handleGetMoreItems = () => {
     const { match: { params: { mode } } }  = this.props
     const { isLoading, modes, getItems }   = this.props
     const { location: { state: filters } } = this.props
@@ -89,7 +99,7 @@ export class Home extends React.Component {
       return
     }
 
-    if (isVisible && !isLoading) {
+    if (!isLoading) {
       getItems(mode, page, filters)
     }
   }
@@ -98,16 +108,22 @@ export class Home extends React.Component {
     const { match: { params: { mode } } } = this.props
     const { modes, isLoading }            = this.props
 
+    const { items } = modes[mode]
+
+    if (!items.length) {
+      this.handleGetMoreItems()
+    }
+
     return (
       <div className={classes.home__container}>
-
         <Header />
-        <div style={{ height: 64 }} />
 
-        <div className={classes.home__cards} style={{ padding: 0 }}>
+        <div
+          ref={ref => this.cardListRef = ref}
+          className={classes.home__cards}
+          style={{ padding: 0 }}>
           <CardList items={modes[mode].items} />
 
-          <VisibilitySensor onChange={this.handleGetMoreItems} />
           <Loader {...{ isLoading }} />
         </div>
 

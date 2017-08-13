@@ -3,5 +3,12 @@
 .home {
   &__cards {
     overflow-x: scroll;
+    margin-top: $menu-container-height;
+  }
+
+  &__container {
+    position: relative;
+    height: 100%;
+    width: 100%;
   }
 }

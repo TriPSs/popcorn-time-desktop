@@ -2,12 +2,10 @@
 
 .card {
   border: 2px solid transparent;
-  max-width: $card-max-with;
-  min-width: $card-min-with;
-  width: 100%;
-  max-height: $card-max-height + 25px;
-  min-height: $card-min-height + 25px;
-  height: 100%;
+  width: $card-with;
+  min-width: $card-with;
+  max-width: $card-with;
+  height: $card-height + 25px;
   margin: 3.5px;
   overflow: hidden;
   position: relative;

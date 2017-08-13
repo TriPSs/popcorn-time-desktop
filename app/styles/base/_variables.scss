@@ -39,7 +39,8 @@ $container-max-widths: (
 		xl: 1540px
 ) !default;
 $headings-color: white;
-$menu-height: 64px;
+$menu-height: 50px;
+$menu-container-height: 70px;
 $menu-item-color: #848484;
 $menu-item-color-active: white;
 $menu-item-background: #424242;
@@ -78,10 +79,8 @@ $transition-opacity-out: opacity 0.1s ease-out;
 $card-list-color: $menu-item-color;
 
 // Card
-$card-max-with: 140px;
-$card-min-with: 130px;
-$card-max-height: 210px;
-$card-min-height: 200px;
+$card-with: 145px;
+$card-height: 210px;
 $card-title-color: $card-list-color;
 $card-title-color-hover: darken($card-list-color, 20%);
 

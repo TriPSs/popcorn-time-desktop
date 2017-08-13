@@ -59,6 +59,8 @@ app.on('ready', async() => {
     minHeight      : 745,
     height         : 745,
     center         : true,
+    frame          : false,
+    titleBarStyle  : 'hiddenInset',
     backgroundColor: '#252525',
     webPreferences : {
       darkTheme             : true,

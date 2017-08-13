@@ -4,6 +4,12 @@
   position: relative;
   height: 100%;
 
+  &__close {
+    position: absolute;
+    width: 100%;
+    top: 20px;
+  }
+
   &__content {
     display: flex;
     width: 100%;

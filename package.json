@@ -95,7 +95,6 @@
     "react-toggle-switch": "^2.1.4",
     "react-tooltip": "^3.3.0",
     "react-transition-group": "^2.2.0",
-    "react-visibility-sensor": "3.10.1",
     "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
     "redux-clazz": "^2.0.0",
