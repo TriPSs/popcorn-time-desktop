@@ -8,15 +8,14 @@ import { DISCLAIMER } from 'api/Database/Settings/SettingsConstants'
 import backgroundImage from 'images/bg.jpg'
 import { name } from '../../package.json'
 
+import type { Props, State } from './DisclaimerTypes'
 import classes from './Disclaimer.scss'
 
 export default class extends React.Component {
 
-  props: {
-    history: Object
-  }
+  props: Props
 
-  state = {
+  state: State = {
     loading: true,
   }
 
