@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
-import { getHighestQualtity } from 'api/Torrents/TorrentsHelpers'
+import { getHighestQuality } from 'api/Torrents/TorrentsHelpers'
 import * as MetadataConstants from 'api/Metadata/MetadataConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
 import * as PlayerConstants from 'api/Player/PlayerConstants'
@@ -73,7 +73,7 @@ export default class Item extends React.Component {
 
   setBestMovieTorrent = (torrents = this.props.item.torrents) => {
     this.setTorrent(
-      getHighestQualtity(torrents),
+      getHighestQuality(torrents),
     )
   }
 

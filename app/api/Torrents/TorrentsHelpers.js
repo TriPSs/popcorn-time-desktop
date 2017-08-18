@@ -1,4 +1,6 @@
 // @flow
+import hasOwnProperty from 'has-own-property'
+
 export const formatShowToSearchQuery = (title, season, episode) => {
   const searchTitle = title.toLowerCase()
     .replace(' ', '.')
@@ -139,7 +141,7 @@ export const getBestTorrent = (torrentOne, torrentTwo) => {
   return torrentTwo
 }
 
-export const getHighestQualtity = (torrents) => {
+export const getHighestQuality = (torrents) => {
   let bestQuality = null
 
   Object.keys(torrents).forEach((quality) => {
@@ -155,4 +157,12 @@ export const getHighestQualtity = (torrents) => {
   }
 
   return null
+}
+
+export const itemHasTorrents = (item) => {
+  if (!hasOwnProperty(item, 'torrents')) {
+    return false
+  }
+
+  return !!getHighestQuality(item.torrents)
 }

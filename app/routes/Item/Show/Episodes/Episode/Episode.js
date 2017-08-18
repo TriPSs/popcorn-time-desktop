@@ -4,7 +4,7 @@ import ReactTooltip from 'react-tooltip'
 
 import * as PlayerConstants from 'api/Player/PlayerConstants'
 import * as TorrentConstants from 'api/Torrent/TorrentConstants'
-import { getHighestQualtity } from 'api/Torrents/TorrentsHelpers'
+import { getHighestQuality, itemHasTorrents } from 'api/Torrents/TorrentsHelpers'
 import Watched from 'components/Watched'
 import Loader from 'components/Loader'
 import placeHolderImage from 'images/posterholder.png'
@@ -63,11 +63,17 @@ export default class extends React.Component {
     }
   }
 
+  isAvailable = () => {
+    const { episode } = this.props
+
+    return episode.aired < this.tomorrow || itemHasTorrents(episode)
+  }
+
   setBestTorrent = (props = this.props) => {
     const { episode: { torrents } } = props
 
     this.setState({
-      torrent: getHighestQualtity(torrents),
+      torrent: getHighestQuality(torrents),
     })
   }
 
@@ -119,12 +125,12 @@ export default class extends React.Component {
           {
             'list__item--active' : episode.number === selectedEpisode.number,
             'list__item--watched': episode.watched.complete && episode.number !== selectedEpisode.number,
-          }, episode.aired > this.tomorrow
+          }, !this.isAvailable()
             ? 'list__item--disabled'
             : 'list__item--available',
         )}
         key={episode.number}
-        onClick={() => (episode.aired < this.tomorrow
+        onClick={() => (this.isAvailable()
           ? selectSeasonAndEpisode(selectedEpisode.season, episode.number)
           : null)}
       >
@@ -140,13 +146,13 @@ export default class extends React.Component {
 
           <div className={'list__item-overlay'} />
 
-          {episode.aired > this.tomorrow && (
+          {!this.isAvailable() && (
             <div className={'list__item-overlay-text'}>
               {this.getFormattedAired(episode.aired)}
             </div>
           )}
 
-          {episode.aired < this.tomorrow && (
+          {this.isAvailable() && (
             <Watched
               tooltip={{ place: 'left', effect: 'float' }}
               className={'list__item-watched'}

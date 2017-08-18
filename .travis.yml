@@ -25,6 +25,7 @@ branches:
   only:
   - master
   - develop
+  - /^greenkeeper.*$/
 
 addons:
   apt:

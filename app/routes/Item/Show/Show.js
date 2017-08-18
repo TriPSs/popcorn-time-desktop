@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { SeasonType, EpisodeType } from 'api/Metadata/MetadataTypes'
+import { itemHasTorrents } from 'api/Torrents/TorrentsHelpers'
 
 import type { Props } from './ShowTypes'
 import itemClasses from '../Item.scss'
@@ -63,7 +64,11 @@ export default class extends React.Component {
     }
 
     if (selectedEpisode !== null) {
-      return season.episodes.find(episode => episode.number === selectedEpisode && episode.aired < this.tomorrow)
+      return season.episodes.find(
+        episode => episode.number === selectedEpisode && (
+          episode.aired < this.tomorrow || itemHasTorrents(episode)
+        ),
+      )
     }
 
     return this.getFirstUnwatchedEpisode()
