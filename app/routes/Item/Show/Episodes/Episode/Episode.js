@@ -138,10 +138,10 @@ export default class extends React.Component {
           <img
             className={classNames(
               'list__item-image',
-              { 'animated fadeIn': !!episode.images },
-              { 'list__item-image-placeholder': !episode.images },
+              'animated fadeIn',
+              { 'list__item-image-placeholder': !episode.images.poster.thumb },
             )}
-            src={episode.images ? episode.images.poster.thumb : placeHolderImage}
+            src={episode.images.poster.thumb || placeHolderImage}
             alt={episode.title} />
 
           <div className={'list__item-overlay'} />

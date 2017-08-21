@@ -92,18 +92,14 @@ export default class TmdbMetadataProvider implements MetadataProviderInterface {
   }
 
   formatImage = (image) => {
-    if (!image) {
-      return null
-    }
-
     const replaceWidthPart = (uri: string, size: string) => this.imageUri + size + uri
 
     return {
       poster: {
-        full  : replaceWidthPart(image, 'original'),
-        high  : replaceWidthPart(image, 'w1280'),
-        medium: replaceWidthPart(image, 'w780'),
-        thumb : replaceWidthPart(image, 'w342'),
+        full  : image ? replaceWidthPart(image, 'original') : null,
+        high  : image ? replaceWidthPart(image, 'w1280') : null,
+        medium: image ? replaceWidthPart(image, 'w780') : null,
+        thumb : image ? replaceWidthPart(image, 'w342') : null,
       },
     }
   }
