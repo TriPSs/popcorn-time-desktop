@@ -7,13 +7,15 @@ export default class extends React.Component {
 
   props: Props
 
+  activeEpisodeComponentRef
+
   componentWillReceiveProps(nextProps) {
     const { episodesListComponent: oldEpisodesListComponent } = this.props
     const { episodesListComponent: newEpisodesListComponent } = nextProps
 
     if (!oldEpisodesListComponent && newEpisodesListComponent) {
       newEpisodesListComponent.scrollLeft = (
-        this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
+        this.activeEpisodeComponentRef.offsetLeft - this.activeEpisodeComponentRef.offsetWidth
       )
     }
   }
@@ -25,14 +27,12 @@ export default class extends React.Component {
 
     if ((newSeason !== oldSeason) && episodesListComponent) {
       episodesListComponent.scrollLeft = (
-        this.activeEpisodeComponent.offsetLeft - this.activeEpisodeComponent.offsetWidth
+        this.activeEpisodeComponentRef.offsetLeft - this.activeEpisodeComponentRef.offsetWidth
       )
     }
   }
 
-  setSelectedEpisodeRef = ref => this.activeEpisodeComponent = ref
-
-  activeEpisodeComponent
+  selectEpisode = ref => this.activeEpisodeComponentRef = ref
 
   render() {
     const { selectedSeason, selectedEpisode } = this.props
@@ -47,7 +47,7 @@ export default class extends React.Component {
               episode,
               selectedEpisode,
               selectSeasonAndEpisode,
-              setSelectedEpisodeRef: this.setSelectedEpisodeRef,
+              selectEpisode: this.selectEpisode,
             }} />
         ))}
       </div>

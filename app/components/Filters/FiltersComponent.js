@@ -2,11 +2,14 @@ import React from 'react'
 import classNames from 'classnames'
 import { withRouter } from 'react-router'
 
+import type { Props, State } from './FiltersTypes'
 import classes from './Filters.scss'
 
 export default withRouter(class extends React.Component {
 
-  state = {
+  props: Props
+  
+  state: State = {
     sort: [
       'trending',
       'popularity',
@@ -59,7 +62,7 @@ export default withRouter(class extends React.Component {
           ))}
         </div>
 
-        {/*<div className={classNames(classes.filters, classes['filters--right'])}>
+        {/* <div className={classNames(classes.filters, classes['filters--right'])}>
       <div className={classes.filterHeading}>
         Filters
       </div>
@@ -67,7 +70,7 @@ export default withRouter(class extends React.Component {
         Comedy
         <i className={'ion-android-close'} />
       </div>
-    </div>*/}
+    </div> */}
 
       </div>
     )

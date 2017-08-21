@@ -88,6 +88,7 @@
         "static-methods",
         "props",
         "state",
+        "/.+Ref/",
         "lifecycle",
         "/^on.+$/",
         "/^handle.+$/",

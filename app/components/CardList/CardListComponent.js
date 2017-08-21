@@ -5,14 +5,12 @@ import type { Props } from './CardListTypes'
 import Card from './Card'
 import classes from './CardList.scss'
 
-export const CardList = ({ items, limit }: Props) => (
+export default ({ items }: Props) => (
   <div className={classes.container}>
-    {(limit ? items.filter((e, i) => i < limit) : items).map((item, index) => (
+    {Array.from(new Set(items)).map(item => (
       <Card
-        key={`item-${index}`}
+        key={item.id}
         item={item} />
     ))}
   </div>
 )
-
-export default CardList

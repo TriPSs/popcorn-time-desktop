@@ -64,8 +64,8 @@ export default class extends React.Component {
             <h2>Your Acceptance</h2>
 
             <p>
-              By using the {name} app you signify your agreement to (1) these terms and conditions (the Terms of
-              Service').
+              By using the {name} app you signify your agreement to (1) these terms and conditions (&apos;the Terms of
+              Service&apos;).
               <br />
               <br />
             </p>

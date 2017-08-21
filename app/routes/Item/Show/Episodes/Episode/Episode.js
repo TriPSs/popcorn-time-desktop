@@ -107,7 +107,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const { episode, setSelectedEpisodeRef }          = this.props
+    const { episode, selectEpisode }                  = this.props
     const { selectSeasonAndEpisode, selectedEpisode } = this.props
     const { fetchingEpisodeTorrents }                 = this.props
 
@@ -118,7 +118,7 @@ export default class extends React.Component {
         role={'presentation'}
         ref={(ref) => {
           if (episode.number === selectedEpisode.number) {
-            setSelectedEpisodeRef(ref)
+            selectEpisode(ref)
           }
         }}
         className={classNames('list__item--hor',
