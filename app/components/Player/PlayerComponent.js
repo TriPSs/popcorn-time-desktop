@@ -45,7 +45,9 @@ export default class extends React.Component {
       return false
     }
 
-    return playerStatus === PlayerConstants.STATUS_PLAYING || playerStatus === PlayerConstants.STATUS_PAUSED
+    return playerStatus === PlayerConstants.STATUS_PLAYING
+           || playerStatus === PlayerConstants.STATUS_PAUSED
+           || playerStatus === PlayerConstants.STATUS_BUFFERING
   }
 
   renderVideo = () => {
