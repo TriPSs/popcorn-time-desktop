@@ -21,6 +21,7 @@ export const mapStateToProps = state => ({
   selectedSeason : Selectors.getSelectedSeason(state),
   selectedEpisode: Selectors.getSelectedEpisode(state),
   playerStatus   : PlayerSelectors.getStatus(state),
+  playerProvider : PlayerSelectors.getProvider(state),
   torrentStatus  : TorrentSelectors.getStatus(state),
 })
 

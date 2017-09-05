@@ -8,8 +8,10 @@ import classes from './Cover.scss'
 
 import itemClasses from '../Item.scss'
 
-export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo }: Props) => (
-  <div className={classNames(itemClasses.content__container, classes.cover)}>
+export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo, visible }: Props) => (
+  <div
+    className={classNames(itemClasses.content__container, classes.cover)}
+    style={{ visibility: visible ? 'inherit' : 'hidden' }}>
     <div
       role={'presentation'}
       onClick={() => (showPlayInfo && mode === MetadataConstants.TYPE_MOVIE ? play() : null)}

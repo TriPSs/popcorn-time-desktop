@@ -6,4 +6,5 @@ export type Props = {
   mode: string,
   setTorrent: () => void,
   showPlayInfo: boolean,
+  visible: boolean,
 }

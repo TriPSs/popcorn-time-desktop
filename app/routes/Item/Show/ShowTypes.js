@@ -6,5 +6,6 @@ export type Props = {
   play: (playerProvider: string, torrent: TorrentType) => void,
   selectedSeason: number,
   selectedEpisode: number,
+  visible: boolean,
 }
 

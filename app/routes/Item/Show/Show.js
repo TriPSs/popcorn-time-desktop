@@ -98,8 +98,8 @@ export default class extends React.Component {
   }
 
   render() {
-    const { item, selectSeasonAndEpisode } = this.props
-    const season                           = this.getSeason()
+    const { item, selectSeasonAndEpisode, visible } = this.props
+    const season                                    = this.getSeason()
 
     let selectedEpisode = this.getEpisode()
     if (!selectedEpisode) {
@@ -109,7 +109,9 @@ export default class extends React.Component {
     const { seasonsListComponent, episodesListComponent } = this.state
 
     return (
-      <div className={itemClasses['item__row--show']}>
+      <div
+        className={itemClasses['item__row--show']}
+        style={{ visibility: visible ? 'inherit' : 'hidden' }}>
         <div className={classes.show}>
           <div
             ref={ref => !this.state.seasonsListComponent && this.setState({ seasonsListComponent: ref })}

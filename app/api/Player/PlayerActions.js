@@ -92,3 +92,10 @@ export function updateProvider(provider: string) {
   }
 }
 
+export function toggleControls(show) {
+  return {
+    type   : PlayerConstants.TOGGLE_CONTROLS,
+    payload: show,
+  }
+}
+

@@ -113,6 +113,18 @@ export default class Item extends React.Component {
     }
   }
 
+  playerIsShown = () => {
+    const { playerProvider, playerStatus } = this.props
+
+    if (playerProvider !== PlayerConstants.PROVIDER_PLYR) {
+      return true
+    }
+
+    return playerStatus !== PlayerConstants.STATUS_PLAYING
+           && playerStatus !== PlayerConstants.STATUS_PAUSED
+           && playerStatus !== PlayerConstants.STATUS_BUFFERING
+  }
+
   getAllData = () => {
     const { player, getItem, match: { params: { itemId, mode } } } = this.props
 
@@ -141,6 +153,8 @@ export default class Item extends React.Component {
           </button>
         </Link>
 
+        <div className={classes.item__dragger} />
+
         <Background
           {...{
             backgroundImage: item.images.fanart.high,
@@ -168,6 +182,7 @@ export default class Item extends React.Component {
               backgroundImage: item.images.fanart.high,
               poster         : item.images.poster.thumb,
               showPlayInfo   : this.showPlayInfo(),
+              visible        : this.playerIsShown(),
             }} />
 
           </div>
@@ -176,7 +191,8 @@ export default class Item extends React.Component {
             <Show
               {...{
                 torrentStatus,
-                play: this.play,
+                play   : this.play,
+                visible: this.playerIsShown(),
               }} />
           )}
 
@@ -184,9 +200,4 @@ export default class Item extends React.Component {
       </div>
     )
   }
-}
-
-Item.defaultProps = {
-  itemId: '',
-  mode  : 'movie',
 }

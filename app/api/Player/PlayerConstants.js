@@ -23,10 +23,12 @@ export const INITIAL_STATE = {
   provider      : PROVIDER_PLYR,
   devices       : [],
   selectedDevice: null,
+  showControls  : false,
 }
 
 export const UPDATE_PROVIDER = `${REDUCER_NAME}.player.type.update`
 export const UPDATE_STATUS   = `${REDUCER_NAME}.status.update`
 export const FOUND_DEVICES   = `${REDUCER_NAME}.devices.found`
 export const SELECT_DEVICE   = `${REDUCER_NAME}.devices.select`
+export const TOGGLE_CONTROLS = `${REDUCER_NAME}.player.controls`
 export const LOAD_ITEM       = `${REDUCER_NAME}.load.item`
