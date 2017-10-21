@@ -135,11 +135,14 @@ export default class extends ReduxClazz implements StreamingInterface {
 
   isPlaying = () => this.status === PlayerConstants.STATUS_PLAYING
 
-  updateStatus = (nStatus) => {
-    log('updateStatus', nStatus)
-    const newStatus = nStatus && nStatus !== 'undefined' ? nStatus : PlayerConstants.STATUS_NONE
+  updateStatus = (newStatus) => {
+    log('updateStatus', newStatus)
 
-    if (newStatus !== this.status) {
+    if (newStatus !== this.status && newStatus !== 'undefined' ) {
+      if (this.states === PlayerConstants.STATUS_NONE && newStatus === PlayerConstants.STATUS_ENDED) {
+        return
+      }
+      
       log(`Update status to ${newStatus}`)
       const { updateStatus } = this.props
 

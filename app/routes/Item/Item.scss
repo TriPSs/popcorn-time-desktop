@@ -8,14 +8,15 @@
     position: fixed;
     width: 100%;
     top: 20px;
-		z-index: 1000;
+    z-index: 1000;
   }
 
-	&__dragger {
-		-webkit-app-region: drag;
-		height: 50px;
-		width: 100%;
-	}
+  &__dragger {
+    -webkit-app-region: drag;
+    position: fixed;
+    height: 50px;
+    width: 100%;
+  }
 
   &__content {
     display: flex;
