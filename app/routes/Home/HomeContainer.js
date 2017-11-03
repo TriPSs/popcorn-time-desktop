@@ -13,8 +13,9 @@ export const mapDispatchToProps = dispatch => ({
 })
 
 export const mapStateToProps = state => ({
-  modes    : Selectors.getModes(state),
-  isLoading: Selectors.getIsLoading(state),
+  modes      : Selectors.getModes(state),
+  isLoading  : Selectors.getIsLoading(state),
+  hasInternet: Selectors.getHasInternet(state),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

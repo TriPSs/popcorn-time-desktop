@@ -25,6 +25,14 @@ export const clearItems = mode => ({
 export const getItems = (mode, page = 1, givenFilters = {}) => (dispatch, getState) => {
   dispatch(fetchItems())
 
+  const catchNoCon = ({ message }) => {
+    if (message === 'Network Error') {
+      dispatch({
+        type: HomeConstants.ERROR_NO_CON,
+      })
+    }
+  }
+
   const { filters: defaultFilters } = HomeSelectors.getModes(getState())[mode]
 
   const filters = {
@@ -34,10 +42,10 @@ export const getItems = (mode, page = 1, givenFilters = {}) => (dispatch, getSta
 
   switch (mode) {
     case HomeConstants.MODE_MOVIES:
-      return Butter.getMovies(page, filters).then(movies => dispatch(fetchedItems(movies, mode)))
+      return Butter.getMovies(page, filters).then(movies => dispatch(fetchedItems(movies, mode))).catch(catchNoCon)
 
     case HomeConstants.MODE_SHOWS:
-      return Butter.getShows(page, filters).then(shows => dispatch(fetchedItems(shows, mode)))
+      return Butter.getShows(page, filters).then(shows => dispatch(fetchedItems(shows, mode))).catch(catchNoCon)
 
     case HomeConstants.MODE_BOOKMARKS:
       return Database.movies.getAll().then(({ docs: movies }) => {
@@ -51,7 +59,7 @@ export const getItems = (mode, page = 1, givenFilters = {}) => (dispatch, getSta
         dispatch(fetchedItems(movies, mode))
 
         return Butter.getShows(page, filters).then(shows => dispatch(fetchedItems(shows, mode)))
-      })
+      }).catch(catchNoCon)
 
     default:
       return null

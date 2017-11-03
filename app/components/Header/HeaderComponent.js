@@ -88,8 +88,7 @@ export default withRouter(class extends React.Component {
               type={'text'}
               onChange={this.handleSearchChange}
               onKeyPress={this.handleKeyPress}
-              placeholder={'Search'}
-            />
+              placeholder={'Search'} />
 
             <i
               role={'presentation'}

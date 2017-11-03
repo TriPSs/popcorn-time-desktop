@@ -28,4 +28,5 @@ export type Props = {
 
   isLoading: boolean,
   infinitePagination: boolean
+
 }

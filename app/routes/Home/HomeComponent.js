@@ -9,8 +9,9 @@ import Fitlers from 'components/Filters'
 import classes from './Home.scss'
 import * as HomeConstants from './HomeConstants'
 import type { Props } from './HomeTypes'
+import NoConnection from './NoConnection'
 
-export class Home extends React.Component {
+export default class extends React.Component {
 
   props: Props
 
@@ -74,14 +75,12 @@ export class Home extends React.Component {
   }
 
   componentWillUnmount() {
-    if (!document.body) {
-      throw new Error('"document" not defined. You are probably not running in the renderer process')
+    if (document && document.body) {
+      const { match: { params: { mode } } } = this.props
+
+      global.pct[`${mode}ScrollTop`] = document.body.scrollTop
+      window.removeEventListener('scroll', this.handlePageScroll)
     }
-
-    const { match: { params: { mode } } } = this.props
-
-    global.pct[`${mode}ScrollTop`] = document.body.scrollTop
-    window.removeEventListener('scroll', this.handlePageScroll)
   }
 
   handlePageScroll = () => {
@@ -91,10 +90,10 @@ export class Home extends React.Component {
   }
 
   handleGetMoreItems = () => {
-    const { match: { params: { mode } } }  = this.props
-    const { isLoading, modes, getItems }   = this.props
+    const { match: { params: { mode } } } = this.props
+    const { isLoading, modes, getItems } = this.props
     const { location: { state: filters } } = this.props
-    const { page }                         = modes[mode]
+    const { page } = modes[mode]
 
     if ((mode === HomeConstants.MODE_BOOKMARKS || mode === HomeConstants.MODE_SEARCH) && page > 1) {
       return
@@ -107,11 +106,11 @@ export class Home extends React.Component {
 
   render() {
     const { match: { params: { mode } } } = this.props
-    const { modes, isLoading }            = this.props
+    const { modes, isLoading, hasInternet } = this.props
 
     const { items } = modes[mode]
 
-    if (!items.length) {
+    if (!items.length && !isLoading && hasInternet) {
       this.handleGetMoreItems()
     }
 
@@ -119,20 +118,28 @@ export class Home extends React.Component {
       <div className={classes.home__container}>
         <Header />
 
-        <Fitlers />
-        <div
-          ref={ref => this.cardListRef = ref}
-          className={classes.home__cards}
-          style={{ padding: 0 }}>
-          <CardList items={modes[mode].items} />
+        {hasInternet && (
+          <Fitlers />
+        )}
 
-          <Loader {...{ isLoading }} />
-        </div>
+        {hasInternet && (
+          <div
+            ref={ref => this.cardListRef = ref}
+            className={classes.home__cards}
+            style={{ padding: 0 }}>
+            <CardList items={modes[mode].items} />
 
+            <Loader {...{ isLoading }} />
+          </div>
+        )}
+
+        {!hasInternet && (
+          <NoConnection
+            getItems={this.handleGetMoreItems}
+          />
+        )}
 
       </div>
     )
   }
 }
-
-export default Home

@@ -9,7 +9,15 @@ export default (state = HomeConstants.INITIAL_STATE, action) => {
     case HomeConstants.FETCH_ITEMS:
       return {
         ...state,
-        isLoading: true,
+        isLoading  : true,
+        hasInternet: true,
+      }
+
+    case HomeConstants.ERROR_NO_CON:
+      return {
+        ...state,
+        isLoading  : false,
+        hasInternet: false,
       }
 
     case HomeConstants.FETCHED_ITEMS:

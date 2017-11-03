@@ -1,0 +1,24 @@
+@import 'base/variables';
+
+.root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: $menu-item-color;
+}
+
+.content {
+  text-align: center;
+
+  h2 {
+	font-size: 22px;
+  }
+
+  :global {
+	.pct-btn {
+	  position: relative;
+	}
+  }
+}
+
