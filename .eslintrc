@@ -3,17 +3,22 @@
   "extends" : [
     "standard",
     "standard-react",
-    "airbnb"
+    "airbnb",
+    "plugin:flowtype/recommended",
+    "plugin:jest/recommended"
   ],
   "plugins": [
     "babel",
     "react",
     "promise",
-    "jsx-a11y"
+    "jsx-a11y",
+    "flowtype",
+    "jest"
   ],
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "globals" : {
     "__DEV__"      : false,
@@ -25,6 +30,13 @@
     "__API__"      : false,
     "NODE_ENV"     : false,
     "DEBUG_PROD"   : false
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["app"]
+      }
+    }
   },
   "rules": {
     // ESLint Rules
@@ -50,13 +62,11 @@
     "babel/array-bracket-spacing": 2,
     "babel/object-curly-spacing": [2, "always"],
     "babel/object-shorthand": 2,
-
     // Switch to error when requireForBlockBody works
     "babel/arrow-parens": [0, "as-needed"/*, { "requireForBlockBody": true }*/],
     "babel/no-await-in-loop": 2,
     "babel/flow-object-type": 2,
     "babel/func-params-comma-dangle": 2,
-    // "babel/no-invalid-this": 1,
 
     // React Rules
     "react/forbid-component-props": [0],
@@ -117,7 +127,6 @@
     "react/jsx-indent": [2, 2],
     "react/jsx-indent-props": [0, 2],
     "react/jsx-key": [2],
-
     "react/jsx-no-bind": [1],
     "react/jsx-no-comment-textnodes": [2],
     "react/jsx-no-duplicate-props": [2],
@@ -125,7 +134,6 @@
     "react/jsx-no-target-blank": [2],
     "react/jsx-no-undef": [2],
     "react/jsx-pascal-case": [2],
-
     "react/jsx-space-before-closing": [2],
     "react/jsx-uses-react": [2],
     "react/jsx-uses-vars": [2],
@@ -136,39 +144,7 @@
     "jsx-a11y/img-redundant-alt": [2],
     "jsx-a11y/aria-role": [2],
     "jsx-a11y/no-access-key": [2],
-    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/href-no-hash": "off"
 
-    "class-methods-use-this": "off",
-    "fp/no-arguments": "off",
-    "fp/no-class": "off",
-    "fp/no-delete": "off",
-    "fp/no-events": "off",
-    "fp/no-get-set": "off",
-    "fp/no-let": "off",
-    "fp/no-loops": "off",
-    "fp/no-mutating-assign": "off",
-    "fp/no-mutating-methods": "off",
-    "fp/no-mutation": "off",
-    "fp/no-nil": "off",
-    "fp/no-proxy": "off",
-    "fp/no-rest-parameters": "off",
-    "fp/no-this": "off",
-    "fp/no-throw": "off",
-    "fp/no-unused-expression": "off",
-    "fp/no-valueof-field": "off",
-    "import/no-extraneous-dependencies": "off",
-    "import/no-named-as-default": 0,
-    "no-var": "off",
-    "no-let": "off",
-    "no-plusplus": "off",
-    "no-use-before-define": "off",
-    "promise/avoid-new": "off",
-  },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "paths": ["app"]
-      }
-    }
-  },
+  }
 }

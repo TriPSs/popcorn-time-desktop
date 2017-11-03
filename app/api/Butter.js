@@ -12,19 +12,19 @@ export default new (class {
   torrentAdapter: TorrentAdapter
 
   constructor() {
-    this.pctAdapter      = new PctTorrentProvider()
-    this.torrentAdapter  = new TorrentAdapter()
+    this.pctAdapter = new PctTorrentProvider()
+    this.torrentAdapter = new TorrentAdapter()
     this.metadataAdapter = new MetadataAdapter()
   }
 
   getMovies = (page: number = 1, filters: Object = {}) => (
     this.pctAdapter.getMovies(page, filters)
-      .then(this.metadataAdapter.updateMoviesWatched)
+    .then(this.metadataAdapter.updateMoviesWatched)
   )
 
   getMovie = (itemId: string) => (
     this.pctAdapter.getMovie(itemId)
-      .then(this.metadataAdapter.updateMovieWatched)
+    .then(this.metadataAdapter.updateMovieWatched)
   )
 
   getShows = (page: number = 1, filters: Object = {}) => (
@@ -33,15 +33,15 @@ export default new (class {
 
   getShow = (itemId: string) => (
     this.pctAdapter
-      .getShow(itemId)
-      .then(pctShow => (
-        this.metadataAdapter
-          .getSeasons(itemId, pctShow.seasons)
-          .then(seasons => ({
-            ...pctShow,
-            seasons,
-          }))),
-      )
+    .getShow(itemId)
+    .then(pctShow => (
+      this.metadataAdapter
+      .getSeasons(itemId, pctShow.seasons)
+      .then(seasons => ({
+        ...pctShow,
+        seasons,
+      }))),
+    )
   )
 
   searchEpisode = (...args) => (
