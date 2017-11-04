@@ -31,7 +31,7 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { fetchingEpisodeTorrents: isSearchingTorrents, episode: { id: oldId } }  = nextProps
+    const { fetchingEpisodeTorrents: isSearchingTorrents, episode: { id: oldId } } = nextProps
     const { fetchingEpisodeTorrents: wasSearchingTorrents, episode: { id: newId } } = this.props
 
     if ((oldId !== newId) || (!isSearchingTorrents && wasSearchingTorrents)) {
@@ -41,8 +41,8 @@ export default class extends React.Component {
 
   handleOnPlayIconClick = () => {
     const { episode, item, player } = this.props
-    const { selectedEpisode }       = this.props
-    const { torrent }               = this.state
+    const { selectedEpisode } = this.props
+    const { torrent } = this.state
 
     if (selectedEpisode.number === episode.number) {
       if (torrent) {
@@ -56,7 +56,7 @@ export default class extends React.Component {
 
   handleSearchTorrents = () => {
     const { item, episode, itemActions } = this.props
-    const { fetchingEpisodeTorrents }    = this.props
+    const { fetchingEpisodeTorrents } = this.props
 
     if (!fetchingEpisodeTorrents) {
       itemActions.searchEpisodeTorrents(item, episode.season, episode.number)
@@ -79,7 +79,7 @@ export default class extends React.Component {
 
   selectTorrent = (quality) => {
     const { episode: { torrents, number } } = this.props
-    const { selectedEpisode }               = this.props
+    const { selectedEpisode } = this.props
 
     if (selectedEpisode.number === number) {
       this.setState({
@@ -92,8 +92,8 @@ export default class extends React.Component {
 
   hidePlay = () => {
     const { fetchingEpisodeTorrents, episode } = this.props
-    const { playerStatus, torrentStatus }      = this.props
-    const { torrent }                          = this.state
+    const { playerStatus, torrentStatus } = this.props
+    const { torrent } = this.state
 
     return playerStatus !== PlayerConstants.STATUS_NONE ||
            torrentStatus !== TorrentConstants.STATUS_NONE ||
@@ -107,9 +107,9 @@ export default class extends React.Component {
   }
 
   render() {
-    const { episode, selectEpisode }                  = this.props
+    const { episode, selectEpisode } = this.props
     const { selectSeasonAndEpisode, selectedEpisode } = this.props
-    const { fetchingEpisodeTorrents }                 = this.props
+    const { fetchingEpisodeTorrents } = this.props
 
     const { torrent } = this.state
 
@@ -131,9 +131,9 @@ export default class extends React.Component {
         )}
         key={episode.number}
         onClick={() => (this.isAvailable()
-          ? selectSeasonAndEpisode(selectedEpisode.season, episode.number)
-          : null)}
-      >
+            ? selectSeasonAndEpisode(selectedEpisode.season, episode.number)
+            : null
+        )}>
         <div className={'list__item-image-container--hor'}>
           <img
             className={classNames(

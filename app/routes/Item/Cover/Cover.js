@@ -8,7 +8,7 @@ import classes from './Cover.scss'
 
 import itemClasses from '../Item.scss'
 
-export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo, visible }: Props) => (
+export default ({ poster, mode, torrent, torrents, setTorrent, play, showPlayInfo, visible }: Props) => (
   <div
     className={classNames(itemClasses.content__container, classes.cover)}
     style={{ visibility: visible ? 'inherit' : 'hidden' }}>
@@ -45,5 +45,3 @@ export const Cover = ({ poster, mode, torrent, torrents, setTorrent, play, showP
 
   </div>
 )
-
-export default Cover

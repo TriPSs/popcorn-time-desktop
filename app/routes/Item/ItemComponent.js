@@ -41,7 +41,7 @@ export default class Item extends React.Component {
 
   componentWillReceiveProps(nextProps: Props) {
     const { isLoading: wasLoading, match: { params: { itemId: oldItemId } } } = this.props
-    const { isLoading, item, match: { params: { itemId: newItemId } } }       = nextProps
+    const { isLoading, item, match: { params: { itemId: newItemId } } } = nextProps
 
     const { torrent } = this.state
 
@@ -134,8 +134,8 @@ export default class Item extends React.Component {
 
   render() {
     const { match: { params: { itemId, mode } } } = this.props
-    const { item, isLoading, torrentStatus }      = this.props
-    const { torrent }                             = this.state
+    const { item, isLoading, torrentStatus } = this.props
+    const { torrent } = this.state
 
     if (isLoading || !item || item.id !== itemId) {
       return <Loader {...{ isLoading }} />
@@ -143,15 +143,17 @@ export default class Item extends React.Component {
 
     return (
       <div className={classNames('container-fluid', classes.item)}>
-        <Link to={`/${mode}s`} className={classes.item__close}>
-          <button
-            style={{ zIndex: 1060 }}
-            className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
-            onClick={this.handlePlayerStop}>
-            <i className={'ion-ios-arrow-back'} />
-            Back
-          </button>
-        </Link>
+        {this.playerIsShown() && (
+          <Link to={`/${mode}s`} className={classes.item__close}>
+            <button
+              style={{ zIndex: 1060 }}
+              className={'pct-btn pct-btn-trans pct-btn-outline pct-btn-round'}
+              onClick={this.handlePlayerStop}>
+              <i className={'ion-ios-arrow-back'} />
+              Back
+            </button>
+          </Link>
+        )}
 
         <div className={classes.item__dragger} />
 

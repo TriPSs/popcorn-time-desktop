@@ -53,6 +53,10 @@ export const toggleWatched = item => (dispatch) => {
 }
 
 export const updatePercentage = (item: MovieType | EpisodeType, percentage: number) => (dispatch) => {
+  if (item.watched && item.watched.progress > percentage) {
+    return
+  }
+
   if (item.type === MetadataConstants.TYPE_MOVIE) {
     Database.watched.updateMoviePercentage(item.id, percentage).then(() => {
       dispatch({

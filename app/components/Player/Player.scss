@@ -1,100 +1,104 @@
 @import 'base/variables';
 
 .player {
-	position: relative;
-	width: $item-content-width;
-	z-index: 2000;
+  position: relative;
+  width: $item-content-width;
+  z-index: 2000;
 
-	&--hidden {
-		display: none;
-	}
+  &--hidden {
+	display: none;
+  }
 
-	&__close {
-		z-index: 3001;
-		margin-left: 15px;
-		position: absolute;
-		top: 20px;
-	}
+  &__close {
+	z-index: 3001;
+	margin-left: 15px;
+	position: absolute;
+	top: 20px;
+  }
 
-	&__controls {
-		position: absolute;
-		bottom: 25px;
-		left: 0;
-		width: 100%;
-		display: flex;
-		flex-flow: column;
-		align-items: center;
-	}
+  &__controls {
+	position: absolute;
+	bottom: 25px;
+	left: 0;
+	width: 100%;
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+  }
 }
 
 .plyr {
-	min-height: $item-background-height;
-	padding: 0;
-	width: 100%;
-	z-index: 3000;
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
+  min-height: $item-background-height;
+  padding: 0;
+  width: 100%;
+  z-index: 3000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 
-	> div {
-		z-index: 2000 !important;
+  > div {
+	z-index: 2000 !important;
+  }
+
+  &--paused {
+	.player__close {
+	  opacity: $button-default-opacity;
+	}
+  }
+
+  &--playing {
+	.player__close {
+	  opacity: 0;
 	}
 
-	&--paused {
-		.player__close {
-			opacity: $button-default-opacity;
-		}
-	}
-
-	&--playing {
-		.player__close {
-			opacity: 0;
-		}
+	&:hover {
+	  .player__close {
+		opacity: $button-default-opacity;
 
 		&:hover {
-			.player__close {
-				opacity: $button-default-opacity;
-
-				&:hover {
-					opacity: 1;
-				}
-			}
+		  opacity: 1;
 		}
+	  }
 	}
+  }
 
-	&__close-button {
-		position: absolute !important;
-		top: 0;
-		right: 0;
-		z-index: 1060;
-		color: white !important;
-	}
+  &__close-button {
+	position: absolute !important;
+	top: 0;
+	right: 0;
+	z-index: 1060;
+	color: white !important;
+  }
 
-	:global {
-		.plyr {
-			position: absolute;
-			left: 0;
-			right: 0;
-			top: 0;
-			z-index: -100;
-			min-height: $item-background-height;
-			opacity: 1;
-			height: $item-background-height;
-			overflow: hidden;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: black;
+  :global {
+	.plyr {
+	  position: absolute;
+	  left: 0;
+	  right: 0;
+	  top: 0;
+	  z-index: -100;
+	  min-height: $item-background-height;
+	  opacity: 1;
+	  height: $item-background-height;
+	  overflow: hidden;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  background: black;
 
-			&__video-wrapper {
-				width: 100%;
+	  &__video-wrapper {
+		width: 100%;
 
-				&.plyr--setup {
-					padding: 0;
-					height: 100%;
-				}
-			}
+		&.plyr--setup {
+		  padding: 0;
+		  height: 100%;
 		}
+	  }
+
+	  .plyr--setup {
+		background: black;
+	  }
 	}
+  }
 }
