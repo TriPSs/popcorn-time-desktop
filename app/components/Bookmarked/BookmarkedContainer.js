@@ -8,4 +8,4 @@ export const mapStateToProps = state => ({
   bookmarks: Selectors.getBookmarkes(state),
 })
 
-export default connect(mapStateToProps, { ...Actions })(BookmarkedComponent)
+export default connect(mapStateToProps, Actions)(BookmarkedComponent)
