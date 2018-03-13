@@ -4,7 +4,6 @@ import * as PlayerConstants from './PlayerConstants'
 import * as TorrentConstants from '../Torrent/TorrentConstants'
 
 export default (state = PlayerConstants.INITIAL_STATE, action) => {
-
   switch (action.type) {
     case PlayerConstants.ACTION_PLAY:
     case PlayerConstants.ACTION_PAUSE:
@@ -20,6 +19,7 @@ export default (state = PlayerConstants.INITIAL_STATE, action) => {
       return {
         ...state,
         status: action.payload,
+        action: null,
       }
 
     case PlayerConstants.UPDATE_PROVIDER:

@@ -55,7 +55,7 @@ export default class extends ReduxClazz implements PlayerProviderInterface {
         this.play({ uri, item })
       }
 
-    } else if (oldAction !== newAction) {
+    } else if (oldAction !== newAction && newAction) {
       const { uri, item } = nextProps
 
       this.handleActionChange(

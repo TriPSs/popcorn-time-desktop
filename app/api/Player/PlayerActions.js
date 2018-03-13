@@ -16,9 +16,7 @@ export function play(uri: string, item: ContentType) {
 }
 
 export const togglePlay = () => (dispatch, getState) => {
-  const playerStatus = PlayerSelectors.getStatus(getState())
-
-  if (playerStatus === PlayerConstants.STATUS_PLAYING) {
+  if (PlayerSelectors.getStatus(getState()) === PlayerConstants.STATUS_PLAYING) {
     dispatch({
       type: PlayerConstants.ACTION_PAUSE,
     })

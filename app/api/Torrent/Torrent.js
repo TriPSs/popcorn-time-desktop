@@ -1,3 +1,4 @@
+//@flow
 import { remote } from 'electron'
 import WebTorrent from 'webtorrent'
 import portfinder from 'portfinder'
